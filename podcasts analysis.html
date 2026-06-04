@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Анализ подкастов IT-консалтинга РФ</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #030712;
+            color: #f3f4f6;
+        }
+        .glass-panel {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .glass-card {
+            background: rgba(31, 41, 55, 0.3);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card:hover {
+            transform: translateY(-4px) scale(1.01);
+            border-color: rgba(99, 102, 241, 0.3);
+            background: rgba(31, 41, 55, 0.5);
+            box-shadow: 0 20px 40px -15px rgba(99, 102, 241, 0.15);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #818cf8 0%, #c084fc 50%, #f472b6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gradient-border {
+            position: relative;
+        }
+        .gradient-border::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(to bottom right, rgba(99, 102, 241, 0.5), rgba(244, 114, 182, 0.1));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+        .tab-active {
+            background: rgba(99, 102, 241, 0.15);
+            border-color: rgba(99, 102, 241, 0.4);
+            color: #a5b4fc;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #030712;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1f2937;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #374151;
+        }
+    </style>
+</head>
+<body class="selection:bg-indigo-500/30 selection:text-indigo-200">
+
+    <!-- NAVIGATION BAR -->
+    <nav class="fixed top-0 left-0 w-full z-50 glass-panel border-b border-gray-900 px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-indigo-600 to-pink-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                <i class="fa-solid fa-microphone-lines text-white text-sm"></i>
+            </div>
+            <span class="font-extrabold text-sm tracking-wider uppercase">Media <span class="text-indigo-400">Intelligence</span></span>
+        </div>
+        <div class="hidden md:flex items-center gap-6 text-sm font-medium text-gray-400">
+            <a href="#hero" class="hover:text-white transition">Старт</a>
+            <a href="#podcasts" class="hover:text-white transition">Обзор подкастов</a>
+            <a href="#matrix" class="hover:text-white transition">Матрица сравнения</a>
+            <a href="#insights" class="hover:text-white transition">Анализ & Темы</a>
+            <a href="#ideas" class="hover:text-white transition">Стратегия & Идеи</a>
+        </div>
+        <a href="#ideas" class="px-4 py-2 rounded-lg bg-indigo-600/10 hover:bg-indigo-600/20 border border-indigo-500/20 text-indigo-300 text-xs font-semibold uppercase tracking-wider transition">
+            Внедрить решения
+        </a>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section id="hero" class="relative min-h-screen flex flex-col justify-center items-center px-4 overflow-hidden pt-16">
+        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-indigo-600/10 rounded-full filter blur-[120px] animate-pulse"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-600/10 rounded-full filter blur-[120px] animate-pulse" style="animation-delay: 3s;"></div>
+
+        <div class="max-w-4xl mx-auto text-center z-10">
+            <span class="px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-widest uppercase bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 animate__animated animate__fadeInDown">
+                Рыночное исследование 2024–2026
+            </span>
+            <h1 class="mt-8 text-4xl md:text-6xl font-black tracking-tight leading-tight animate__animated animate__fadeInUp">
+                Анализ подкастов <br>
+                <span class="gradient-text">IT-Консалтинга России</span>
+            </h1>
+            <p class="mt-6 text-lg text-gray-400 max-w-2xl mx-auto font-light leading-relaxed animate__animated animate__fadeInUp animate__delay-1s">
+                Глубокий разбор аудио- и видео-подкастов ключевых игроков рынка. Как лидеры упаковывают экспертизу и о чем они говорят со своими клиентами.
+            </p>
+            <div class="mt-10 flex flex-wrap justify-center gap-4 animate__animated animate__fadeInUp animate__delay-1s">
+                <a href="#podcasts" class="px-6 py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold rounded-xl text-sm shadow-lg shadow-indigo-500/25 transition transform hover:-translate-y-0.5">
+                    Начать обзор <i class="fa-solid fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 1: ПОДРОБНЫЙ РАЗБОР ПОДКАСТОВ -->
+    <section id="podcasts" class="py-24 px-4 max-w-7xl mx-auto relative">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl md:text-5xl font-extrabold tracking-tight">Карта подкаст-активности</h2>
+            <p class="text-gray-400 mt-3">Детальный разбор каждого проекта: форматы, темы, метрики</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            <!-- AXENIX -->
+            <div class="glass-card p-8 rounded-2xl relative overflow-hidden gradient-border">
+                <div class="flex justify-between items-start mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center font-bold text-lg">AX</div>
+                        <div>
+                            <h3 class="text-xl font-bold">Axenix (ex-Accenture)</h3>
+                            <p class="text-xs text-purple-400 font-mono">«Axenix Coffee Talks»</p>
+                        </div>
+                    </div>
+                    <span class="px-2.5 py-1 rounded bg-purple-500/10 text-purple-400 text-xs font-semibold">Аудио-подкаст</span>
+                </div>
+                <div class="grid grid-cols-3 gap-4 mb-6 bg-gray-950/40 p-4 rounded-xl border border-gray-900 text-center">
+                    <div>
+                        <p class="text-xs text-gray-500">Выпуски</p>
+                        <p class="text-lg font-bold text-gray-200">33</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500">Длительность</p>
+                        <p class="text-lg font-bold text-gray-200">27–47 мин</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500">Активность</p>
+                        <p class="text-sm font-bold text-emerald-400 mt-1">2024–2026 гг.</p>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <span class="text-xs text-gray-500 block uppercase tracking-wider mb-1 font-semibold">Стиль и ведущие:</span>
+                        <p class="text-sm text-gray-300 leading-relaxed">
+                            Неформальная беседа «за чашкой кофе» между руководителями практик (Денис Шульга, Николай Ульрих, Олег Аэров) и клиентами.
+                        </p>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500 block uppercase tracking-wider mb-2 font-semibold">Ключевые темы:</span>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-2 py-1 rounded bg-gray-900 text-gray-300 text-xs">Локализация ИТ-ландшафта</span>
+                            <span class="px-2 py-1 rounded bg-gray-900 text-gray-300 text-xs">Цепочки поставок (X5 Group)</span>
+                            <span class="px-2 py-1 rounded bg-gray-900 text-gray-300 text-xs">GenAI в бизнесе</span>
+                            <span class="px-2 py-1 rounded bg-gray-900 text-gray-300 text-xs">MDM в 1С</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- КОРУС -->
+            <div class="glass-card p-8 rounded-2xl relative overflow-hidden gradient-border">
+                <div class="flex justify-between items-start mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold text-lg">КР</div>
+                        <div>
+                            <h3 class="text-xl font-bold">КОРУС Консалтинг</h3>
+                            <p class="text-xs text-emerald-400 font-mono">«сITуация» / «Кейсы, цифры и ИТ»</p>
+                        </div>
+                    </div>
+                    <span class="px-2.5 py-1 rounded bg-emerald-500/10 text-emerald-400 text-xs font-semibold">Аудио-подкаст + Блог</span>
+                </div>
+                <div class="grid grid-cols-3 gap-4 mb-6 bg-gray-950/40 p-4 rounded-xl border border-gray-900 text-center">
+                    <div>
+                        <p class="text-xs text-gray-500">Выпуски</p>
+                        <p class="text-lg font-bold text-gray-200">13</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500">Длительность</p>
+                        <p class="text-lg font-bold text-gray-200">21–55 мин</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500">Активность</p>
+                        <p class="text-sm font-bold text-emerald-400 mt-1">2023–2026 гг.</p>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <span class="text-xs text-gray-500 block uppercase tracking-wider mb-1 font-semibold">Стиль и форматы:</span>
+                        <p class="text-sm text-gray-300 leading-relaxed">
+                            Аналитические обзоры рынка. Дополнительно запущен формат «КОРУС от первого лица» (2026 г.) — подкаст о методологии продаж консалтинга и управлении ожиданиями заказчиков.
+                        </p>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500 block uppercase tracking-wider mb-2 font-semibold">Ключевые темы:</span>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-2 py-1 rounded bg-gray-900 text-gray-300 text-xs">Онлайн-продажи в B2B</span>
+                            <span class="px-2 py-1 rounded bg-gray-900 text-gray-300 text-xs">Big Data в промышленности</span>
+                            <span class="px-2 py-1 rounded bg-gray-900 text-gray-300 text-xs">Российский рынок CRM</span>
+                            <span class="px-2 py-1 rounded bg-gray-900 text-gray-300 text-xs">ИТ-эдвайзинг</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- КРОК 1 -->
+            <div class="glass-card p-8 rounded-2xl relative overflow-hidden gradient-border">
+                <div class="flex justify-between items-start mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center font-bold text-lg">КР</div>
+                        <div>
+                            <h3 class="text-xl font-bold">КРОК Облака</h3>
+                            <p class="text-xs text-blue-400 font-mono">«Откровенно об ИТ-инфраструктуре»</p>
+                        </div>
+                    </div>
+                    <span class="px-2.5 py-1 rounded bg-blue-500/10 text-blue-400 text-xs font-semibold">Аудио-подкаст</span>
+                </div>
+                <div class="grid grid-cols-3 gap-4 mb-6 bg-gray-950/40 p-4 rounded-xl border border-gray-900 text-center">
+                    <div>
+                        <p class="text-xs text-gray-500">Выпуски</p>
+                        <p class="text-lg font-bold text-gray-200">11</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500">Длительность</p>
+                        <p class="text-lg font-bold text-gray-200">30–53 мин</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500">Активность</p>
+                        <p class="text-sm font-bold text-gray-500 mt-1">2023–2024 гг.</p>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <span class="text-xs text-gray-500 block uppercase tracking-wider mb-1 font-semibold">Стиль и ведущие:</span>
+                        <p class="text-sm text-gray-300 leading-relaxed">
+                            Технически насыщенный диалог с заказчиками и вендорами. Ведущие: Сергей Зинкевич и Александр Фикс.
+                        </p>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500 block uppercase tracking-wider mb-2 font-semibold">Ключевые темы:</span>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-2 py-1 rounded bg-gray-900 text-gray-300 text-xs">Kubernetes в РФ</span>
+                            <span class="px-2 py-1 rounded bg-gray-900 text-gray-300 text-xs">Облачная экономика</span>
+                            <span class="px-2 py-1 rounded bg-gray-900 text-gray-300 text-xs">Локализация ИТ</span>
+                            <span class="px-2 py-1 rounded bg-gray-900 text-gray-300 text-xs">Кибербезопасность</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- КРОК 2 -->
+            <div class="glass-card p-8 rounded-2xl relative overflow-hidden gradient-border">
+                <div class="flex justify-between items-start mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-lg bg-orange-500/10 text-orange-400 flex items-center justify-center font-bold text-lg">КР</div>
+                        <div>
+                            <h3 class="text-xl font-bold">КРОК Sales</h3>
+                            <p class="text-xs text-orange-400 font-mono">«Продажи или смерть»</p>
+                        </div>
+                    </div>
+                    <span class="px-2.5 py-1 rounded bg-orange-500/10 text-orange-400 text-xs font-semibold">Аудио-подкаст</span>
+                </div>
+                <div class="grid grid-cols-3 gap-4 mb-6 bg-gray-950/40 p-4 rounded-xl border border-gray-900 text-center">
+                    <div>
+                        <p class="text-xs text-gray-500">Выпуски</p>
+                        <p class="text-lg font-bold text-gray-200">2</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500">Длительность</p>
+                        <p class="text-lg font-bold text-gray-200">29–34 мин</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500">Активность</p>
+                        <p class="text-sm font-bold text-gray-500 mt-1">2022 г.</p>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <span class="text-xs text-gray-500 block uppercase tracking-wider mb-1 font-semibold">Стиль и концепция:</span>
+                        <p class="text-sm text-gray-300 leading-relaxed">
+                            Неформальный разбор «внутренней кухни» продаж сложных ИТ-решений. Ведущий: Сергей Зинкевич.
+                        </p>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500 block uppercase tracking-wider mb-2 font-semibold">Ключевые темы:</span>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-2 py-1 rounded bg-gray-900 text-gray-300 text-xs">Роль BDM в ИТ</span>
+                            <span class="px-2 py-1 rounded bg-gray-900 text-gray-300 text-xs">Карьерный путь сейла</span>
+                            <span class="px-2 py-1 rounded bg-gray-900 text-gray-300 text-xs">Ошибки новичков в продажах</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ICL SERVICES -->
+            <div class="glass-card p-8 rounded-2xl relative overflow-hidden gradient-border">
+                <div class="flex justify-between items-start mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-lg bg-teal-500/10 text-teal-400 flex items-center justify-center font-bold text-lg">IC</div>
+                        <div>
+                            <h3 class="text-xl font-bold">ICL Services</h3>
+                            <p class="text-xs text-teal-400 font-mono">«Сервисные хроники»</p>
+                        </div>
+                    </div>
+                    <span class="px-2.5 py-1 rounded bg-teal-500/10 text-teal-400 text-xs font-semibold">Аудио-подкаст</span>
+                </div>
+                <div class="grid grid-cols-3 gap-4 mb-6 bg-gray-950/40 p-4 rounded-xl border border-gray-900 text-center">
+                    <div>
+                        <p class="text-xs text-gray-500">Выпуски</p>
+                        <p class="text-lg font-bold text-gray-200">8</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500">Длительность</p>
+                        <p class="text-lg font-bold text-gray-200">4–49 мин</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500">Активность</p>
+                        <p class="text-sm font-bold text-emerald-400 mt-1">2025–2026 гг.</p>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <span class="text-xs text-gray-500 block uppercase tracking-wider mb-1 font-semibold">Стиль и особенности:</span>
+                        <p class="text-sm text-gray-300 leading-relaxed">
+                            Экспертные обсуждения ИТ-отрасли с привлечением госорганов (Минцифры Татарстана). Имеются ультракороткие бонусные выпуски.
+                        </p>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500 block uppercase tracking-wider mb-2 font-semibold">Ключевые темы:</span>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-2 py-1 rounded bg-gray-900 text-gray-300 text-xs">Тренды ритейла 2026</span>
+                            <span class="px-2 py-1 rounded bg-gray-900 text-gray-300 text-xs">Киберугрозы 2026</span>
+                            <span class="px-2 py-1 rounded bg-gray-900 text-gray-300 text-xs">Мифы об ИТ-аутсорсинге</span>
+                            <span class="px-2 py-1 rounded bg-gray-900 text-gray-300 text-xs">Заказная разработка</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ЛАНИТ G -->
+            <div class="glass-card p-8 rounded-2xl relative overflow-hidden gradient-border">
+                <div class="flex justify-between items-start mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-lg bg-pink-500/10 text-pink-400 flex items-center justify-center font-bold text-lg">ЛА</div>
+                        <div>
+                            <h3 class="text-xl font-bold">ЛАНИТ</h3>
+                            <p class="text-xs text-pink-400 font-mono">«ЛАНИТ Говорит»</p>
+                        </div>
+                    </div>
+                    <span class="px-2.5 py-1 rounded bg-pink-500/10 text-pink-400 text-xs font-semibold">Карьерный аудио-подкаст</span>
+                </div>
+                <div class="grid grid-cols-3 gap-4 mb-6 bg-gray-950/40 p-4 rounded-xl border border-gray-900 text-center">
+                    <div>
+                        <p class="text-xs text-gray-500">Выпуски</p>
+                        <p class="text-lg font-bold text-gray-200">13+</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500">Длительность</p>
+                        <p class="text-lg font-bold text-gray-200">~30 мин</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500">Активность</p>
+                        <p class="text-sm font-bold text-gray-500 mt-1">Периодический</p>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <span class="text-xs text-gray-500 block uppercase tracking-wider mb-1 font-semibold">Стиль и фокус:</span>
+                        <p class="text-sm text-gray-300 leading-relaxed">
+                            Интервью с руководителями и экспертами компании. Сильный уклон в продажи, личную эффективность и HR-бренд.
+                        </p>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500 block uppercase tracking-wider mb-2 font-semibold">Ключевые темы:</span>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-2 py-1 rounded bg-gray-900 text-gray-300 text-xs">Успешные продажи в ИТ</span>
+                            <span class="px-2 py-1 rounded bg-gray-900 text-gray-300 text-xs">UBERизация аутстаффинга</span>
+                            <span class="px-2 py-1 rounded bg-gray-900 text-gray-300 text-xs">Построение ресурсных центров</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ЛАНИТ PRO -->
+            <div class="glass-card p-8 rounded-2xl relative overflow-hidden gradient-border">
+                <div class="flex justify-between items-start mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-lg bg-red-500/10 text-red-400 flex items-center justify-center font-bold text-lg">ЛА</div>
+                        <div>
+                            <h3 class="text-xl font-bold">ЛАНИТ</h3>
+                            <p class="text-xs text-red-400 font-mono">«РАЗГОВОРЫ PRO»</p>
+                        </div>
+                    </div>
+                    <span class="px-2.5 py-1 rounded bg-red-500/10 text-red-400 text-xs font-semibold">Видео-подкаст (Rutube)</span>
+                </div>
+                <div class="grid grid-cols-3 gap-4 mb-6 bg-gray-950/40 p-4 rounded-xl border border-gray-900 text-center">
+                    <div>
+                        <p class="text-xs text-gray-500">Выпуски</p>
+                        <p class="text-lg font-bold text-gray-200">5</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500">Длительность</p>
+                        <p class="text-lg font-bold text-gray-200">25–40 мин</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500">Активность</p>
+                        <p class="text-sm font-bold text-gray-500 mt-1">Нерегулярно</p>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <span class="text-xs text-gray-500 block uppercase tracking-wider mb-1 font-semibold">Целевая аудитория и стиль:</span>
+                        <p class="text-sm text-gray-300 leading-relaxed">
+                            Студенты и молодые инженеры. Яркий визуальный видеоформат о мире инжиниринга и высоких скоростей.
+                        </p>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500 block uppercase tracking-wider mb-2 font-semibold">Ключевые темы:</span>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-2 py-1 rounded bg-gray-900 text-gray-300 text-xs">Hard & Soft Skills</span>
+                            <span class="px-2 py-1 rounded bg-gray-900 text-gray-300 text-xs">HR-лайфхаки рынка труда</span>
+                            <span class="px-2 py-1 rounded bg-gray-900 text-gray-300 text-xs">Инженерия в автоспорте</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ЭКОПСИ -->
+            <div class="glass-card p-8 rounded-2xl relative overflow-hidden gradient-border">
+                <div class="flex justify-between items-start mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-lg bg-yellow-500/10 text-yellow-400 flex items-center justify-center font-bold text-lg">ЭК</div>
+                        <div>
+                            <h3 class="text-xl font-bold">ЭКОПСИ Консалтинг</h3>
+                            <p class="text-xs text-yellow-400 font-mono">«Найти айти»</p>
+                        </div>
+                    </div>
+                    <span class="px-2.5 py-1 rounded bg-yellow-500/10 text-yellow-400 text-xs font-semibold">HR-подкаст</span>
+                </div>
+                <div class="grid grid-cols-3 gap-4 mb-6 bg-gray-950/40 p-4 rounded-xl border border-gray-900 text-center">
+                    <div>
+                        <p class="text-xs text-gray-500">Выпуски</p>
+                        <p class="text-lg font-bold text-gray-200">Серия</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500">Длительность</p>
+                        <p class="text-lg font-bold text-gray-200">~30 мин</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500">Активность</p>
+                        <p class="text-sm font-bold text-gray-500 mt-1">C 2022 г.</p>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <span class="text-xs text-gray-500 block uppercase tracking-wider mb-1 font-semibold">Концепция и ведущие:</span>
+                        <p class="text-sm text-gray-300 leading-relaxed">
+                            Профессиональный подкаст об ИТ-бренде работодателя. Ведущие: Вероника Луцкина и Артем Гринев. Гости — деврелы, CIO, HRD тех-гигантов.
+                        </p>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500 block uppercase tracking-wider mb-2 font-semibold">Ключевые темы:</span>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-2 py-1 rounded bg-gray-900 text-gray-300 text-xs">Удержание кадров в ИТ</span>
+                            <span class="px-2 py-1 rounded bg-gray-900 text-gray-300 text-xs">Продвижение бренда</span>
+                            <span class="px-2 py-1 rounded bg-gray-900 text-gray-300 text-xs">Исследования ЭКОПСИ + Хабр</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECTION 2: СРАВНИТЕЛЬНАЯ ТАБЛИЦА -->
+    <section id="matrix" class="py-24 bg-gray-950/40 border-y border-gray-900 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <span class="text-xs text-indigo-400 font-mono uppercase tracking-widest">Сводная аналитика</span>
+                <h2 class="text-3xl md:text-5xl font-extrabold mt-2">Матрица сравнения</h2>
+            </div>
+            
+            <div class="overflow-x-auto rounded-2xl border border-gray-800/80 glass-panel">
+                <table class="w-full text-left text-sm text-gray-300">
+                    <thead class="bg-gray-900/50 text-gray-400 uppercase text-xs tracking-wider border-b border-gray-800">
+                        <tr>
+                            <th class="p-6">Компания</th>
+                            <th class="p-6">Название</th>
+                            <th class="p-6">Формат</th>
+                            <th class="p-6 text-center">Эпизоды</th>
+                            <th class="p-6 text-center">Длительность</th>
+                            <th class="p-6">Целевая аудитория</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-800/50">
+                        <tr class="hover:bg-gray-900/20 transition">
+                            <td class="p-6 font-bold text-white">Axenix</td>
+                            <td class="p-6 font-mono text-purple-300">Coffee Talks</td>
+                            <td class="p-6">Аудио</td>
+                            <td class="p-6 text-center font-bold">33</td>
+                            <td class="p-6 text-center">27–47 мин</td>
+                            <td class="p-6 text-xs text-gray-400">CIO, архитекторы, консультанты</td>
+                        </tr>
+                        <tr class="hover:bg-gray-900/20 transition">
+                            <td class="p-6 font-bold text-white">КОРУС</td>
+                            <td class="p-6 font-mono text-emerald-300">сITуация</td>
+                            <td class="p-6">Аудио</td>
+                            <td class="p-6 text-center font-bold">13</td>
+                            <td class="p-6 text-center">21–55 мин</td>
+                            <td class="p-6 text-xs text-gray-400">ИТ-руководители, аналитики</td>
+                        </tr>
+                        <tr class="hover:bg-gray-900/20 transition">
+                            <td class="p-6 font-bold text-white">КРОК (Облака)</td>
+                            <td class="p-6 font-mono text-blue-300">Откровенно об ИТ</td>
+                            <td class="p-6">Аудио</td>
+                            <td class="p-6 text-center font-bold">11</td>
+                            <td class="p-6 text-center">30–53 мин</td>
+                            <td class="p-6 text-xs text-gray-400">ИТ-директора, архитекторы</td>
+                        </tr>
+                        <tr class="hover:bg-gray-900/20 transition">
+                            <td class="p-6 font-bold text-white">КРОК (Sales)</td>
+                            <td class="p-6 font-mono text-orange-300">Продажи или смерть</td>
+                            <td class="p-6">Аудио</td>
+                            <td class="p-6 text-center font-bold">2</td>
+                            <td class="p-6 text-center">29–34 мин</td>
+                            <td class="p-6 text-xs text-gray-400">BDM, sales-менеджеры</td>
+                        </tr>
+                        <tr class="hover:bg-gray-900/20 transition">
+                            <td class="p-6 font-bold text-white">ICL Services</td>
+                            <td class="p-6 font-mono text-teal-300">Сервисные хроники</td>
+                            <td class="p-6">Аудио</td>
+                            <td class="p-6 text-center font-bold">8</td>
+                            <td class="p-6 text-center">4–49 мин</td>
+                            <td class="p-6 text-xs text-gray-400">ИТ-руководители, аутсорсеры</td>
+                        </tr>
+                        <tr class="hover:bg-gray-900/20 transition">
+                            <td class="p-6 font-bold text-white">ЛАНИТ (G)</td>
+                            <td class="p-6 font-mono text-pink-300">ЛАНИТ Говорит</td>
+                            <td class="p-6">Аудио</td>
+                            <td class="p-6 text-center font-bold">13+</td>
+                            <td class="p-6 text-center">~30 мин</td>
+                            <td class="p-6 text-xs text-gray-400">HR, sales, молодые специалисты</td>
+                        </tr>
+                        <tr class="hover:bg-gray-900/20 transition">
+                            <td class="p-6 font-bold text-white">ЛАНИТ (PRO)</td>
+                            <td class="p-6 font-mono text-red-300">РАЗГОВОРЫ PRO</td>
+                            <td class="p-6">Видео (Rutube)</td>
+                            <td class="p-6 text-center font-bold">5</td>
+                            <td class="p-6 text-center">25–40 мин</td>
+                            <td class="p-6 text-xs text-gray-400">Студенты, молодые инженеры</td>
+                        </tr>
+                        <tr class="hover:bg-gray-900/20 transition">
+                            <td class="p-6 font-bold text-white">ЭКОПСИ</td>
+                            <td class="p-6 font-mono text-yellow-300">Найти айти</td>
+                            <td class="p-6">Аудио</td>
+                            <td class="p-6 text-center font-bold">Серия</td>
+                            <td class="p-6 text-center">~30 мин</td>
+                            <td class="p-6 text-xs text-gray-400">HR, деврелы, IT-руководители</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: АНАЛИЗ ФОРМАТОВ И ТЕМ -->
+    <section id="insights" class="py-24 px-4 max-w-7xl mx-auto">
+        <div class="text-center mb-16">
+            <span class="text-xs text-indigo-400 font-mono uppercase tracking-widest">Аналитика контента</span>
+            <h2 class="text-3xl md:text-5xl font-extrabold mt-2">Форматы & Ключевые тренды</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- ФОРМАТЫ -->
+            <div class="glass-card p-8 rounded-2xl">
+                <h3 class="text-2xl font-bold mb-6 text-indigo-300"><i class="fa-solid fa-layer-group mr-2"></i> Доминирующие форматы</h3>
+                <div class="space-y-6">
+                    <div class="flex gap-4">
+                        <div class="text-xl font-bold text-gray-600 font-mono">01</div>
+                        <div>
+                            <h4 class="font-bold text-white">Экспертный диалог</h4>
+                            <p class="text-sm text-gray-400 mt-1">Беседа ведущих консультантов с приглашенными CIO клиентов (Axenix, КРОК, КОРУС). Лидер по популярности.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="text-xl font-bold text-gray-600 font-mono">02</div>
+                        <div>
+                            <h4 class="font-bold text-white">Аналитический обзор</h4>
+                            <p class="text-sm text-gray-400 mt-1">Глубокие разборы конкретной ниши с опорой на цифры и аналитику рынка (КОРУС «сITуация»).</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="text-xl font-bold text-gray-600 font-mono">03</div>
+                        <div>
+                            <h4 class="font-bold text-white">Карьерный / HR-подкаст</h4>
+                            <p class="text-sm text-gray-400 mt-1">Фокус на привлечении талантов, ИТ-бренде и внутренней кухне (ЛАНИТ, ЭКОПСИ).</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ТЕМЫ -->
+            <div class="glass-card p-8 rounded-2xl">
+                <h3 class="text-2xl font-bold mb-6 text-pink-300"><i class="fa-solid fa-tags mr-2"></i> О чем говорят все?</h3>
+                <div class="space-y-4">
+                    <div class="p-4 bg-gray-950/40 rounded-xl border border-gray-900 flex justify-between items-center">
+                        <span class="text-sm font-semibold text-gray-200">Локализация и импортозамещение</span>
+                        <span class="px-2.5 py-1 rounded bg-pink-500/10 text-pink-400 text-xs font-mono">Главная тема</span>
+                    </div>
+                    <div class="p-4 bg-gray-950/40 rounded-xl border border-gray-900 flex justify-between items-center">
+                        <span class="text-sm font-semibold text-gray-200">Искусственный интеллект и GenAI</span>
+                        <span class="px-2.5 py-1 rounded bg-purple-500/10 text-purple-400 text-xs font-mono">Тренд 2024–2026</span>
+                    </div>
+                    <div class="p-4 bg-gray-950/40 rounded-xl border border-gray-900 flex justify-between items-center">
+                        <span class="text-sm font-semibold text-gray-200">Облака, инфраструктура и кибербезопасность</span>
+                        <span class="px-2.5 py-1 rounded bg-blue-500/10 text-blue-400 text-xs font-mono">Базовый стек</span>
+                    </div>
+                    <div class="p-4 bg-gray-950/40 rounded-xl border border-gray-900 flex justify-between items-center">
+                        <span class="text-sm font-semibold text-gray-200">Цифровая трансформация ритейла и промышленности</span>
+                        <span class="px-2.5 py-1 rounded bg-teal-500/10 text-teal-400 text-xs font-mono">Отраслевые кейсы</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 4: СТРАТЕГИЧЕСКИЕ ИДЕИ ДЛЯ ВАС -->
+    <section id="ideas" class="py-24 bg-gray-950/20 border-t border-gray-900 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <span class="text-xs text-indigo-400 font-mono uppercase tracking-widest">Action Plan</span>
+                <h2 class="text-3xl md:text-5xl font-extrabold mt-2">Идеи для внедрения в вашей компании</h2>
+                <p class="text-gray-400 mt-4 max-w-2xl mx-auto">Проверенные практики конкурентов, доработанные до уровня сильного B2B-инструмента.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Идея 1 -->
+                <div class="glass-card p-6 rounded-xl flex flex-col justify-between">
+                    <div>
+                        <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center mb-4"><i class="fa-solid fa-mug-hot"></i></div>
+                        <h4 class="text-lg font-bold mb-2">Формат "Coffee Talks"</h4>
+                        <p class="text-sm text-gray-400 leading-relaxed">Неформальные беседы ваших экспертов с клиентами. Каждая ИТ-практика (ERP, CRM, BI) записывает свой выпуск, раскрывая экспертизу без пафоса.</p>
+                    </div>
+                    <span class="text-xs text-indigo-400 mt-4 font-semibold">Ориентир: Axenix</span>
+                </div>
+
+                <!-- Идея 2 -->
+                <div class="glass-card p-6 rounded-xl flex flex-col justify-between">
+                    <div>
+                        <div class="w-10 h-10 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center mb-4"><i class="fa-solid fa-chart-line"></i></div>
+                        <h4 class="text-lg font-bold mb-2">Разбор кейсов с цифрами</h4>
+                        <p class="text-sm text-gray-400 leading-relaxed">Откажитесь от абстрактных обсуждений. Стройте выпуски вокруг структуры: «Была проблема → Решение → Измеримый ROI для бизнеса».</p>
+                    </div>
+                    <span class="text-xs text-emerald-400 mt-4 font-semibold">Ориентир: КОРУС</span>
+                </div>
+
+                <!-- Идея 3 -->
+                <div class="glass-card p-6 rounded-xl flex flex-col justify-between">
+                    <div>
+                        <div class="w-10 h-10 rounded-lg bg-teal-500/10 text-teal-400 flex items-center justify-center mb-4"><i class="fa-solid fa-shield-halved"></i></div>
+                        <h4 class="text-lg font-bold mb-2">Мифы и реальность</h4>
+                        <p class="text-sm text-gray-400 leading-relaxed">Разрушайте стереотипы. Темы вроде «7 мифов об ИТ-аутсорсинге» обладают высокой виральностью и отлично прогревают сомневающихся клиентов.</p>
+                    </div>
+                    <span class="text-xs text-teal-400 mt-4 font-semibold">Ориентир: ICL Services</span>
+                </div>
+
+                <!-- Идея 4 -->
+                <div class="glass-card p-6 rounded-xl flex flex-col justify-between">
+                    <div>
+                        <div class="w-10 h-10 rounded-lg bg-pink-500/10 text-pink-400 flex items-center justify-center mb-4"><i class="fa-solid fa-users"></i></div>
+                        <h4 class="text-lg font-bold mb-2">Клиенты-топы в качестве гостей</h4>
+                        <p class="text-sm text-gray-400 leading-relaxed">Приглашайте CIO и ИТ-директоров крупных игроков рынка. Их участие автоматически привлечет внимание их коллег из других Enterprise-компаний.</p>
+                    </div>
+                    <span class="text-xs text-pink-400 mt-4 font-semibold">Ориентир: Axenix (кейс X5 / Лента)</span>
+                </div>
+
+                <!-- Идея 5 -->
+                <div class="glass-card p-6 rounded-xl flex flex-col justify-between">
+                    <div>
+                        <div class="w-10 h-10 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center mb-4"><i class="fa-solid fa-folder-open"></i></div>
+                        <h4 class="text-lg font-bold mb-2">Отраслевые мини-сезоны</h4>
+                        <p class="text-sm text-gray-400 leading-relaxed">Группируйте подкаст по сезонам: Ритейл, Промышленность, Финтех. Так потенциальному клиенту будет проще найти выпуски под свою нишу.</p>
+                    </div>
+                    <span class="text-xs text-blue-400 mt-4 font-semibold">Ориентир: Лучшая практика</span>
+                </div>
+
+                <!-- Идея 6 -->
+                <div class="glass-card p-6 rounded-xl flex flex-col justify-between">
+                    <div>
+                        <div class="w-10 h-10 rounded-lg bg-red-500/10 text-red-400 flex items-center justify-center mb-4"><i class="fa-solid fa-video"></i></div>
+                        <h4 class="text-lg font-bold mb-2">Видео-версии (YouTube/Rutube)</h4>
+                        <p class="text-sm text-gray-400 leading-relaxed">Запись видео-подкаста в студии требует бюджета, но визуальный контакт кратно повышает доверие к экспертам вашей компании.</p>
+                    </div>
+                    <span class="text-xs text-red-400 mt-4 font-semibold">Ориентир: ЛАНИТ (Разговоры PRO)</span>
+                </div>
+
+            </div>
+
+            <!-- СТРАТЕГИЯ ЗАПУСКА -->
+            <div class="mt-16 p-8 rounded-2xl bg-gradient-to-r from-indigo-950/40 to-pink-950/20 border border-indigo-500/10">
+                <h3 class="text-2xl font-bold mb-6 flex items-center gap-3"><i class="fa-solid fa-rocket text-indigo-400"></i> Рекомендуемая MVP-стратегия</h3>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 text-sm">
+                    <div class="p-4 bg-gray-950/50 rounded-xl border border-gray-900">
+                        <span class="font-mono text-indigo-400 text-xs block mb-2">ШАГ 1: ФОРМАТ</span>
+                        <p class="text-gray-300">1 аудио-подкаст с видео-версией. Экспертный диалог с клиентами.</p>
+                    </div>
+                    <div class="p-4 bg-gray-950/50 rounded-xl border border-gray-900">
+                        <span class="font-mono text-indigo-400 text-xs block mb-2">ШАГ 2: ЧАСТОТА</span>
+                        <p class="text-gray-300">2 выпуска в месяц. Длительность: строго 30–40 минут.</p>
+                    </div>
+                    <div class="p-4 bg-gray-950/50 rounded-xl border border-gray-900">
+                        <span class="font-mono text-indigo-400 text-xs block mb-2">ШАГ 3: ПЛАТФОРМЫ</span>
+                        <p class="text-gray-300">Яндекс Музыка, Apple Podcasts, VK, YouTube, Rutube.</p>
+                    </div>
+                    <div class="p-4 bg-gray-950/50 rounded-xl border border-gray-900">
+                        <span class="font-mono text-indigo-400 text-xs block mb-2">ШАГ 4: СИНЕРГИЯ</span>
+                        <p class="text-gray-300">Транскрибация выпусков в SEO-статьи для VC.ru и Хабра.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ЗОНА РОСТА -->
+            <div class="mt-12 text-center">
+                <p class="text-sm text-gray-500">
+                    <i class="fa-solid fa-triangle-exclamation text-yellow-500 mr-2"></i> 
+                    <strong>Главное упущение конкурентов:</strong> На рынке практически нет узконишевых ИТ-подкастов (только про 1С, только про BI) и геймифицированных форматов. Это ваша точка входа!
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="py-12 text-center border-t border-gray-900 text-gray-600 text-xs">
+        <p>© 2026 IT-Consulting Media Analysis. Презентация подготовлена для стратегической сессии.</p>
+    </footer>
+
+</body>
+</html>
