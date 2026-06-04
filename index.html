@@ -1,0 +1,1671 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>B2B Подкасты: Скрытая бизнес-логика</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+:root {
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #12121a;
+  --bg-card: #1a1a2e;
+  --bg-card-hover: #222240;
+  --accent-blue: #4f8fff;
+  --accent-purple: #8b5cf6;
+  --accent-pink: #ec4899;
+  --accent-green: #10b981;
+  --accent-orange: #f59e0b;
+  --accent-red: #ef4444;
+  --accent-cyan: #06b6d4;
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --border: rgba(255,255,255,0.06);
+  --glow-blue: rgba(79,143,255,0.15);
+  --glow-purple: rgba(139,92,246,0.15);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-purple) var(--bg-primary);
+}
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+  line-height: 1.7;
+}
+
+/* === ANIMATED BACKGROUND === */
+.bg-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.3;
+  animation: orbFloat 20s ease-in-out infinite;
+}
+.orb-1 { width:600px;height:600px;background:var(--accent-purple);top:-10%;left:-5%;animation-delay:0s; }
+.orb-2 { width:500px;height:500px;background:var(--accent-blue);bottom:-10%;right:-5%;animation-delay:-7s; }
+.orb-3 { width:400px;height:400px;background:var(--accent-pink);top:40%;left:50%;animation-delay:-14s; }
+.orb-4 { width:350px;height:350px;background:var(--accent-cyan);top:70%;left:10%;animation-delay:-4s; }
+
+@keyframes orbFloat {
+  0%,100% { transform: translate(0,0) scale(1); }
+  25% { transform: translate(80px,-60px) scale(1.1); }
+  50% { transform: translate(-40px,80px) scale(0.9); }
+  75% { transform: translate(60px,40px) scale(1.05); }
+}
+
+/* === GRID OVERLAY === */
+.grid-overlay {
+  position: fixed;
+  top:0;left:0;width:100%;height:100%;
+  z-index:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+
+/* === PARTICLES === */
+.particles-container {
+  position: fixed;
+  top:0;left:0;width:100%;height:100%;
+  z-index:0;
+  pointer-events:none;
+}
+.particle {
+  position: absolute;
+  width: 3px; height: 3px;
+  background: var(--accent-blue);
+  border-radius: 50%;
+  opacity: 0;
+  animation: particleRise linear infinite;
+}
+
+@keyframes particleRise {
+  0% { opacity:0; transform: translateY(100vh) scale(0); }
+  10% { opacity:0.8; }
+  90% { opacity:0.3; }
+  100% { opacity:0; transform: translateY(-10vh) scale(1); }
+}
+
+/* === MAIN CONTAINER === */
+.main-container {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* === HERO SECTION === */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 60px 0;
+  position: relative;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px;
+  background: rgba(139,92,246,0.1);
+  border: 1px solid rgba(139,92,246,0.3);
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--accent-purple);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 32px;
+  opacity: 0;
+  animation: fadeInUp 0.8s ease forwards;
+  animation-delay: 0.2s;
+}
+
+.hero-badge .pulse-dot {
+  width: 8px; height: 8px;
+  background: var(--accent-green);
+  border-radius: 50%;
+  animation: pulseDot 2s ease-in-out infinite;
+}
+
+@keyframes pulseDot {
+  0%,100% { opacity:1; transform:scale(1); }
+  50% { opacity:0.5; transform:scale(1.5); }
+}
+
+.hero h1 {
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 900;
+  line-height: 1.1;
+  margin-bottom: 24px;
+  opacity: 0;
+  animation: fadeInUp 1s ease forwards;
+  animation-delay: 0.4s;
+}
+
+.hero h1 .gradient-text {
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple), var(--accent-pink));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-subtitle {
+  font-size: clamp(1rem, 2.5vw, 1.3rem);
+  color: var(--text-secondary);
+  max-width: 700px;
+  margin-bottom: 40px;
+  opacity: 0;
+  animation: fadeInUp 1s ease forwards;
+  animation-delay: 0.6s;
+}
+
+.hero-cta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+  opacity: 0;
+  animation: fadeInUp 1s ease forwards;
+  animation-delay: 0.8s;
+}
+
+.btn {
+  padding: 14px 32px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+  color: white;
+  box-shadow: 0 4px 20px rgba(79,143,255,0.3);
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(79,143,255,0.5);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(10px);
+}
+.btn-outline:hover {
+  background: rgba(255,255,255,0.05);
+  border-color: var(--accent-purple);
+}
+
+.scroll-indicator {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+  font-size: 12px;
+  animation: bounceDown 2s ease-in-out infinite;
+}
+
+.scroll-indicator .mouse {
+  width: 24px; height: 38px;
+  border: 2px solid var(--text-muted);
+  border-radius: 12px;
+  position: relative;
+}
+.scroll-indicator .mouse::after {
+  content:'';
+  position:absolute;
+  top:8px;left:50%;
+  transform:translateX(-50%);
+  width:3px;height:8px;
+  background:var(--accent-purple);
+  border-radius:2px;
+  animation: scrollWheel 2s ease-in-out infinite;
+}
+
+@keyframes scrollWheel {
+  0%,100% { opacity:1; transform:translateX(-50%) translateY(0); }
+  50% { opacity:0.3; transform:translateX(-50%) translateY(10px); }
+}
+
+@keyframes bounceDown {
+  0%,100% { transform:translateX(-50%) translateY(0); }
+  50% { transform:translateX(-50%) translateY(10px); }
+}
+
+@keyframes fadeInUp {
+  from { opacity:0; transform:translateY(30px); }
+  to { opacity:1; transform:translateY(0); }
+}
+
+/* === SECTION STYLES === */
+.section {
+  padding: 100px 0;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 64px;
+}
+
+.section-label {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent-purple);
+  margin-bottom: 16px;
+  padding: 6px 16px;
+  background: rgba(139,92,246,0.1);
+  border-radius: 50px;
+}
+
+.section-title {
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 800;
+  margin-bottom: 16px;
+  line-height: 1.2;
+}
+
+.section-desc {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* === PARADOX CARD === */
+.paradox-card {
+  background: linear-gradient(135deg, rgba(239,68,68,0.08), rgba(139,92,246,0.08));
+  border: 1px solid rgba(239,68,68,0.2);
+  border-radius: 24px;
+  padding: 48px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.paradox-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;left: -50%;
+  width: 200%;height: 200%;
+  background: conic-gradient(from 0deg, transparent, rgba(239,68,68,0.1), transparent, rgba(139,92,246,0.1), transparent);
+  animation: rotateBorder 10s linear infinite;
+}
+
+@keyframes rotateBorder {
+  to { transform: rotate(360deg); }
+}
+
+.paradox-card .inner {
+  position: relative;
+  z-index: 1;
+  background: var(--bg-secondary);
+  border-radius: 18px;
+  padding: 40px;
+}
+
+.paradox-vs {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 32px;
+  align-items: center;
+  margin-top: 32px;
+}
+
+.paradox-side {
+  padding: 24px;
+  border-radius: 16px;
+}
+.paradox-side.wrong {
+  background: rgba(239,68,68,0.05);
+  border: 1px solid rgba(239,68,68,0.15);
+}
+.paradox-side.right {
+  background: rgba(16,185,129,0.05);
+  border: 1px solid rgba(16,185,129,0.15);
+}
+
+.paradox-side h4 {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 16px;
+}
+.paradox-side.wrong h4 { color: var(--accent-red); }
+.paradox-side.right h4 { color: var(--accent-green); }
+
+.paradox-side ul { list-style: none; text-align: left; }
+.paradox-side ul li {
+  padding: 8px 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.paradox-side.wrong ul li::before { content:'✕'; color:var(--accent-red); font-weight:700; }
+.paradox-side.right ul li::before { content:'✓'; color:var(--accent-green); font-weight:700; }
+
+.vs-divider {
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--accent-purple);
+  text-shadow: 0 0 20px var(--glow-purple);
+}
+
+/* === MATH SECTION === */
+.math-showcase {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+.math-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 32px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s ease;
+}
+.math-card:hover {
+  border-color: var(--accent-blue);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+.math-card .value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.math-card .value.blue { color: var(--accent-blue); }
+.math-card .value.purple { color: var(--accent-purple); }
+.math-card .value.green { color: var(--accent-green); }
+.math-card .value.orange { color: var(--accent-orange); }
+
+.math-card .label {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+.math-card .desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.math-card .icon-bg {
+  position: absolute;
+  top: -20px; right: -20px;
+  font-size: 100px;
+  opacity: 0.04;
+}
+
+/* === COUNTER ANIMATION === */
+.counter {
+  display: inline;
+}
+
+/* === GOALS GRID === */
+.goals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 24px;
+}
+
+.goal-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 36px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: default;
+}
+
+.goal-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+}
+
+.goal-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 3px;
+  border-radius: 20px 20px 0 0;
+}
+
+.goal-card.blue::after { background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan)); }
+.goal-card.purple::after { background: linear-gradient(90deg, var(--accent-purple), var(--accent-pink)); }
+.goal-card.green::after { background: linear-gradient(90deg, var(--accent-green), var(--accent-cyan)); }
+.goal-card.orange::after { background: linear-gradient(90deg, var(--accent-orange), var(--accent-red)); }
+.goal-card.pink::after { background: linear-gradient(90deg, var(--accent-pink), var(--accent-purple)); }
+.goal-card.cyan::after { background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue)); }
+
+.goal-card:hover.blue { border-color: rgba(79,143,255,0.3); }
+.goal-card:hover.purple { border-color: rgba(139,92,246,0.3); }
+.goal-card:hover.green { border-color: rgba(16,185,129,0.3); }
+.goal-card:hover.orange { border-color: rgba(245,158,11,0.3); }
+.goal-card:hover.pink { border-color: rgba(236,72,153,0.3); }
+.goal-card:hover.cyan { border-color: rgba(6,182,212,0.3); }
+
+.goal-number {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 48px;
+  font-weight: 900;
+  opacity: 0.07;
+  position: absolute;
+  top: 16px; right: 24px;
+}
+
+.goal-icon {
+  width: 52px; height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.goal-card.blue .goal-icon { background: rgba(79,143,255,0.12); }
+.goal-card.purple .goal-icon { background: rgba(139,92,246,0.12); }
+.goal-card.green .goal-icon { background: rgba(16,185,129,0.12); }
+.goal-card.orange .goal-icon { background: rgba(245,158,11,0.12); }
+.goal-card.pink .goal-icon { background: rgba(236,72,153,0.12); }
+.goal-card.cyan .goal-icon { background: rgba(6,182,212,0.12); }
+
+.goal-card h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.goal-card p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+
+.goal-bullets {
+  list-style: none;
+}
+.goal-bullets li {
+  font-size: 13px;
+  color: var(--text-muted);
+  padding: 5px 0;
+  padding-left: 20px;
+  position: relative;
+}
+.goal-bullets li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--accent-purple);
+  font-weight: 600;
+}
+
+.goal-example {
+  margin-top: 16px;
+  padding: 14px 18px;
+  background: rgba(255,255,255,0.02);
+  border-left: 3px solid var(--accent-purple);
+  border-radius: 0 10px 10px 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+/* === TIMELINE === */
+.timeline {
+  position: relative;
+  padding: 40px 0;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 0; bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, transparent, var(--accent-purple), var(--accent-blue), transparent);
+}
+
+.timeline-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 48px;
+  position: relative;
+}
+
+.timeline-item:nth-child(odd) { flex-direction: row; }
+.timeline-item:nth-child(even) { flex-direction: row-reverse; }
+
+.timeline-content {
+  width: 45%;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  transition: all 0.3s ease;
+}
+.timeline-content:hover {
+  border-color: var(--accent-purple);
+  transform: scale(1.02);
+}
+
+.timeline-dot {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 16px; height: 16px;
+  background: var(--accent-purple);
+  border-radius: 50%;
+  border: 3px solid var(--bg-primary);
+  box-shadow: 0 0 20px var(--glow-purple);
+  z-index: 2;
+}
+
+.timeline-month {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--accent-purple);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.timeline-content h4 {
+  font-size: 15px;
+  margin-bottom: 6px;
+}
+
+.timeline-content p {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* === METRICS TABLE === */
+.metrics-table-wrapper {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.metrics-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.metrics-table thead th {
+  padding: 20px 24px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+  background: rgba(255,255,255,0.02);
+  border-bottom: 1px solid var(--border);
+}
+
+.metrics-table tbody tr {
+  transition: all 0.3s ease;
+  border-bottom: 1px solid var(--border);
+}
+.metrics-table tbody tr:last-child { border-bottom: none; }
+.metrics-table tbody tr:hover { background: rgba(139,92,246,0.05); }
+
+.metrics-table td {
+  padding: 18px 24px;
+  font-size: 14px;
+}
+
+.metrics-table td:first-child {
+  font-weight: 600;
+  color: var(--accent-blue);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+}
+
+.metrics-table td:nth-child(2) { color: var(--text-primary); }
+.metrics-table td:nth-child(3) { color: var(--text-secondary); font-size: 13px; }
+
+.metric-bar {
+  width: 100%;
+  height: 4px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 2px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+.metric-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.visible .metric-bar-fill { transform: scaleX(1); }
+
+/* === FUNNEL === */
+.funnel-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin: 48px 0;
+}
+
+.funnel-step {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 20px;
+  border-radius: 14px;
+  transition: all 0.4s ease;
+  cursor: default;
+  position: relative;
+  text-align: center;
+}
+.funnel-step:hover { transform: scale(1.03); }
+
+.funnel-step .funnel-label {
+  font-weight: 600;
+  font-size: 15px;
+}
+.funnel-step .funnel-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.funnel-arrow {
+  font-size: 24px;
+  color: var(--text-muted);
+  animation: arrowPulse 2s ease-in-out infinite;
+}
+
+@keyframes arrowPulse {
+  0%,100% { opacity:0.3; transform:translateY(0); }
+  50% { opacity:1; transform:translateY(4px); }
+}
+
+/* === SUMMARY === */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 48px;
+}
+
+.summary-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+.summary-item:hover {
+  border-color: var(--accent-purple);
+  transform: translateY(-4px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+}
+
+.summary-item .s-icon {
+  font-size: 32px;
+  margin-bottom: 14px;
+}
+.summary-item h4 {
+  font-size: 15px;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+.summary-item p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* === CONCLUSION BOX === */
+.conclusion-box {
+  background: linear-gradient(135deg, rgba(79,143,255,0.08), rgba(139,92,246,0.08), rgba(236,72,153,0.08));
+  border: 1px solid rgba(139,92,246,0.25);
+  border-radius: 24px;
+  padding: 48px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.conclusion-box h3 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+}
+
+.conclusion-box p {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  max-width: 700px;
+  margin: 0 auto 32px;
+  line-height: 1.8;
+}
+
+/* === TIPS === */
+.tips-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 48px;
+}
+
+.tip-item {
+  display: flex;
+  gap: 16px;
+  padding: 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  transition: all 0.3s ease;
+}
+.tip-item:hover {
+  border-color: var(--accent-green);
+  background: var(--bg-card-hover);
+}
+
+.tip-num {
+  flex-shrink: 0;
+  width: 36px; height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(16,185,129,0.1);
+  color: var(--accent-green);
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 14px;
+  border-radius: 10px;
+}
+
+.tip-item h4 { font-size: 14px; margin-bottom: 6px; }
+.tip-item p { font-size: 13px; color: var(--text-secondary); }
+
+/* === PROGRESS NAV === */
+.progress-nav {
+  position: fixed;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.progress-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+.progress-dot.active {
+  background: var(--accent-purple);
+  box-shadow: 0 0 12px var(--glow-purple);
+  transform: scale(1.3);
+}
+.progress-dot:hover { background: var(--accent-blue); transform: scale(1.2); }
+
+.progress-dot .tooltip {
+  position: absolute;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.progress-dot:hover .tooltip { opacity: 1; }
+
+/* === READING PROGRESS === */
+.reading-progress {
+  position: fixed;
+  top: 0; left: 0;
+  width: 0%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple), var(--accent-pink));
+  z-index: 1000;
+  transition: width 0.1s;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  .paradox-vs { grid-template-columns: 1fr; }
+  .vs-divider { text-align: center; }
+  .timeline::before { left: 20px; }
+  .timeline-item, .timeline-item:nth-child(even) { flex-direction: column; align-items: flex-start; padding-left: 48px; }
+  .timeline-content { width: 100%; }
+  .timeline-dot { left: 20px; }
+  .progress-nav { display: none; }
+  .goals-grid { grid-template-columns: 1fr; }
+  .metrics-table-wrapper { overflow-x: auto; }
+  .hero h1 { font-size: 2rem; }
+}
+
+/* === GLOW HOVER EFFECT === */
+.glow-hover {
+  position: relative;
+}
+.glow-hover::before {
+  content:'';
+  position:absolute;
+  inset:-1px;
+  border-radius:inherit;
+  padding:1px;
+  background:linear-gradient(135deg, var(--accent-blue), var(--accent-purple), var(--accent-pink));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.glow-hover:hover::before { opacity: 1; }
+
+/* === TYPEWRITER === */
+.typewriter {
+  display: inline-block;
+  overflow: hidden;
+  border-right: 2px solid var(--accent-purple);
+  white-space: nowrap;
+  animation: typewrite 3s steps(40) forwards, blink 0.8s step-end infinite;
+}
+
+@keyframes typewrite {
+  from { width: 0; }
+  to { width: 100%; }
+}
+@keyframes blink {
+  50% { border-color: transparent; }
+}
+
+/* Stagger children animation */
+.stagger-children > * {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.stagger-children.visible > *:nth-child(1) { transition-delay: 0.05s; }
+.stagger-children.visible > *:nth-child(2) { transition-delay: 0.1s; }
+.stagger-children.visible > *:nth-child(3) { transition-delay: 0.15s; }
+.stagger-children.visible > *:nth-child(4) { transition-delay: 0.2s; }
+.stagger-children.visible > *:nth-child(5) { transition-delay: 0.25s; }
+.stagger-children.visible > *:nth-child(6) { transition-delay: 0.3s; }
+.stagger-children.visible > *:nth-child(7) { transition-delay: 0.35s; }
+.stagger-children.visible > *:nth-child(8) { transition-delay: 0.4s; }
+.stagger-children.visible > *:nth-child(9) { transition-delay: 0.45s; }
+.stagger-children.visible > *:nth-child(10) { transition-delay: 0.5s; }
+.stagger-children.visible > * { opacity: 1; transform: translateY(0); }
+
+/* === ANIMATED NUMBER TICKER === */
+.ticker-row {
+  display: flex;
+  gap: 32px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 48px 0;
+}
+
+.ticker-item {
+  text-align: center;
+}
+.ticker-item .ticker-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 3rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.ticker-item .ticker-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* === NOISE TEXTURE === */
+.noise-overlay {
+  position: fixed;
+  top:0;left:0;width:100%;height:100%;
+  z-index:0;
+  pointer-events:none;
+  opacity:0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* floating labels */
+.float-tag {
+  display: inline-block;
+  padding: 4px 12px;
+  background: rgba(139,92,246,0.1);
+  border: 1px solid rgba(139,92,246,0.2);
+  border-radius: 8px;
+  font-size: 12px;
+  color: var(--accent-purple);
+  font-weight: 500;
+  margin: 3px;
+}
+
+footer {
+  text-align: center;
+  padding: 60px 24px;
+  color: var(--text-muted);
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+}
+footer a { color: var(--accent-purple); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<!-- Animated Background -->
+<div class="bg-canvas">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="orb orb-4"></div>
+</div>
+<div class="grid-overlay"></div>
+<div class="noise-overlay"></div>
+<div class="particles-container" id="particles"></div>
+
+<!-- Reading Progress -->
+<div class="reading-progress" id="readingProgress"></div>
+
+<!-- Progress Nav -->
+<nav class="progress-nav" id="progressNav">
+  <div class="progress-dot active" data-section="hero"><div class="tooltip">Начало</div></div>
+  <div class="progress-dot" data-section="paradox"><div class="tooltip">Парадокс</div></div>
+  <div class="progress-dot" data-section="math"><div class="tooltip">Математика</div></div>
+  <div class="progress-dot" data-section="timeline"><div class="tooltip">Цикл сделки</div></div>
+  <div class="progress-dot" data-section="goals"><div class="tooltip">Скрытые цели</div></div>
+  <div class="progress-dot" data-section="metrics"><div class="tooltip">Метрики</div></div>
+  <div class="progress-dot" data-section="summary"><div class="tooltip">Резюме</div></div>
+  <div class="progress-dot" data-section="tips"><div class="tooltip">Рекомендации</div></div>
+</nav>
+
+<div class="main-container">
+
+  <!-- ======================== HERO ======================== -->
+  <section class="hero" id="hero">
+    <div class="hero-badge">
+      <span class="pulse-dot"></span>
+      Глубокий анализ • B2B-маркетинг
+    </div>
+    <h1>
+      Зачем IT-консалтинг делает<br>
+      <span class="gradient-text">подкасты при низкой<br>статистике?</span>
+    </h1>
+    <p class="hero-subtitle">
+      Классическая ошибка: оценка B2B-маркетинга по B2C-метрикам.<br>
+      Разбираем скрытую бизнес-логику за «провальными» цифрами.
+    </p>
+    <div class="hero-cta">
+      <a href="#paradox" class="btn btn-primary">🔍 Начать разбор</a>
+      <a href="#summary" class="btn btn-outline">⚡ К выводам</a>
+    </div>
+    <div class="scroll-indicator">
+      <div class="mouse"></div>
+      <span>Листайте вниз</span>
+    </div>
+  </section>
+
+  <!-- ======================== PARADOX ======================== -->
+  <section class="section" id="paradox">
+    <div class="section-header">
+      <div class="section-label">Ключевое наблюдение</div>
+      <h2 class="section-title">B2B ≠ B2C метрики</h2>
+      <p class="section-desc">Если смотреть на публичные метрики — подкасты выглядят как провал. Но это иллюзия.</p>
+    </div>
+
+    <div class="paradox-card">
+      <div class="inner">
+        <h3 style="font-size:1.4rem;margin-bottom:8px;">🎯 Парадокс восприятия</h3>
+        <p style="color:var(--text-secondary);font-size:15px;">Низкие публичные метрики ≠ низкая бизнес-ценность</p>
+
+        <div class="paradox-vs">
+          <div class="paradox-side wrong">
+            <h4>❌ B2C-взгляд</h4>
+            <ul>
+              <li>Общее количество прослушиваний</li>
+              <li>Число подписчиков</li>
+              <li>Лайки и комментарии</li>
+              <li>Виральность контента</li>
+            </ul>
+          </div>
+          <div class="vs-divider">VS</div>
+          <div class="paradox-side right">
+            <h4>✅ B2B-реальность</h4>
+            <ul>
+              <li>Кто именно слушает (CIO, CTO)</li>
+              <li>Запросы после упоминания темы</li>
+              <li>Упоминания в RFP и тендерах</li>
+              <li>Качество лидов и бюджет проектов</li>
+            </ul>
+          </div>
+        </div>
+
+        <p style="margin-top:32px;font-size:15px;color:var(--text-secondary);line-height:1.8;">
+          <strong style="color:var(--accent-purple);">Аналогия:</strong> 
+          Это как сравнивать B2B-выставку (500 посетителей) и B2C-концерт (50 000 зрителей) по количеству людей. В B2B важны не толпы, а <strong style="color:var(--accent-green);">правильные люди</strong> в зале.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================== MATH ======================== -->
+  <section class="section" id="math">
+    <div class="section-header">
+      <div class="section-label">Цифры решают</div>
+      <h2 class="section-title">Математика B2B-консалтинга</h2>
+      <p class="section-desc">50 CIO важнее 10 000 случайных слушателей. Вот почему.</p>
+    </div>
+
+    <div class="math-showcase stagger-children">
+      <div class="math-card glow-hover">
+        <div class="icon-bg">💰</div>
+        <div class="value blue"><span class="counter" data-target="50">0</span>M ₽</div>
+        <div class="label">Средний контракт IT-консалтинга</div>
+        <div class="desc">Диапазон: 5–50 млн рублей за проект. Крупная цифровая трансформация — до 500 млн.</div>
+      </div>
+      <div class="math-card glow-hover">
+        <div class="icon-bg">🎧</div>
+        <div class="value purple"><span class="counter" data-target="500">0</span></div>
+        <div class="label">Достаточно слушателей</div>
+        <div class="desc">Если среди 500 слушателей — 5 CIO из крупных компаний, подкаст уже окупился.</div>
+      </div>
+      <div class="math-card glow-hover">
+        <div class="icon-bg">📈</div>
+        <div class="value green"><span class="counter" data-target="2">0</span></div>
+        <div class="label">Клиента в год для окупаемости</div>
+        <div class="desc">Всего 1–2 контракта через подкаст покрывают все затраты на производство с лихвой.</div>
+      </div>
+      <div class="math-card glow-hover">
+        <div class="icon-bg">🏢</div>
+        <div class="value orange"><span class="counter" data-target="30">0</span></div>
+        <div class="label">ИТ-директоров — цель Axenix</div>
+        <div class="desc">33 выпуска не для массовости. Цель — 20–30 CIO из топ-100 компаний на каждый выпуск.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================== TIMELINE ======================== -->
+  <section class="section" id="timeline">
+    <div class="section-header">
+      <div class="section-label">Длинный цикл</div>
+      <h2 class="section-title">Путь клиента: 6–18 месяцев</h2>
+      <p class="section-desc">IT-консалтинг — не импульсная покупка. Подкаст работает на ранних стадиях воронки.</p>
+    </div>
+
+    <div class="funnel-container">
+      <div class="funnel-step" style="width:90%;background:rgba(79,143,255,0.08);border:1px solid rgba(79,143,255,0.2);">
+        <div>
+          <div class="funnel-label" style="color:var(--accent-blue);">Месяц 1 → Услышал подкаст</div>
+          <div class="funnel-desc">Первичная заинтересованность темой, запоминание бренда</div>
+        </div>
+      </div>
+      <div class="funnel-arrow">↓</div>
+      <div class="funnel-step" style="width:78%;background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.2);">
+        <div>
+          <div class="funnel-label" style="color:var(--accent-purple);">Месяц 2–3 → Слушает ещё 5 выпусков</div>
+          <div class="funnel-desc">Формируется восприятие экспертизы компании</div>
+        </div>
+      </div>
+      <div class="funnel-arrow">↓</div>
+      <div class="funnel-step" style="width:64%;background:rgba(236,72,153,0.08);border:1px solid rgba(236,72,153,0.2);">
+        <div>
+          <div class="funnel-label" style="color:var(--accent-pink);">Месяц 4–6 → Мероприятие</div>
+          <div class="funnel-desc">Приходит на конференцию, где выступает эксперт из подкаста</div>
+        </div>
+      </div>
+      <div class="funnel-arrow">↓</div>
+      <div class="funnel-step" style="width:48%;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);">
+        <div>
+          <div class="funnel-label" style="color:var(--accent-orange);">Месяц 7–12 → Коммерческое предложение</div>
+          <div class="funnel-desc">Запрашивает КП, начинаются переговоры</div>
+        </div>
+      </div>
+      <div class="funnel-arrow">↓</div>
+      <div class="funnel-step" style="width:34%;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);">
+        <div>
+          <div class="funnel-label" style="color:var(--accent-green);">Месяц 12–18 → Контракт ✅</div>
+          <div class="funnel-desc">Подписание контракта на 5–500 млн ₽</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================== GOALS ======================== -->
+  <section class="section" id="goals">
+    <div class="section-header">
+      <div class="section-label">Глубокий разбор</div>
+      <h2 class="section-title">10 скрытых бизнес-целей подкастов</h2>
+      <p class="section-desc">За «низкой статистикой» стоит мощная многоуровневая стратегия.</p>
+    </div>
+
+    <div class="goals-grid stagger-children">
+
+      <!-- 1 -->
+      <div class="goal-card blue glow-hover">
+        <div class="goal-number">01</div>
+        <div class="goal-icon">🧠</div>
+        <h3>Экспертный брендинг и доверие</h3>
+        <p>В консалтинге продают не продукт, а компетенции и доверие. 30-минутный разговор показывает знания лучше любой статьи.</p>
+        <ul class="goal-bullets">
+          <li>Демонстрация глубины экспертизы</li>
+          <li>Человеческое лицо компании</li>
+          <li>Доказательство ability to think</li>
+        </ul>
+        <div class="goal-example">💡 КОРУС с подкастом «Как продать ИТ-проект внутри компании» показывает понимание болей клиента.</div>
+      </div>
+
+      <!-- 2 -->
+      <div class="goal-card purple glow-hover">
+        <div class="goal-number">02</div>
+        <div class="goal-icon">🤝</div>
+        <h3>Networking и отношения с клиентами</h3>
+        <p>Приглашение клиента в подкаст — это комплимент, демонстрация партнёрства и площадка для кросс-продаж.</p>
+        <ul class="goal-bullets">
+          <li>Публичное подтверждение partnership</li>
+          <li>Укрепление лояльности клиентов</li>
+          <li>Обсуждение новых проектов «между делом»</li>
+        </ul>
+        <div class="goal-example">💡 Axenix пригласил В. Сорокина из «Ленты» — публичное подтверждение долгосрочного партнёрства.</div>
+      </div>
+
+      <!-- 3 -->
+      <div class="goal-card green glow-hover">
+        <div class="goal-number">03</div>
+        <div class="goal-icon">🛠️</div>
+        <h3>Sales Enablement Tool</h3>
+        <p>Подкасты становятся оружием sales-команды в процессе продажи.</p>
+        <ul class="goal-bullets">
+          <li>Ссылки в письмах: «Послушайте, как мы решили похожую задачу»</li>
+          <li>Использование на встречах</li>
+          <li>Встраивание в коммерческие предложения</li>
+          <li>Закрытие возражения «Почему вы?»</li>
+        </ul>
+      </div>
+
+      <!-- 4 -->
+      <div class="goal-card orange glow-hover">
+        <div class="goal-number">04</div>
+        <div class="goal-icon">👥</div>
+        <h3>HR-бренд и привлечение талантов</h3>
+        <p>На перегретом рынке IT-кадров подкаст — инструмент привлечения и удержания.</p>
+        <ul class="goal-bullets">
+          <li>Привлечение кандидатов</li>
+          <li>Гордость сотрудников за компанию</li>
+          <li>Снижение стоимости найма</li>
+        </ul>
+        <div class="goal-example">💡 ЭКОПСИ «Найти айти» — целенаправленная работа с HR-сообществом. ЛАНИТ «Разговоры PRO» — для студентов.</div>
+      </div>
+
+      <!-- 5 -->
+      <div class="goal-card pink glow-hover">
+        <div class="goal-number">05</div>
+        <div class="goal-icon">🔍</div>
+        <h3>SEO и долгосрочный контент</h3>
+        <p>Подкасты транскрибируются в статьи, которые работают на поисковую выдачу годами.</p>
+        <ul class="goal-bullets">
+          <li>Индексация long-tail запросов</li>
+          <li>Трафик на Хабре 2–3 года</li>
+          <li>Backlinks от отраслевых ресурсов</li>
+        </ul>
+        <div class="goal-example">💡 КОРУС и Axenix публикуют текстовые версии — это SEO-стратегия.</div>
+      </div>
+
+      <!-- 6 -->
+      <div class="goal-card cyan glow-hover">
+        <div class="goal-number">06</div>
+        <div class="goal-icon">⭐</div>
+        <h3>Личный бренд партнёров</h3>
+        <p>Топ-эксперты хотят признания. Подкаст — платформа для построения личного бренда.</p>
+        <ul class="goal-bullets">
+          <li>Стать «голосом отрасли»</li>
+          <li>Приглашения на конференции и в СМИ</li>
+          <li>Удержание топ-талантов через самореализацию</li>
+        </ul>
+      </div>
+
+      <!-- 7 -->
+      <div class="goal-card blue glow-hover">
+        <div class="goal-number">07</div>
+        <div class="goal-icon">🔄</div>
+        <h3>LTV и удержание клиентов</h3>
+        <p>Подкаст удерживает текущих клиентов: они видят, что компания в тренде, узнают о новых услугах.</p>
+        <ul class="goal-bullets">
+          <li>Cross-sell через контент</li>
+          <li>Community building</li>
+          <li>Удержание в 5–7x дешевле привлечения</li>
+        </ul>
+      </div>
+
+      <!-- 8 -->
+      <div class="goal-card purple glow-hover">
+        <div class="goal-number">08</div>
+        <div class="goal-icon">🏆</div>
+        <h3>Конкурентное давление</h3>
+        <p>Подкаст стал table stakes — обязательным атрибутом современного IT-консалтинга.</p>
+        <ul class="goal-bullets">
+          <li>«Все конкуренты делают — мы не можем отставать»</li>
+          <li>Отсутствие = отставание в digital-зрелости</li>
+        </ul>
+      </div>
+
+      <!-- 9 -->
+      <div class="goal-card green glow-hover">
+        <div class="goal-number">09</div>
+        <div class="goal-icon">🏗️</div>
+        <h3>Долгосрочный актив</h3>
+        <p>33 выпуска Axenix = библиотека экспертизы. Каждый выпуск усиливает предыдущие.</p>
+        <ul class="goal-bullets">
+          <li>Критическая масса за 3–5 лет</li>
+          <li>Невозможно быстро скопировать</li>
+          <li>Барьер входа для новых игроков</li>
+        </ul>
+      </div>
+
+      <!-- 10 -->
+      <div class="goal-card orange glow-hover">
+        <div class="goal-number">10</div>
+        <div class="goal-icon">🎯</div>
+        <h3>Точечное воздействие на ЛПР</h3>
+        <p>50–100 CIO, принимающих решения, важнее 10 000 случайных слушателей. Подкаст бьёт точечно.</p>
+        <ul class="goal-bullets">
+          <li>Отслеживание через CRM и LinkedIn</li>
+          <li>Персональные касания через контент</li>
+          <li>Формирование доверия до первого звонка</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ======================== METRICS TABLE ======================== -->
+  <section class="section" id="metrics">
+    <div class="section-header">
+      <div class="section-label">Скрытая аналитика</div>
+      <h2 class="section-title">Метрики, которые <em>реально</em> смотрят</h2>
+      <p class="section-desc">Вместо лайков и подписчиков — вот что отслеживают B2B-компании.</p>
+    </div>
+
+    <div class="metrics-table-wrapper">
+      <table class="metrics-table">
+        <thead>
+          <tr>
+            <th>Метрика</th>
+            <th>Что измеряет</th>
+            <th>Почему важно</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>RFP Mentions</td>
+            <td>Упоминание подкаста в тендерных заявках</td>
+            <td>Прямое влияние на продажи</td>
+          </tr>
+          <tr>
+            <td>Lead Quality Score</td>
+            <td>Качество приходящих запросов</td>
+            <td>10 крупных лидов > 1000 мелких</td>
+          </tr>
+          <tr>
+            <td>Brand Mentions</td>
+            <td>Цитирование в TAdviser, CNews</td>
+            <td>Узнаваемость в профсреде</td>
+          </tr>
+          <tr>
+            <td>Employee Advocacy</td>
+            <td>Готовность сотрудников делиться</td>
+            <td>Внутренняя амбассадорская программа</td>
+          </tr>
+          <tr>
+            <td>Client Retention</td>
+            <td>Удержание клиентов</td>
+            <td>LTV-эффект подкаста</td>
+          </tr>
+          <tr>
+            <td>Share of Voice</td>
+            <td>Доля упоминаний в нише</td>
+            <td>Конкурентное позиционирование</td>
+          </tr>
+          <tr>
+            <td>Cost per Lead</td>
+            <td>Стоимость привлечения лида</td>
+            <td>Сравнение с другими каналами</td>
+          </tr>
+          <tr>
+            <td>Pipeline Influence</td>
+            <td>Сколько сделок затронул подкаст</td>
+            <td>Общее влияние на воронку</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ======================== SUMMARY ======================== -->
+  <section class="section" id="summary">
+    <div class="section-header">
+      <div class="section-label">Резюме</div>
+      <h2 class="section-title">Почему это <span class="gradient-text">работает</span></h2>
+      <p class="section-desc">Подкаст в IT-консалтинге — это не про охват, а про стратегию.</p>
+    </div>
+
+    <div class="summary-grid stagger-children">
+      <div class="summary-item">
+        <div class="s-icon">🎯</div>
+        <h4>Точечное воздействие</h4>
+        <p>50–100 CIO важнее 10 000 случайных слушателей</p>
+      </div>
+      <div class="summary-item">
+        <div class="s-icon">♟️</div>
+        <h4>Длинная игра</h4>
+        <p>Инвестиция на 2–3 года вперёд, а не быстрый ROI</p>
+      </div>
+      <div class="summary-item">
+        <div class="s-icon">🤝</div>
+        <h4>Доверие = Деньги</h4>
+        <p>В консалтинге доверие — главная валюта</p>
+      </div>
+      <div class="summary-item">
+        <div class="s-icon">🔗</div>
+        <h4>Комплексный маркетинг</h4>
+        <p>Связка с Sales, HR, PR и SEO</p>
+      </div>
+      <div class="summary-item">
+        <div class="s-icon">🏗️</div>
+        <h4>Стратегический актив</h4>
+        <p>Накапливается, создаёт барьеры для конкурентов</p>
+      </div>
+    </div>
+
+    <div class="conclusion-box">
+      <h3>💡 Парадокс — это иллюзия</h3>
+      <p>
+        Низкие публичные метрики не означают низкую бизнес-ценность. 
+        В B2B важны не <strong>толпы</strong>, а <strong style="color:var(--accent-green);">правильные люди</strong> в зале.
+        Подкаст — это стратегическое оружие, работающее незаметно, но мощно.
+      </p>
+    </div>
+  </section>
+
+  <!-- ======================== TIPS ======================== -->
+  <section class="section" id="tips">
+    <div class="section-header">
+      <div class="section-label">Практические советы</div>
+      <h2 class="section-title">Рекомендации для вашей компании</h2>
+      <p class="section-desc">Если рассматриваете запуск подкаста — вот ключевые принципы.</p>
+    </div>
+
+    <div class="tips-list stagger-children">
+      <div class="tip-item">
+        <div class="tip-num">01</div>
+        <div>
+          <h4>Не гонитесь за массовостью</h4>
+          <p>Фокус на качестве аудитории, а не на количестве. Каждый слушатель-ЛПР = потенциальный контракт.</p>
+        </div>
+      </div>
+      <div class="tip-item">
+        <div class="tip-num">02</div>
+        <div>
+          <h4>Измеряйте скрытые метрики</h4>
+          <p>Лиды, упоминания в RFP, качество контактов — вот реальные KPI подкаста.</p>
+        </div>
+      </div>
+      <div class="tip-item">
+        <div class="tip-num">03</div>
+        <div>
+          <h4>Интегрируйте с sales-процессом</h4>
+          <p>Подкаст должен работать на воронку: дайте sales-команде инструменты.</p>
+        </div>
+      </div>
+      <div class="tip-item">
+        <div class="tip-num">04</div>
+        <div>
+          <h4>Играйте в долгую</h4>
+          <p>Первые результаты — через 6–12 месяцев. Это марафон, а не спринт.</p>
+        </div>
+      </div>
+      <div class="tip-item">
+        <div class="tip-num">05</div>
+        <div>
+          <h4>Приглашайте клиентов и партнёров</h4>
+          <p>Используйте подкаст для networking — это укрепляет отношения и генерирует контент.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <p>Анализ B2B-подкастинга в IT-консалтинге • Тёмная тема с живой анимацией</p>
+  <p style="margin-top:8px;opacity:0.5;">Создано для стратегического понимания маркетинга</p>
+</footer>
+
+<script>
+// === PARTICLES ===
+const particlesContainer = document.getElementById('particles');
+function createParticle() {
+  const p = document.createElement('div');
+  p.classList.add('particle');
+  p.style.left = Math.random() * 100 + '%';
+  p.style.animationDuration = (8 + Math.random() * 12) + 's';
+  p.style.animationDelay = Math.random() * 5 + 's';
+  p.style.width = p.style.height = (2 + Math.random() * 3) + 'px';
+  const colors = ['#4f8fff','#8b5cf6','#ec4899','#06b6d4','#10b981'];
+  p.style.background = colors[Math.floor(Math.random()*colors.length)];
+  particlesContainer.appendChild(p);
+  setTimeout(() => p.remove(), 20000);
+}
+for(let i=0;i<30;i++) setTimeout(()=>createParticle(), i*300);
+setInterval(createParticle, 800);
+
+// === SCROLL REVEAL ===
+const sections = document.querySelectorAll('.section');
+const staggerContainers = document.querySelectorAll('.stagger-children');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+sections.forEach(s => observer.observe(s));
+staggerContainers.forEach(s => observer.observe(s));
+
+// === READING PROGRESS ===
+window.addEventListener('scroll', () => {
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = (scrollTop / docHeight) * 100;
+  document.getElementById('readingProgress').style.width = progress + '%';
+});
+
+// === PROGRESS NAV ===
+const navDots = document.querySelectorAll('.progress-dot');
+const allSections = ['hero','paradox','math','timeline','goals','metrics','summary','tips'];
+
+window.addEventListener('scroll', () => {
+  let current = '';
+  allSections.forEach(id => {
+    const section = document.getElementById(id);
+    if(section) {
+      const rect = section.getBoundingClientRect();
+      if(rect.top <= window.innerHeight / 2) current = id;
+    }
+  });
+  navDots.forEach(dot => {
+    dot.classList.remove('active');
+    if(dot.dataset.section === current) dot.classList.add('active');
+  });
+});
+
+navDots.forEach(dot => {
+  dot.addEventListener('click', () => {
+    const target = document.getElementById(dot.dataset.section);
+    if(target) target.scrollIntoView({ behavior: 'smooth' });
+  });
+});
+
+// === COUNTER ANIMATION ===
+const counters = document.querySelectorAll('.counter');
+const counterObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting) {
+      const counter = entry.target;
+      const target = parseInt(counter.dataset.target);
+      let current = 0;
+      const increment = Math.max(1, target / 60);
+      const timer = setInterval(() => {
+        current += increment;
+        if(current >= target) {
+          current = target;
+          clearInterval(timer);
+        }
+        counter.textContent = Math.floor(current);
+      }, 25);
+      counterObserver.unobserve(counter);
+    }
+  });
+}, { threshold: 0.5 });
+
+counters.forEach(c => counterObserver.observe(c));
+
+// === SMOOTH ANCHOR SCROLL ===
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if(target) target.scrollIntoView({ behavior: 'smooth' });
+  });
+});
+
+// === MOUSE PARALLAX ON HERO ===
+const hero = document.querySelector('.hero');
+hero.addEventListener('mousemove', (e) => {
+  const x = (e.clientX / window.innerWidth - 0.5) * 20;
+  const y = (e.clientY / window.innerHeight - 0.5) * 20;
+  hero.querySelector('h1').style.transform = `translate(${x*0.3}px, ${y*0.3}px)`;
+});
+
+// === TABLE ROW ANIMATION ===
+const tableRows = document.querySelectorAll('.metrics-table tbody tr');
+const tableObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if(entry.isIntersecting) {
+      setTimeout(() => {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateX(0)';
+      }, i * 80);
+    }
+  });
+}, { threshold: 0.1 });
+
+tableRows.forEach(row => {
+  row.style.opacity = '0';
+  row.style.transform = 'translateX(-20px)';
+  row.style.transition = 'all 0.5s ease';
+  tableObserver.observe(row);
+});
+
+// === CARD TILT EFFECT ===
+document.querySelectorAll('.goal-card').forEach(card => {
+  card.addEventListener('mousemove', (e) => {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = (y - centerY) / 20;
+    const rotateY = (centerX - x) / 20;
+    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-6px) scale(1.02)`;
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = '';
+  });
+});
+</script>
+
+</body>
+</html>
