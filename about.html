@@ -1,0 +1,1508 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Анализ подкастов IT-консалтинга России | Novardis Dark</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:       #080c14;
+  --bg2:      #0d1220;
+  --bg3:      #111827;
+  --card:     #131c2e;
+  --card2:    #1a2540;
+  --blue:     #0066ff;
+  --accent:   #00aaff;
+  --cyan:     #00d4ff;
+  --purple:   #7c3aed;
+  --green:    #00e5a0;
+  --orange:   #ff6b35;
+  --text:     #e2e8f0;
+  --muted:    #64748b;
+  --border:   rgba(255,255,255,0.07);
+  --border2:  rgba(0,170,255,0.2);
+  --gblue:    linear-gradient(135deg,#0057b8,#00aaff);
+  --gcyan:    linear-gradient(135deg,#00aaff,#00d4ff);
+  --gpurp:    linear-gradient(135deg,#7c3aed,#a855f7);
+  --ggreen:   linear-gradient(135deg,#00c87a,#00e5a0);
+  --gorange:  linear-gradient(135deg,#ff6b35,#ff9f1c);
+  --shadow:   0 8px 40px rgba(0,100,255,0.12);
+  --shadowH:  0 24px 80px rgba(0,100,255,0.25);
+}
+
+html{scroll-behavior:smooth}
+body{
+  font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+  background:var(--bg);color:var(--text);
+  overflow-x:hidden;line-height:1.7;
+}
+
+/* ══ CURSOR ══ */
+#cur{width:10px;height:10px;background:var(--cyan);border-radius:50%;
+  position:fixed;top:0;left:0;pointer-events:none;z-index:9999;mix-blend-mode:screen}
+#cur-ring{width:40px;height:40px;border:1.5px solid rgba(0,212,255,0.5);border-radius:50%;
+  position:fixed;top:0;left:0;pointer-events:none;z-index:9998;
+  transition:width .3s,height .3s,border-color .3s,transform .08s ease}
+#cur-ring.expand{width:60px;height:60px;border-color:var(--blue)}
+
+/* ══ PROGRESS ══ */
+#prog{position:fixed;top:0;left:0;height:2px;
+  background:linear-gradient(90deg,var(--blue),var(--cyan),var(--purple));
+  z-index:9000;box-shadow:0 0 16px rgba(0,212,255,0.8);transition:width .1s}
+
+/* ══ CANVAS ══ */
+#star-canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* ══ NAV ══ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:500;height:68px;
+  background:rgba(8,12,20,0.8);backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;padding:0 48px;
+  transition:box-shadow .3s
+}
+nav.scrolled{box-shadow:0 4px 40px rgba(0,100,255,0.15)}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+.logo-icon{
+  width:38px;height:38px;border-radius:10px;
+  background:var(--gblue);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:.95rem;color:#fff;
+  animation:logoPulse 3s ease-in-out infinite
+}
+@keyframes logoPulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(0,170,255,0.4)}
+  50%{box-shadow:0 0 0 12px rgba(0,170,255,0)}
+}
+.logo-text{font-size:1.3rem;font-weight:800;color:#fff;letter-spacing:-.3px}
+.logo-text span{color:var(--accent)}
+.nav-chips{display:flex;gap:10px}
+.nav-chip{
+  font-size:.68rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;
+  padding:5px 14px;border-radius:20px;color:var(--cyan);
+  background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.2);
+  animation:chipBlink 2.5s ease-in-out infinite
+}
+@keyframes chipBlink{0%,100%{opacity:1}50%{opacity:.6}}
+
+/* ══ HERO ══ */
+.hero{
+  position:relative;z-index:1;min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:120px 40px 80px;overflow:hidden
+}
+.hero-glow{
+  position:absolute;top:20%;left:50%;transform:translate(-50%,-50%);
+  width:900px;height:600px;pointer-events:none;
+  background:radial-gradient(ellipse,rgba(0,100,255,0.12) 0%,transparent 70%);
+  animation:glowPulse 4s ease-in-out infinite
+}
+@keyframes glowPulse{0%,100%{opacity:.7;transform:translate(-50%,-50%) scale(1)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.08)}}
+
+.hero-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(0,100,255,0.1);border:1px solid rgba(0,170,255,0.25);
+  color:var(--accent);font-size:.72rem;font-weight:700;letter-spacing:1.5px;
+  text-transform:uppercase;padding:6px 20px;border-radius:30px;margin-bottom:28px;
+  animation:tagFloat .9s ease both
+}
+.hero-tag .pulse-dot{
+  width:7px;height:7px;background:var(--cyan);border-radius:50%;
+  animation:pDot 1.5s ease-in-out infinite
+}
+@keyframes pDot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.7)}}
+@keyframes tagFloat{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:none}}
+
+.hero h1{
+  font-size:clamp(2rem,5.5vw,4.2rem);font-weight:900;line-height:1.1;
+  max-width:900px;margin-bottom:24px;
+  animation:fadeUp .9s .1s ease both
+}
+.grad-text{
+  background:linear-gradient(135deg,var(--accent),var(--cyan),var(--purple));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  animation:gradShift 5s ease-in-out infinite alternate
+}
+@keyframes gradShift{
+  0%{filter:hue-rotate(0deg)}
+  100%{filter:hue-rotate(30deg)}
+}
+
+.hero-sub{font-size:1.1rem;color:var(--muted);max-width:640px;margin-bottom:48px;animation:fadeUp .9s .2s ease both}
+
+.hero-btns{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;animation:fadeUp .9s .3s ease both;margin-bottom:64px}
+.btn-p{
+  background:var(--gblue);color:#fff;padding:14px 36px;border-radius:50px;
+  font-weight:700;font-size:.95rem;text-decoration:none;position:relative;overflow:hidden;
+  box-shadow:0 8px 30px rgba(0,100,255,0.35);transition:transform .25s,box-shadow .25s
+}
+.btn-p::before{
+  content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);
+  transition:left .5s
+}
+.btn-p:hover::before{left:100%}
+.btn-p:hover{transform:translateY(-4px);box-shadow:0 16px 50px rgba(0,100,255,0.5)}
+.btn-s{
+  background:transparent;color:var(--accent);padding:14px 36px;border-radius:50px;
+  font-weight:700;font-size:.95rem;text-decoration:none;
+  border:1.5px solid rgba(0,170,255,0.4);transition:all .25s
+}
+.btn-s:hover{background:rgba(0,170,255,0.1);transform:translateY(-4px);border-color:var(--accent)}
+
+/* ══ STATS ROW ══ */
+.stats-row{
+  display:flex;gap:48px;flex-wrap:wrap;justify-content:center;
+  animation:fadeUp .9s .4s ease both
+}
+.stat-box{text-align:center}
+.stat-num{
+  font-size:2.4rem;font-weight:900;line-height:1;
+  background:var(--gcyan);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text
+}
+.stat-lbl{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-top:4px}
+.stat-divider{width:1px;background:var(--border);align-self:stretch}
+
+/* ══ SCROLL INDICATOR ══ */
+.scroll-ind{
+  position:absolute;bottom:32px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  animation:fadeUp .9s .8s ease both
+}
+.scroll-ind span{font-size:.68rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+.scroll-mouse{
+  width:22px;height:36px;border:1.5px solid rgba(255,255,255,0.15);
+  border-radius:11px;display:flex;align-items:flex-start;justify-content:center;padding-top:6px
+}
+.scroll-mouse::after{
+  content:'';width:4px;height:7px;background:var(--accent);border-radius:4px;
+  animation:scrollW 1.8s ease infinite
+}
+@keyframes scrollW{0%{opacity:1;transform:none}100%{opacity:0;transform:translateY(14px)}}
+
+/* ══ SECTION BASE ══ */
+section{position:relative;z-index:1;padding:80px 40px}
+.container{max-width:1120px;margin:0 auto}
+.sec-label{
+  display:inline-block;font-size:.68rem;font-weight:800;letter-spacing:1.5px;
+  text-transform:uppercase;padding:5px 16px;border-radius:20px;margin-bottom:14px;
+  background:var(--gblue);color:#fff
+}
+.sec-title{font-size:clamp(1.8rem,3.5vw,2.7rem);font-weight:900;color:#fff;margin-bottom:14px;line-height:1.2}
+.sec-title span{color:var(--accent)}
+.sec-desc{font-size:1rem;color:var(--muted);max-width:620px;margin-bottom:52px}
+
+/* ══ REVEAL ══ */
+.rv  {opacity:0;transform:translateY(40px);transition:opacity .7s ease,transform .7s ease}
+.rvL {opacity:0;transform:translateX(-50px);transition:opacity .7s ease,transform .7s ease}
+.rvR {opacity:0;transform:translateX(50px);transition:opacity .7s ease,transform .7s ease}
+.rv.on,.rvL.on,.rvR.on{opacity:1;transform:none}
+
+/* ══ COMPANY CARDS ══ */
+.companies-section{background:var(--bg2)}
+.comp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:24px}
+.comp-card{
+  background:var(--card);border:1px solid var(--border);border-radius:22px;
+  padding:30px;position:relative;overflow:hidden;cursor:default;
+  transition:transform .3s,box-shadow .3s,border-color .3s
+}
+.comp-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:var(--gblue);transform:scaleX(0);transform-origin:left;transition:transform .4s
+}
+.comp-card:hover::before{transform:scaleX(1)}
+.comp-card:hover{transform:translateY(-8px);box-shadow:var(--shadowH);border-color:var(--border2)}
+.comp-card .glow-orb{
+  position:absolute;top:-40px;right:-40px;width:120px;height:120px;
+  border-radius:50%;opacity:.08;pointer-events:none;transition:opacity .3s
+}
+.comp-card:hover .glow-orb{opacity:.16}
+.cc-header{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.cc-avatar{
+  width:52px;height:52px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;flex-shrink:0;font-weight:900;color:#fff
+}
+.cc-info h3{font-size:1.05rem;font-weight:800;color:#fff;margin-bottom:3px}
+.cc-info .cc-sub{font-size:.78rem;color:var(--muted)}
+.cc-badge{
+  display:inline-block;font-size:.68rem;font-weight:700;padding:3px 12px;
+  border-radius:20px;margin-bottom:14px;letter-spacing:.3px
+}
+.cc-topics{display:flex;flex-direction:column;gap:7px;margin-bottom:18px}
+.cc-topic{
+  display:flex;align-items:center;gap:8px;font-size:.84rem;color:var(--muted)
+}
+.cc-topic::before{content:'▸';color:var(--accent);font-size:.7rem;flex-shrink:0}
+.cc-meta{
+  display:flex;gap:12px;flex-wrap:wrap;margin-top:auto;padding-top:18px;
+  border-top:1px solid var(--border)
+}
+.cc-meta-item{
+  display:flex;align-items:center;gap:5px;font-size:.75rem;color:var(--muted)
+}
+.cc-meta-item span:first-child{font-size:.85rem}
+
+/* ══ FORMATS SECTION ══ */
+.formats-section{background:var(--bg)}
+.fmt-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
+.fmt-card{
+  background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px;
+  text-align:center;transition:transform .3s,border-color .3s;cursor:default
+}
+.fmt-card:hover{transform:translateY(-8px);border-color:var(--border2)}
+.fmt-icon{
+  width:64px;height:64px;border-radius:18px;margin:0 auto 18px;
+  display:flex;align-items:center;justify-content:center;font-size:1.8rem
+}
+.fmt-card h3{font-size:1rem;font-weight:800;color:#fff;margin-bottom:10px}
+.fmt-card p{font-size:.84rem;color:var(--muted);line-height:1.6}
+.fmt-tag{
+  display:inline-block;margin-top:14px;font-size:.7rem;font-weight:700;
+  padding:4px 12px;border-radius:20px;
+  background:rgba(0,170,255,0.1);color:var(--accent)
+}
+
+/* ══ COMPARISON TABLE ══ */
+.table-section{background:var(--bg2)}
+.table-wrap{
+  overflow-x:auto;border-radius:20px;
+  border:1px solid var(--border);
+  box-shadow:0 8px 60px rgba(0,100,255,0.1)
+}
+table{width:100%;border-collapse:collapse;background:var(--card);min-width:800px}
+thead th{
+  background:rgba(0,100,255,0.15);color:var(--accent);
+  padding:16px 18px;font-size:.75rem;font-weight:700;letter-spacing:.8px;
+  text-transform:uppercase;text-align:left;white-space:nowrap;
+  border-bottom:1px solid var(--border)
+}
+tbody td{
+  padding:14px 18px;font-size:.86rem;color:var(--text);
+  border-bottom:1px solid var(--border);vertical-align:middle
+}
+tbody tr:last-child td{border-bottom:none}
+tbody tr{transition:background .2s}
+tbody tr:hover td{background:rgba(0,170,255,0.05)}
+.co-name{font-weight:800;color:#fff}
+.ep-badge{
+  display:inline-block;background:var(--gblue);color:#fff;
+  font-size:.72rem;font-weight:700;padding:3px 10px;border-radius:20px
+}
+.aud-tag{
+  display:inline-block;background:rgba(0,212,255,0.1);color:var(--cyan);
+  font-size:.7rem;font-weight:600;padding:3px 9px;border-radius:20px;margin:2px
+}
+
+/* ══ TOPICS SECTION ══ */
+.topics-section{background:var(--bg)}
+.topics-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px}
+.topic-card{
+  background:var(--card);border:1px solid var(--border);border-radius:18px;
+  padding:26px;display:flex;gap:18px;align-items:flex-start;
+  transition:transform .3s,border-color .3s,background .3s;cursor:default
+}
+.topic-card:hover{transform:translateX(6px);border-color:var(--border2);background:var(--card2)}
+.t-icon{
+  width:46px;height:46px;border-radius:12px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:1.3rem
+}
+.t-body h4{font-size:.95rem;font-weight:700;color:#fff;margin-bottom:6px}
+.t-body p{font-size:.82rem;color:var(--muted)}
+.t-freq{
+  display:inline-block;margin-top:10px;font-size:.67rem;font-weight:700;
+  padding:3px 10px;border-radius:20px;letter-spacing:.5px
+}
+
+/* ══ OPPORTUNITIES SECTION ══ */
+.opps-section{background:var(--bg2)}
+.opps-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px}
+.opp-card{
+  background:var(--card);border:1px solid var(--border);border-radius:20px;
+  padding:28px;position:relative;overflow:hidden;
+  transition:transform .3s,box-shadow .3s,border-color .3s;cursor:default
+}
+.opp-card:hover{transform:translateY(-6px);box-shadow:var(--shadow);border-color:var(--border2)}
+.opp-num{
+  position:absolute;top:14px;right:20px;font-size:4rem;font-weight:900;
+  color:rgba(255,255,255,0.03);line-height:1
+}
+.opp-icon{font-size:1.8rem;margin-bottom:12px;display:block}
+.opp-card h3{font-size:1rem;font-weight:800;color:#fff;margin-bottom:8px}
+.opp-card p{font-size:.84rem;color:var(--muted);line-height:1.65}
+.opp-tag{
+  display:inline-block;margin-top:14px;font-size:.7rem;font-weight:700;
+  padding:4px 12px;border-radius:20px;
+  background:rgba(124,58,237,0.15);color:#a855f7
+}
+
+/* ══ GAPS SECTION ══ */
+.gaps-section{
+  background:var(--bg);position:relative;overflow:hidden
+}
+.gaps-section::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 60% 50% at 80% 50%,rgba(124,58,237,0.08) 0%,transparent 70%)
+}
+.gaps-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:640px){.gaps-grid{grid-template-columns:1fr}}
+.gap-item{
+  background:var(--card);border:1px solid var(--border);border-radius:16px;
+  padding:22px;display:flex;gap:16px;align-items:flex-start;
+  transition:transform .2s,border-color .3s
+}
+.gap-item:hover{transform:translateX(4px);border-color:rgba(0,229,160,0.3)}
+.gap-dot{
+  width:10px;height:10px;border-radius:50%;background:var(--green);
+  flex-shrink:0;margin-top:6px;animation:gDot 2s ease-in-out infinite
+}
+@keyframes gDot{0%,100%{box-shadow:0 0 0 0 rgba(0,229,160,0.4)}50%{box-shadow:0 0 0 8px rgba(0,229,160,0)}}
+.gap-item h4{font-size:.92rem;font-weight:700;color:#fff;margin-bottom:5px}
+.gap-item p{font-size:.8rem;color:var(--muted)}
+
+/* ══ STRATEGY SECTION ══ */
+.strategy-section{background:var(--bg2)}
+.strategy-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+@media(max-width:768px){.strategy-grid{grid-template-columns:1fr}}
+.strat-steps{display:flex;flex-direction:column;gap:0}
+.strat-step{
+  display:flex;gap:20px;padding:22px 0;
+  border-bottom:1px solid var(--border);
+  transition:background .2s
+}
+.strat-step:last-child{border-bottom:none}
+.strat-step:hover .step-num-wrap{transform:scale(1.1)}
+.step-num-wrap{
+  width:44px;height:44px;border-radius:12px;background:var(--gblue);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:.9rem;color:#fff;flex-shrink:0;
+  transition:transform .25s
+}
+.step-body h4{font-size:.95rem;font-weight:700;color:#fff;margin-bottom:5px}
+.step-body p{font-size:.82rem;color:var(--muted)}
+
+.content-plan{
+  background:var(--card);border:1px solid var(--border);border-radius:20px;overflow:hidden
+}
+.cp-header{
+  background:rgba(0,100,255,0.12);border-bottom:1px solid var(--border);
+  padding:18px 24px;font-size:.85rem;font-weight:800;color:var(--accent);
+  letter-spacing:.5px
+}
+.cp-item{
+  display:flex;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);
+  align-items:flex-start;transition:background .2s
+}
+.cp-item:last-child{border-bottom:none}
+.cp-item:hover{background:rgba(0,170,255,0.05)}
+.ep-num{
+  min-width:34px;height:34px;border-radius:8px;background:rgba(0,170,255,0.12);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.75rem;font-weight:800;color:var(--accent)
+}
+.cp-item-text strong{display:block;font-size:.86rem;color:#fff;margin-bottom:2px}
+.cp-item-text span{font-size:.76rem;color:var(--muted)}
+
+/* ══ PLATFORMS ══ */
+.platforms-section{background:var(--bg);text-align:center}
+.plat-row{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.plat-pill{
+  display:flex;align-items:center;gap:10px;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:50px;padding:12px 24px;font-size:.88rem;font-weight:600;
+  color:var(--text);transition:all .25s;text-decoration:none
+}
+.plat-pill:hover{border-color:var(--border2);transform:translateY(-4px);background:var(--card2)}
+.plat-icon{font-size:1.3rem}
+
+/* ══ CTA BANNER ══ */
+.cta-banner{
+  background:var(--bg2);position:relative;overflow:hidden
+}
+.cta-banner::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 60% at 50% 50%,rgba(0,100,255,0.15) 0%,transparent 70%);
+  animation:ctaGlow 5s ease-in-out infinite alternate
+}
+@keyframes ctaGlow{0%{opacity:.7}100%{opacity:1}}
+.cta-inner{
+  position:relative;z-index:1;text-align:center;max-width:700px;margin:0 auto
+}
+.cta-inner h2{font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:900;color:#fff;margin-bottom:16px}
+.cta-inner p{font-size:1rem;color:var(--muted);margin-bottom:36px}
+.cta-chips{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:36px}
+.cta-chip{
+  font-size:.75rem;font-weight:700;padding:6px 16px;border-radius:20px;
+  background:rgba(0,170,255,0.1);border:1px solid rgba(0,170,255,0.2);color:var(--accent)
+}
+
+/* ══ FOOTER ══ */
+footer{
+  background:var(--bg);border-top:1px solid var(--border);
+  text-align:center;padding:40px;color:var(--muted);font-size:.82rem;position:relative;z-index:1
+}
+footer strong{color:var(--accent)}
+
+/* ══ KEYFRAMES ══ */
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+
+/* ══ PARTICLES ══ */
+.particle{
+  position:fixed;border-radius:50%;pointer-events:none;z-index:0;
+  animation:partFloat linear infinite;opacity:0
+}
+@keyframes partFloat{
+  0%{transform:translateY(100vh) rotate(0deg);opacity:0}
+  10%{opacity:.5}90%{opacity:.2}
+  100%{transform:translateY(-120px) rotate(360deg);opacity:0}
+}
+
+/* ══ GLITCH ══ */
+.glitch{position:relative}
+.glitch::before,.glitch::after{
+  content:attr(data-text);position:absolute;inset:0;
+  background:transparent;
+}
+.glitch::before{
+  color:rgba(0,212,255,0.6);animation:glitch1 4s infinite;clip-path:polygon(0 20%,100% 20%,100% 30%,0 30%)
+}
+.glitch::after{
+  color:rgba(124,58,237,0.6);animation:glitch2 4s infinite;clip-path:polygon(0 65%,100% 65%,100% 75%,0 75%)
+}
+@keyframes glitch1{
+  0%,90%,100%{transform:none}
+  92%{transform:translate(-3px,1px)}
+  94%{transform:translate(3px,-1px)}
+  96%{transform:none}
+}
+@keyframes glitch2{
+  0%,88%,100%{transform:none}
+  90%{transform:translate(3px,2px)}
+  93%{transform:translate(-3px,-1px)}
+  95%{transform:none}
+}
+
+/* ══ HOVER LINE ══ */
+.hover-line{
+  display:inline-block;position:relative
+}
+.hover-line::after{
+  content:'';position:absolute;left:0;bottom:-2px;width:0;height:2px;
+  background:var(--gcyan);transition:width .3s
+}
+.hover-line:hover::after{width:100%}
+
+/* ══ TYPED CURSOR ══ */
+.typed-cursor{animation:tcBlink .7s ease infinite}
+@keyframes tcBlink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:600px){
+  nav{padding:0 20px}
+  section{padding:60px 20px}
+  .hero{padding:100px 20px 60px}
+  .stats-row{gap:24px}
+  .stat-divider{display:none}
+}
+
+/* ══ HEXGRID BG ══ */
+.hex-bg{
+  position:absolute;inset:0;pointer-events:none;overflow:hidden;opacity:.025
+}
+.hex-bg svg{width:100%;height:100%}
+
+/* ══ NEON BORDER ══ */
+.neon-border{
+  border:1px solid transparent;
+  background:linear-gradient(var(--card),var(--card)) padding-box,
+             linear-gradient(135deg,var(--blue),var(--purple)) border-box;
+  animation:neonPulse 3s ease-in-out infinite
+}
+@keyframes neonPulse{
+  0%,100%{box-shadow:0 0 15px rgba(0,100,255,0.1)}
+  50%{box-shadow:0 0 35px rgba(0,100,255,0.25)}
+}
+
+/* ══ COUNTER ══ */
+.counter{display:inline-block}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-ring"></div>
+<div id="prog"></div>
+<canvas id="star-canvas"></canvas>
+
+<!-- ══════════════════ NAV ══════════════════ -->
+<nav id="navbar">
+  <a class="logo" href="#">
+    <div class="logo-icon">N</div>
+    <div class="logo-text">NOV<span>ARDIS</span></div>
+  </a>
+  <div class="nav-chips">
+    <div class="nav-chip">🎙️ Podcast Intelligence</div>
+    <div class="nav-chip" style="animation-delay:.5s">Russia IT 2026</div>
+  </div>
+</nav>
+
+<!-- ══════════════════ HERO ══════════════════ -->
+<section class="hero">
+  <div class="hero-glow"></div>
+
+  <div class="hero-tag">
+    <span class="pulse-dot"></span>
+    Аналитический отчёт 2026
+  </div>
+
+  <h1>
+    <span class="glitch grad-text" data-text="Анализ подкастов">Анализ подкастов</span>
+    <br/>IT-консалтинга России
+  </h1>
+
+  <p class="hero-sub">
+    Полное исследование: кто делает, что обсуждают, как это работает
+    и как обойти всех конкурентов за счёт незанятых ниш
+  </p>
+
+  <div class="hero-btns">
+    <a href="#companies" class="btn-p">Изучить компании →</a>
+    <a href="#opps"      class="btn-s">Возможности</a>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-box">
+      <div class="stat-num"><span class="counter" data-t="8">0</span></div>
+      <div class="stat-lbl">Компаний</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-box">
+      <div class="stat-num"><span class="counter" data-t="85">0</span>+</div>
+      <div class="stat-lbl">Эпизодов</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-box">
+      <div class="stat-num"><span class="counter" data-t="12">0</span></div>
+      <div class="stat-lbl">Подкастов</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-box">
+      <div class="stat-num"><span class="counter" data-t="6">0</span></div>
+      <div class="stat-lbl">Свободных ниш</div>
+    </div>
+  </div>
+
+  <div class="scroll-ind">
+    <div class="scroll-mouse"></div>
+    <span>Прокрутите вниз</span>
+  </div>
+</section>
+
+<!-- ══════════════════ COMPANIES ══════════════════ -->
+<section class="companies-section" id="companies">
+  <div class="container">
+    <div class="rv" style="text-align:center">
+      <div class="sec-label">🏢 Участники рынка</div>
+      <h2 class="sec-title" style="text-align:center">Кто делает <span>подкасты</span> в IT-консалтинге</h2>
+      <p class="sec-desc" style="text-align:center;margin:12px auto 52px">Подробный разбор каждой компании и их подходов к созданию контента</p>
+    </div>
+    <div class="comp-grid">
+
+      <!-- AXENIX -->
+      <div class="comp-card rv neon-border" style="transition-delay:.05s">
+        <div class="glow-orb" style="background:radial-gradient(#0066ff,transparent)"></div>
+        <div class="cc-header">
+          <div class="cc-avatar" style="background:linear-gradient(135deg,#0057b8,#00aaff)">☕</div>
+          <div class="cc-info">
+            <h3>AXENIX (экс-Accenture)</h3>
+            <div class="cc-sub">«Axenix Coffee Talks»</div>
+          </div>
+        </div>
+        <div class="cc-badge" style="background:rgba(0,170,255,0.1);color:var(--accent)">🎙️ Аудио · 33 выпуска · 2024–2026</div>
+        <div class="cc-topics">
+          <div class="cc-topic">Локализация ИТ-ландшафта (кейс «Рулог»)</div>
+          <div class="cc-topic">Архитектура ИТ-проектов и enterprise</div>
+          <div class="cc-topic">Мастер-данные и MDM в 1С</div>
+          <div class="cc-topic">GenAI в бизнесе</div>
+          <div class="cc-topic">Культура лидерства (гость: ГК «Лента»)</div>
+          <div class="cc-topic">Цепочки поставок (гость: X5 Group)</div>
+        </div>
+        <div class="cc-meta">
+          <div class="cc-meta-item"><span>⏱️</span><span>27–47 мин</span></div>
+          <div class="cc-meta-item"><span>🎯</span><span>CIO, архитекторы</span></div>
+          <div class="cc-meta-item"><span>📅</span><span>Еженедельно</span></div>
+        </div>
+      </div>
+
+      <!-- КОРУС -->
+      <div class="comp-card rv neon-border" style="transition-delay:.1s">
+        <div class="glow-orb" style="background:radial-gradient(#7c3aed,transparent)"></div>
+        <div class="cc-header">
+          <div class="cc-avatar" style="background:linear-gradient(135deg,#7c3aed,#a855f7)">📊</div>
+          <div class="cc-info">
+            <h3>КОРУС Консалтинг</h3>
+            <div class="cc-sub">«сITуация» / «Кейсы, цифры и ИТ»</div>
+          </div>
+        </div>
+        <div class="cc-badge" style="background:rgba(124,58,237,0.1);color:#a855f7">🎙️ Аудио · 13 выпусков · 2023–2024</div>
+        <div class="cc-topics">
+          <div class="cc-topic">37% российских B2B без e-com — анализ</div>
+          <div class="cc-topic">Big Data и AI в промышленности</div>
+          <div class="cc-topic">Российский рынок CRM: 2 года адаптации</div>
+          <div class="cc-topic">Как «продать» ИТ-проект внутри компании</div>
+          <div class="cc-topic">Рост ритейла и смена ИТ-стратегии</div>
+        </div>
+        <div class="cc-meta">
+          <div class="cc-meta-item"><span>⏱️</span><span>21–55 мин</span></div>
+          <div class="cc-meta-item"><span>🎯</span><span>ИТ-руководители</span></div>
+          <div class="cc-meta-item"><span>📅</span><span>Ежемесячно</span></div>
+        </div>
+      </div>
+
+      <!-- КРОК Инфра -->
+      <div class="comp-card rv neon-border" style="transition-delay:.15s">
+        <div class="glow-orb" style="background:radial-gradient(#00e5a0,transparent)"></div>
+        <div class="cc-header">
+          <div class="cc-avatar" style="background:linear-gradient(135deg,#00c87a,#00e5a0)">☁️</div>
+          <div class="cc-info">
+            <h3>КРОК</h3>
+            <div class="cc-sub">«Откровенно об ИТ-инфраструктуре»</div>
+          </div>
+        </div>
+        <div class="cc-badge" style="background:rgba(0,229,160,0.1);color:var(--green)">🎙️ Аудио · 11 выпусков · 2023–2024</div>
+        <div class="cc-topics">
+          <div class="cc-topic">Контейнеры и Kubernetes на рынке РФ</div>
+          <div class="cc-topic">Облачная экономика и расчёт миграции</div>
+          <div class="cc-topic">ИТ-инфраструктура в ритейле</div>
+          <div class="cc-topic">Большие данные и Big Data</div>
+          <div class="cc-topic">Облака и кибербезопасность</div>
+        </div>
+        <div class="cc-meta">
+          <div class="cc-meta-item"><span>⏱️</span><span>30–53 мин</span></div>
+          <div class="cc-meta-item"><span>🎯</span><span>ИТ-директора</span></div>
+          <div class="cc-meta-item"><span>📅</span><span>Ежемесячно</span></div>
+        </div>
+      </div>
+
+      <!-- КРОК Sales -->
+      <div class="comp-card rv neon-border" style="transition-delay:.2s">
+        <div class="glow-orb" style="background:radial-gradient(#ff6b35,transparent)"></div>
+        <div class="cc-header">
+          <div class="cc-avatar" style="background:linear-gradient(135deg,#ff6b35,#ff9f1c)">💼</div>
+          <div class="cc-info">
+            <h3>КРОК</h3>
+            <div class="cc-sub">«Продажи или смерть»</div>
+          </div>
+        </div>
+        <div class="cc-badge" style="background:rgba(255,107,53,0.1);color:var(--orange)">🎙️ Аудио · 2 выпуска · 2022</div>
+        <div class="cc-topics">
+          <div class="cc-topic">Кто такие BDM и их ценность</div>
+          <div class="cc-topic">Карьерный путь BDM: от стажёра</div>
+          <div class="cc-topic">Типичные ошибки начинающих sales</div>
+        </div>
+        <div class="cc-meta">
+          <div class="cc-meta-item"><span>⏱️</span><span>29–34 мин</span></div>
+          <div class="cc-meta-item"><span>🎯</span><span>BDM, sales</span></div>
+          <div class="cc-meta-item"><span>📅</span><span>Нерегулярно</span></div>
+        </div>
+      </div>
+
+      <!-- ICL Services -->
+      <div class="comp-card rv neon-border" style="transition-delay:.25s">
+        <div class="glow-orb" style="background:radial-gradient(#00aaff,transparent)"></div>
+        <div class="cc-header">
+          <div class="cc-avatar" style="background:linear-gradient(135deg,#0057b8,#00d4ff)">🔧</div>
+          <div class="cc-info">
+            <h3>ICL Services</h3>
+            <div class="cc-sub">«Сервисные хроники»</div>
+          </div>
+        </div>
+        <div class="cc-badge" style="background:rgba(0,170,255,0.1);color:var(--accent)">🎙️ Аудио · 8 выпусков · 2025–2026</div>
+        <div class="cc-topics">
+          <div class="cc-topic">Технологии меняют российский ритейл 2026</div>
+          <div class="cc-topic">Противодействие киберугрозам 2026</div>
+          <div class="cc-topic">7 главных мифов об ИТ-аутсорсинге</div>
+          <div class="cc-topic">Итоги 2025 с Минцифры Татарстана</div>
+          <div class="cc-topic">Заказная разработка: тренды и рынок</div>
+        </div>
+        <div class="cc-meta">
+          <div class="cc-meta-item"><span>⏱️</span><span>4–49 мин</span></div>
+          <div class="cc-meta-item"><span>🎯</span><span>ИТ-руководители</span></div>
+          <div class="cc-meta-item"><span>📅</span><span>Ежемесячно</span></div>
+        </div>
+      </div>
+
+      <!-- ЛАНИТ -->
+      <div class="comp-card rv neon-border" style="transition-delay:.3s">
+        <div class="glow-orb" style="background:radial-gradient(#a855f7,transparent)"></div>
+        <div class="cc-header">
+          <div class="cc-avatar" style="background:linear-gradient(135deg,#6d28d9,#a855f7)">🎓</div>
+          <div class="cc-info">
+            <h3>ЛАНИТ</h3>
+            <div class="cc-sub">«ЛАНИТ Говорит» + «РАЗГОВОРЫ PRO»</div>
+          </div>
+        </div>
+        <div class="cc-badge" style="background:rgba(168,85,247,0.1);color:#a855f7">🎙️ Аудио + 📹 Видео · 18+ выпусков</div>
+        <div class="cc-topics">
+          <div class="cc-topic">Секреты успешных продаж в ИТ</div>
+          <div class="cc-topic">UBERизация аутстаффинга</div>
+          <div class="cc-topic">Образование: Hard skills и soft skills</div>
+          <div class="cc-topic">Инженерное образование без границ</div>
+          <div class="cc-topic">Международная карьера инженера</div>
+        </div>
+        <div class="cc-meta">
+          <div class="cc-meta-item"><span>⏱️</span><span>25–40 мин</span></div>
+          <div class="cc-meta-item"><span>🎯</span><span>HR, студенты</span></div>
+          <div class="cc-meta-item"><span>📅</span><span>Нерегулярно</span></div>
+        </div>
+      </div>
+
+      <!-- ЭКОПСИ -->
+      <div class="comp-card rv neon-border" style="transition-delay:.35s">
+        <div class="glow-orb" style="background:radial-gradient(#00e5a0,transparent)"></div>
+        <div class="cc-header">
+          <div class="cc-avatar" style="background:linear-gradient(135deg,#047857,#00e5a0)">🔍</div>
+          <div class="cc-info">
+            <h3>ЭКОПСИ Консалтинг</h3>
+            <div class="cc-sub">«Найти айти»</div>
+          </div>
+        </div>
+        <div class="cc-badge" style="background:rgba(0,229,160,0.1);color:var(--green)">🎙️ Аудио · Серия с 2022</div>
+        <div class="cc-topics">
+          <div class="cc-topic">Формирование IT-бренда работодателя</div>
+          <div class="cc-topic">Удержание профессионалов на рынке</div>
+          <div class="cc-topic">Кейсы сильных IT-брендов (DataArt)</div>
+          <div class="cc-topic">На данных исследований ЭКОПСИ + Хабр</div>
+        </div>
+        <div class="cc-meta">
+          <div class="cc-meta-item"><span>⏱️</span><span>~30 мин</span></div>
+          <div class="cc-meta-item"><span>🎯</span><span>HR, деврелы</span></div>
+          <div class="cc-meta-item"><span>📅</span><span>Нерегулярно</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ TABLE ══════════════════ -->
+<section class="table-section">
+  <div class="container">
+    <div class="rv" style="text-align:center">
+      <div class="sec-label">📊 Сравнительная таблица</div>
+      <h2 class="sec-title" style="text-align:center">Все компании <span>одним взглядом</span></h2>
+      <p class="sec-desc" style="text-align:center;margin:12px auto 48px">Структурированное сравнение всех подкастов рынка</p>
+    </div>
+    <div class="table-wrap rv">
+      <table>
+        <thead>
+          <tr>
+            <th>Компания</th>
+            <th>Подкаст</th>
+            <th>Формат</th>
+            <th>Эпизоды</th>
+            <th>Длительность</th>
+            <th>Целевая аудитория</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="co-name">Axenix</span></td>
+            <td>Coffee Talks</td>
+            <td>🎙️ Аудио</td>
+            <td><span class="ep-badge">33</span></td>
+            <td>27–47 мин</td>
+            <td><span class="aud-tag">CIO</span><span class="aud-tag">Архитекторы</span></td>
+          </tr>
+          <tr>
+            <td><span class="co-name">КОРУС</span></td>
+            <td>сITуация</td>
+            <td>🎙️ Аудио</td>
+            <td><span class="ep-badge">13</span></td>
+            <td>21–55 мин</td>
+            <td><span class="aud-tag">ИТ-руководители</span><span class="aud-tag">Аналитики</span></td>
+          </tr>
+          <tr>
+            <td><span class="co-name">КРОК</span></td>
+            <td>Откровенно об ИТ</td>
+            <td>🎙️ Аудио</td>
+            <td><span class="ep-badge">11</span></td>
+            <td>30–53 мин</td>
+            <td><span class="aud-tag">ИТ-директора</span><span class="aud-tag">Инфра</span></td>
+          </tr>
+          <tr>
+            <td><span class="co-name">КРОК</span></td>
+            <td>Продажи или смерть</td>
+            <td>🎙️ Аудио</td>
+            <td><span class="ep-badge">2</span></td>
+            <td>29–34 мин</td>
+            <td><span class="aud-tag">BDM</span><span class="aud-tag">Sales</span></td>
+          </tr>
+          <tr>
+            <td><span class="co-name">ICL Services</span></td>
+            <td>Сервисные хроники</td>
+            <td>🎙️ Аудио</td>
+            <td><span class="ep-badge">8</span></td>
+            <td>4–49 мин</td>
+            <td><span class="aud-tag">ИТ-руководители</span><span class="aud-tag">Аутсорсинг</span></td>
+          </tr>
+          <tr>
+            <td><span class="co-name">ЛАНИТ</span></td>
+            <td>ЛАНИТ Говорит</td>
+            <td>🎙️ Аудио</td>
+            <td><span class="ep-badge">13+</span></td>
+            <td>~30 мин</td>
+            <td><span class="aud-tag">HR</span><span class="aud-tag">Sales</span></td>
+          </tr>
+          <tr>
+            <td><span class="co-name">ЛАНИТ</span></td>
+            <td>РАЗГОВОРЫ PRO</td>
+            <td>📹 Видео</td>
+            <td><span class="ep-badge">5</span></td>
+            <td>25–40 мин</td>
+            <td><span class="aud-tag">Студенты</span><span class="aud-tag">Инженеры</span></td>
+          </tr>
+          <tr>
+            <td><span class="co-name">ЭКОПСИ</span></td>
+            <td>Найти айти</td>
+            <td>🎙️ Аудио</td>
+            <td><span class="ep-badge">Серия</span></td>
+            <td>~30 мин</td>
+            <td><span class="aud-tag">HR</span><span class="aud-tag">Деврелы</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ FORMATS ══════════════════ -->
+<section class="formats-section">
+  <div class="container">
+    <div class="rv" style="text-align:center">
+      <div class="sec-label">🎨 Форматы</div>
+      <h2 class="sec-title" style="text-align:center">Доминирующие <span>форматы</span> подкастов</h2>
+      <p class="sec-desc" style="text-align:center;margin:12px auto 48px">4 формата, которые используют лидеры рынка</p>
+    </div>
+    <div class="fmt-grid">
+      <div class="fmt-card rv neon-border" style="transition-delay:.05s">
+        <div class="fmt-icon" style="background:rgba(0,170,255,0.1)">🎙️</div>
+        <h3>Экспертный диалог</h3>
+        <p>Беседа ведущих экспертов с приглашёнными гостями из компаний-клиентов. Самый популярный формат.</p>
+        <div class="fmt-tag">Axenix · КРОК · КОРУС</div>
+      </div>
+      <div class="fmt-card rv neon-border" style="transition-delay:.1s">
+        <div class="fmt-icon" style="background:rgba(124,58,237,0.1)">📈</div>
+        <h3>Аналитический обзор</h3>
+        <p>Структурированный разбор состояния рынка с цифрами и трендами. Высокая экспертная ценность.</p>
+        <div class="fmt-tag">КОРУС «сITуация»</div>
+      </div>
+      <div class="fmt-card rv neon-border" style="transition-delay:.15s">
+        <div class="fmt-icon" style="background:rgba(0,229,160,0.1)">👥</div>
+        <h3>Карьерный / HR-подкаст</h3>
+        <p>Фокус на привлечении талантов, построении карьеры и HR-бренде. Работает на внутренний и внешний найм.</p>
+        <div class="fmt-tag">ЛАНИТ · ЭКОПСИ</div>
+      </div>
+      <div class="fmt-card rv neon-border" style="transition-delay:.2s">
+        <div class="fmt-icon" style="background:rgba(255,107,53,0.1)">📹</div>
+        <h3>Видео-подкаст</h3>
+        <p>Визуальный формат для молодёжной аудитории. Размещается на RUTUBE, привлекает студентов и молодых специалистов.</p>
+        <div class="fmt-tag">ЛАНИТ «РАЗГОВОРЫ PRO»</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ TOPICS ══════════════════ -->
+<section style="background:var(--bg2);padding:80px 40px">
+  <div class="container">
+    <div class="rv" style="text-align:center">
+      <div class="sec-label">💡 Темы</div>
+      <h2 class="sec-title" style="text-align:center">О чём говорят <span>все</span></h2>
+      <p class="sec-desc" style="text-align:center;margin:12px auto 48px">Ключевые темы, которые обсуждают все компании рынка</p>
+    </div>
+    <div class="topics-grid">
+      <div class="topic-card rv" style="transition-delay:.05s">
+        <div class="t-icon" style="background:rgba(255,107,53,0.12)">🔄</div>
+        <div class="t-body">
+          <h4>Локализация и импортозамещение</h4>
+          <p>Главная тема 2022–2026 гг. Переход с SAP/Oracle, поиск российских альтернатив</p>
+          <div class="t-freq" style="background:rgba(255,107,53,0.1);color:var(--orange)">Все компании</div>
+        </div>
+      </div>
+      <div class="topic-card rv" style="transition-delay:.1s">
+        <div class="t-icon" style="background:rgba(0,212,255,0.12)">🤖</div>
+        <div class="t-body">
+          <h4>Искусственный интеллект и GenAI</h4>
+          <p>Главный тренд 2024–2026. Применение LLM, GenAI в бизнес-процессах</p>
+          <div class="t-freq" style="background:rgba(0,212,255,0.1);color:var(--cyan)">Тренд 2024–2026</div>
+        </div>
+      </div>
+      <div class="topic-card rv" style="transition-delay:.15s">
+        <div class="t-icon" style="background:rgba(0,229,160,0.12)">☁️</div>
+        <div class="t-body">
+          <h4>Облачные технологии</h4>
+          <p>Классическая тема для интеграторов. Миграция, облачная экономика, Kubernetes</p>
+          <div class="t-freq" style="background:rgba(0,229,160,0.1);color:var(--green)">Классика</div>
+        </div>
+      </div>
+      <div class="topic-card rv" style="transition-delay:.2s">
+        <div class="t-icon" style="background:rgba(124,58,237,0.12)">🛡️</div>
+        <div class="t-body">
+          <h4>Кибербезопасность</h4>
+          <p>Стабильно актуальная тема. Защита инфраструктуры, противодействие угрозам</p>
+          <div class="t-freq" style="background:rgba(124,58,237,0.1);color:#a855f7">Всегда актуально</div>
+        </div>
+      </div>
+      <div class="topic-card rv" style="transition-delay:.25s">
+        <div class="t-icon" style="background:rgba(0,170,255,0.12)">🏭</div>
+        <div class="t-body">
+          <h4>Цифровая трансформация отраслей</h4>
+          <p>Ритейл, промышленность, финансы. Кейсы клиентов — самый ценный контент</p>
+          <div class="t-freq" style="background:rgba(0,170,255,0.1);color:var(--accent)">Кейсы = золото</div>
+        </div>
+      </div>
+      <div class="topic-card rv" style="transition-delay:.3s">
+        <div class="t-icon" style="background:rgba(255,107,53,0.12)">📦</div>
+        <div class="t-body">
+          <h4>Управление данными</h4>
+          <p>Big Data, MDM, мастер-данные в 1С. Аналитические решения и платформы</p>
+          <div class="t-freq" style="background:rgba(255,107,53,0.1);color:var(--orange)">Растущий тренд</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ OPPORTUNITIES ══════════════════ -->
+<section class="opps-section" id="opps">
+  <div class="container">
+    <div class="rv" style="text-align:center">
+      <div class="sec-label">🚀 Идеи для вас</div>
+      <h2 class="sec-title" style="text-align:center">12 идей чтобы <span>обойти</span> конкурентов</h2>
+      <p class="sec-desc" style="text-align:center;margin:12px auto 48px">На основе анализа конкурентов — что можно перенять и усилить</p>
+    </div>
+    <div class="opps-grid">
+
+      <div class="opp-card rv" style="transition-delay:.05s">
+        <span class="opp-num">01</span>
+        <span class="opp-icon">☕</span>
+        <h3>Coffee Talks по примеру Axenix</h3>
+        <p>Неформальные беседы экспертов с клиентами. Каждая практика (ERP, CRM, BI, ИБ) — свой выпуск.</p>
+        <div class="opp-tag">Высокий приоритет</div>
+      </div>
+
+      <div class="opp-card rv" style="transition-delay:.1s">
+        <span class="opp-num">02</span>
+        <span class="opp-icon">📊</span>
+        <h3>Разбор кейсов с цифрами</h3>
+        <p>Формат: проблема → решение → измеримый результат. Сколько сэкономили, ROI, сроки внедрения.</p>
+        <div class="opp-tag">Высокий приоритет</div>
+      </div>
+
+      <div class="opp-card rv" style="transition-delay:.15s">
+        <span class="opp-num">03</span>
+        <span class="opp-icon">💣</span>
+        <h3>Серия «Мифы и реальность»</h3>
+        <p>Разоблачение заблуждений в IT-консалтинге. «7 мифов об аутсорсинге». Отлично работает на доверие.</p>
+        <div class="opp-tag">Виральный формат</div>
+      </div>
+
+      <div class="opp-card rv" style="transition-delay:.2s">
+        <span class="opp-num">04</span>
+        <span class="opp-icon">🏆</span>
+        <h3>Топ-менеджеры клиентов как гости</h3>
+        <p>CIO и CEO крупных компаний делятся опытом трансформации. Networking-эффект гарантирован.</p>
+        <div class="opp-tag">Networking</div>
+      </div>
+
+      <div class="opp-card rv" style="transition-delay:.25s">
+        <span class="opp-num">05</span>
+        <span class="opp-icon">🎬</span>
+        <h3>Отраслевые мини-сезоны</h3>
+        <p>Сезон 1: IT в ритейле. Сезон 2: промышленность. Сезон 3: финансы. Аудитория находит «свои» выпуски.</p>
+        <div class="opp-tag">Контент-план</div>
+      </div>
+
+      <div class="opp-card rv" style="transition-delay:.3s">
+        <span class="opp-num">06</span>
+        <span class="opp-icon">📹</span>
+        <h3>Видео-версии для YouTube/RUTUBE</h3>
+        <p>Визуальный контент лучше индексируется и привлекает молодых специалистов. Двойной охват.</p>
+        <div class="opp-tag">SEO-эффект</div>
+      </div>
+
+      <div class="opp-card rv" style="transition-delay:.35s">
+        <span class="opp-num">07</span>
+        <span class="opp-icon">🔮</span>
+        <h3>Прогнозный выпуск в начале года</h3>
+        <p>«Итоги года и прогнозы с Минцифры» — генерирует упоминания в СМИ и привлекает внимание.</p>
+        <div class="opp-tag">PR-эффект</div>
+      </div>
+
+      <div class="opp-card rv" style="transition-delay:.4s">
+        <span class="opp-num">08</span>
+        <span class="opp-icon">🎓</span>
+        <h3>Карьерный подкаст для найма</h3>
+        <p>Истории сотрудников о проектах, росте и культуре. Снижает стоимость найма в 2–3 раза.</p>
+        <div class="opp-tag">HR-бренд</div>
+      </div>
+
+      <div class="opp-card rv" style="transition-delay:.45s">
+        <span class="opp-num">09</span>
+        <span class="opp-icon">⚡</span>
+        <h3>Короткие шоты 5–10 минут</h3>
+        <p>Как ICL Services с 4-минутным выпуском. Быстрый контент для занятых руководителей.</p>
+        <div class="opp-tag">Быстрый контент</div>
+      </div>
+
+      <div class="opp-card rv" style="transition-delay:.5s">
+        <span class="opp-num">10</span>
+        <span class="opp-icon">📰</span>
+        <h3>Партнёрство с TAdviser и CNews</h3>
+        <p>КОРУС и ЭКОПСИ делают совместные выпуски с TAdviser и Хабром. Расширяет аудиторию радикально.</p>
+        <div class="opp-tag">Дистрибуция</div>
+      </div>
+
+      <div class="opp-card rv" style="transition-delay:.55s">
+        <span class="opp-num">11</span>
+        <span class="opp-icon">💬</span>
+        <h3>Интерактивные Q&A-эпизоды</h3>
+        <p>Собирайте вопросы слушателей, делайте Q&A-выпуски. Повышает вовлечённость и лояльность.</p>
+        <div class="opp-tag">Community</div>
+      </div>
+
+      <div class="opp-card rv" style="transition-delay:.6s">
+        <span class="opp-num">12</span>
+        <span class="opp-icon">📝</span>
+        <h3>Транскрибация в SEO-статьи</h3>
+        <p>Axenix и КРОК публикуют текстовые версии. Статья на Хабре приносит трафик 2–3 года.</p>
+        <div class="opp-tag">Долгий актив</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ GAPS ══════════════════ -->
+<section class="gaps-section">
+  <div class="container">
+    <div class="rv" style="text-align:center">
+      <div class="sec-label">⚠️ Свободные ниши</div>
+      <h2 class="sec-title" style="text-align:center">Что не делают <span>конкуренты</span></h2>
+      <p class="sec-desc" style="text-align:center;margin:12px auto 48px">6 ниш, которые свободны — ваши возможности для конкурентного преимущества</p>
+    </div>
+    <div class="gaps-grid">
+      <div class="gap-item rv" style="transition-delay:.05s">
+        <div class="gap-dot"></div>
+        <div>
+          <h4>Нет подкастов на английском</h4>
+          <p>Можно охватить СНГ и международную аудиторию. Ниша полностью свободна.</p>
+        </div>
+      </div>
+      <div class="gap-item rv" style="transition-delay:.1s">
+        <div class="gap-dot"></div>
+        <div>
+          <h4>Нет интерактивных live-форматов</h4>
+          <p>Live-записи, Q&A в реальном времени, голосование аудитории — всё это свободно.</p>
+        </div>
+      </div>
+      <div class="gap-item rv" style="transition-delay:.15s">
+        <div class="gap-dot"></div>
+        <div>
+          <h4>Нет сериальных форматов</h4>
+          <p>История одного проекта в 3–5 выпусках. Захватывающий нарратив, которого нет ни у кого.</p>
+        </div>
+      </div>
+      <div class="gap-item rv" style="transition-delay:.2s">
+        <div class="gap-dot"></div>
+        <div>
+          <h4>Нет подкастов для узких ниш</h4>
+          <p>Только про 1С, только про BI, только про ИБ — сверхточное попадание в аудиторию.</p>
+        </div>
+      </div>
+      <div class="gap-item rv" style="transition-delay:.25s">
+        <div class="gap-dot"></div>
+        <div>
+          <h4>Нет со-ведущих из клиентских компаний</h4>
+          <p>Когда клиент является постоянным со-ведущим — максимальное partnership-позиционирование.</p>
+        </div>
+      </div>
+      <div class="gap-item rv" style="transition-delay:.3s">
+        <div class="gap-dot"></div>
+        <div>
+          <h4>Нет геймификации</h4>
+          <p>Челленджи, квизы, рейтинги слушателей — вирусный механизм, который никто не использует.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ STRATEGY ══════════════════ -->
+<section class="strategy-section">
+  <div class="container">
+    <div class="rv" style="text-align:center;margin-bottom:52px">
+      <div class="sec-label">📋 Стратегия</div>
+      <h2 class="sec-title" style="text-align:center">Рекомендуемая <span>стратегия запуска</span></h2>
+      <p class="sec-desc" style="text-align:center;margin:12px auto 0">Пошаговый план для тех, кто начинает с нуля</p>
+    </div>
+    <div class="strategy-grid">
+      <div class="rvL">
+        <h3 style="color:#fff;font-size:1.2rem;font-weight:800;margin-bottom:8px">
+          Первые шаги
+        </h3>
+        <p style="color:var(--muted);font-size:.88rem;margin-bottom:24px">Базовые действия для старта</p>
+        <div class="strat-steps">
+          <div class="strat-step">
+            <div class="step-num-wrap">1</div>
+            <div class="step-body">
+              <h4>1 аудио-подкаст в формате диалога</h4>
+              <p>Как Axenix — экспертная беседа с приглашёнными гостями</p>
+            </div>
+          </div>
+          <div class="strat-step">
+            <div class="step-num-wrap">2</div>
+            <div class="step-body">
+              <h4>2 выпуска в месяц</h4>
+              <p>Реалистичная частота для начала. Длительность 30–40 минут.</p>
+            </div>
+          </div>
+          <div class="strat-step">
+            <div class="step-num-wrap">3</div>
+            <div class="step-body">
+              <h4>4 платформы одновременно</h4>
+              <p>Apple Podcasts · Яндекс Музыка · VK Подкасты · YouTube</p>
+            </div>
+          </div>
+          <div class="strat-step">
+            <div class="step-num-wrap">4</div>
+            <div class="step-body">
+              <h4>Продвижение через Telegram + TAdviser</h4>
+              <p>Корпоративный канал + партнёрство с отраслевыми медиа</p>
+            </div>
+          </div>
+          <div class="strat-step">
+            <div class="step-num-wrap">5</div>
+            <div class="step-body">
+              <h4>Транскрибируйте каждый выпуск</h4>
+              <p>Статьи на сайте и Хабре — долгосрочный SEO-актив</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rvR">
+        <h3 style="color:#fff;font-size:1.2rem;font-weight:800;margin-bottom:8px">
+          Контент-план: первый сезон
+        </h3>
+        <p style="color:var(--muted);font-size:.88rem;margin-bottom:24px">10 выпусков, которые создадут фундамент</p>
+        <div class="content-plan">
+          <div class="cp-header">🎙️ Сезон 1 — 10 выпусков</div>
+          <div class="cp-item">
+            <div class="ep-num">EP1</div>
+            <div class="cp-item-text">
+              <strong>Кто мы и зачем этот подкаст</strong>
+              <span>Знакомство с командой и форматом</span>
+            </div>
+          </div>
+          <div class="cp-item">
+            <div class="ep-num">EP2</div>
+            <div class="cp-item-text">
+              <strong>Главный тренд 2026 в IT-консалтинге</strong>
+              <span>Аналитика и прогнозы рынка</span>
+            </div>
+          </div>
+          <div class="cp-item">
+            <div class="ep-num">EP3</div>
+            <div class="cp-item-text">
+              <strong>Кейс: как мы сэкономили N млн рублей</strong>
+              <span>Разбор реального проекта с цифрами</span>
+            </div>
+          </div>
+          <div class="cp-item">
+            <div class="ep-num">EP4</div>
+            <div class="cp-item-text">
+              <strong>5 мифов о [ваша специализация]</strong>
+              <span>Разоблачение заблуждений рынка</span>
+            </div>
+          </div>
+          <div class="cp-item">
+            <div class="ep-num">EP5</div>
+            <div class="cp-item-text">
+              <strong>Интервью с CIO крупной компании</strong>
+              <span>Приглашённый топ-менеджер клиента</span>
+            </div>
+          </div>
+          <div class="cp-item">
+            <div class="ep-num">EP6</div>
+            <div class="cp-item-text">
+              <strong>Как выбрать IT-консалтинговую компанию</strong>
+              <span>Польза для рынка, доверие через честность</span>
+            </div>
+          </div>
+          <div class="cp-item">
+            <div class="ep-num">EP7</div>
+            <div class="cp-item-text">
+              <strong>Технологии через 3 года — прогноз</strong>
+              <span>Экспертный взгляд на будущее отрасли</span>
+            </div>
+          </div>
+          <div class="cp-item">
+            <div class="ep-num">EP8</div>
+            <div class="cp-item-text">
+              <strong>Провал проекта: чему мы научились</strong>
+              <span>Честность = доверие = контракты</span>
+            </div>
+          </div>
+          <div class="cp-item">
+            <div class="ep-num">EP9</div>
+            <div class="cp-item-text">
+              <strong>Как мы строим команду</strong>
+              <span>HR-бренд: культура, рост, ценности</span>
+            </div>
+          </div>
+          <div class="cp-item">
+            <div class="ep-num">EP10</div>
+            <div class="cp-item-text">
+              <strong>Итоги сезона и Q&A слушателей</strong>
+              <span>Интерактив и планы на следующий сезон</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ PLATFORMS ══════════════════ -->
+<section class="platforms-section">
+  <div class="container">
+    <div class="rv">
+      <div class="sec-label">📡 Платформы</div>
+      <h2 class="sec-title">Где <span>размещать</span> подкаст</h2>
+      <p class="sec-desc" style="margin:12px auto 40px">Все ключевые площадки для максимального охвата аудитории</p>
+    </div>
+    <div class="plat-row rv">
+      <div class="plat-pill"><span class="plat-icon">🍎</span>Apple Podcasts</div>
+      <div class="plat-pill"><span class="plat-icon">🎵</span>Яндекс Музыка</div>
+      <div class="plat-pill"><span class="plat-icon">📱</span>VK Подкасты</div>
+      <div class="plat-pill"><span class="plat-icon">▶️</span>YouTube</div>
+      <div class="plat-pill"><span class="plat-icon">📺</span>RUTUBE</div>
+      <div class="plat-pill"><span class="plat-icon">✈️</span>Telegram</div>
+      <div class="plat-pill"><span class="plat-icon">📰</span>TAdviser</div>
+      <div class="plat-pill"><span class="plat-icon">🖥️</span>Хабр</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ CTA BANNER ══════════════════ -->
+<section class="cta-banner">
+  <div class="container">
+    <div class="cta-inner rv">
+      <div class="sec-label" style="margin-bottom:20px">🎯 Итог</div>
+      <h2>Подкаст — это <span class="grad-text">стратегический актив</span>, а не контент-канал</h2>
+      <p>Низкие публичные метрики — иллюзия. 33 выпуска Axenix — это библиотека экспертизы, которую невозможно скопировать за год. Начинайте сегодня.</p>
+      <div class="cta-chips">
+        <div class="cta-chip">Доверие = Деньги</div>
+        <div class="cta-chip">Длинная игра</div>
+        <div class="cta-chip">Качество аудитории</div>
+        <div class="cta-chip">Стратегический актив</div>
+        <div class="cta-chip">Барьер для конкурентов</div>
+        <div class="cta-chip">SEO-эффект</div>
+      </div>
+      <a href="#companies" class="btn-p" style="display:inline-block">Изучить ещё раз →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ FOOTER ══════════════════ -->
+<footer>
+  <p>Аналитический отчёт в стиле <strong>NOVARDIS Consulting</strong> — IT-консалтинг нового поколения</p>
+  <p style="margin-top:8px">Подкаст в B2B-консалтинге — инструмент доверия, а не охвата</p>
+</footer>
+
+<!-- ══════════════════ SCRIPTS ══════════════════ -->
+<script>
+/* ── CURSOR ── */
+const cur = document.getElementById('cur');
+const ring = document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+(function animCur(){
+  cur.style.transform=`translate(${mx-5}px,${my-5}px)`;
+  rx+=(mx-rx)*.1; ry+=(my-ry)*.1;
+  ring.style.transform=`translate(${rx-20}px,${ry-20}px)`;
+  requestAnimationFrame(animCur);
+})();
+document.querySelectorAll('a,.comp-card,.opp-card,.fmt-card,.topic-card,.gap-item,.plat-pill').forEach(el=>{
+  el.addEventListener('mouseenter',()=>ring.classList.add('expand'));
+  el.addEventListener('mouseleave',()=>ring.classList.remove('expand'));
+});
+
+/* ── PROGRESS ── */
+const prog = document.getElementById('prog');
+const nav  = document.getElementById('navbar');
+window.addEventListener('scroll',()=>{
+  const pct=scrollY/(document.body.scrollHeight-innerHeight)*100;
+  prog.style.width=pct+'%';
+  nav.classList.toggle('scrolled',scrollY>30);
+});
+
+/* ── CANVAS STARS ── */
+const canvas=document.getElementById('star-canvas');
+const ctx=canvas.getContext('2d');
+let W,H,stars=[];
+function resize(){W=canvas.width=innerWidth;H=canvas.height=innerHeight}
+resize();addEventListener('resize',resize);
+function mkStar(){
+  return{
+    x:Math.random()*W,y:Math.random()*H,
+    r:Math.random()*1.8+.3,
+    vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,
+    o:Math.random()*.6+.1,
+    col:Math.random()>.6?'rgba(0,170,255,':'rgba(255,255,255,'
+  }
+}
+for(let i=0;i<130;i++)stars.push(mkStar());
+function drawStars(){
+  ctx.clearRect(0,0,W,H);
+  // connections
+  for(let i=0;i<stars.length;i++){
+    for(let j=i+1;j<stars.length;j++){
+      const dx=stars[i].x-stars[j].x,dy=stars[i].y-stars[j].y;
+      const d=Math.sqrt(dx*dx+dy*dy);
+      if(d<110){
+        ctx.beginPath();
+        ctx.strokeStyle=`rgba(0,100,255,${(1-d/110)*.12})`;
+        ctx.lineWidth=.8;
+        ctx.moveTo(stars[i].x,stars[i].y);
+        ctx.lineTo(stars[j].x,stars[j].y);
+        ctx.stroke();
+      }
+    }
+  }
+  // stars
+  stars.forEach(s=>{
+    ctx.beginPath();
+    ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+    ctx.fillStyle=s.col+s.o+')';
+    ctx.fill();
+    s.x+=s.vx;s.y+=s.vy;
+    if(s.x<0||s.x>W)s.vx*=-1;
+    if(s.y<0||s.y>H)s.vy*=-1;
+  });
+  requestAnimationFrame(drawStars);
+}
+drawStars();
+
+/* ── REVEAL ON SCROLL ── */
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on')});
+},{threshold:.1});
+document.querySelectorAll('.rv,.rvL,.rvR').forEach(el=>io.observe(el));
+
+/* ── COUNTERS ── */
+function animCount(el){
+  const t=+el.dataset.t,d=1600,s=performance.now();
+  const tick=now=>{
+    const p=Math.min((now-s)/d,1);
+    const e=1-Math.pow(1-p,3);
+    el.textContent=Math.floor(e*t);
+    if(p<1)requestAnimationFrame(tick);
+    else el.textContent=t;
+  };
+  requestAnimationFrame(tick);
+}
+const cio=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.querySelectorAll('.counter').forEach(animCount);
+      cio.unobserve(e.target);
+    }
+  });
+},{threshold:.4});
+document.querySelector('.stats-row') && cio.observe(document.querySelector('.stats-row'));
+
+/* ── FLOATING PARTICLES ── */
+function spawnPart(){
+  const p=document.createElement('div');
+  p.className='particle';
+  const sz=Math.random()*6+2;
+  const colors=['rgba(0,100,255,.4)','rgba(0,212,255,.4)','rgba(124,58,237,.4)','rgba(0,229,160,.3)'];
+  p.style.cssText=`
+    width:${sz}px;height:${sz}px;
+    left:${Math.random()*100}vw;
+    background:${colors[Math.floor(Math.random()*colors.length)]};
+    animation-duration:${Math.random()*14+8}s;
+    animation-delay:${Math.random()*4}s;
+    border-radius:${Math.random()>.5?'50%':'3px'};
+  `;
+  document.body.appendChild(p);
+  setTimeout(()=>p.remove(),20000);
+}
+setInterval(spawnPart,900);
+
+/* ── SMOOTH SCROLL ── */
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    e.preventDefault();
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t)t.scrollIntoView({behavior:'smooth'});
+  });
+});
+
+/* ── PARALLAX HERO GLOW ── */
+const heroGlow=document.querySelector('.hero-glow');
+window.addEventListener('scroll',()=>{
+  if(heroGlow)heroGlow.style.transform=`translate(-50%,calc(-50% + ${scrollY*.15}px))`;
+});
+
+/* ── CARD TILT ── */
+document.querySelectorAll('.comp-card,.opp-card').forEach(card=>{
+  card.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect();
+    const x=(e.clientX-r.left)/r.width-.5;
+    const y=(e.clientY-r.top)/r.height-.5;
+    card.style.transform=`translateY(-8px) rotateY(${x*6}deg) rotateX(${-y*6}deg)`;
+  });
+  card.addEventListener('mouseleave',()=>{
+    card.style.transform='';
+  });
+});
+
+/* ── TYPING EFFECT HERO ── */
+const heroSub=document.querySelector('.hero-sub');
+if(heroSub){
+  const orig=heroSub.textContent;
+  heroSub.textContent='';
+  let i=0;
+  const cursor=document.createElement('span');
+  cursor.className='typed-cursor';cursor.textContent='|';
+  heroSub.appendChild(cursor);
+  setTimeout(()=>{
+    const iv=setInterval(()=>{
+      if(i<orig.length){
+        heroSub.insertBefore(document.createTextNode(orig[i]),cursor);
+        i++;
+      } else {
+        clearInterval(iv);
+        setTimeout(()=>cursor.remove(),1200);
+      }
+    },22);
+  },1200);
+}
+
+/* ── NEON FLICKER ON BADGES ── */
+document.querySelectorAll('.cc-badge').forEach(b=>{
+  setInterval(()=>{
+    b.style.opacity=Math.random()>.97?'.5':'1';
+  },100);
+});
+</script>
+</body>
+</html>
