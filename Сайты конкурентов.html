@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Аудит цифрового присутствия IT-консалтинга | Novardis</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#07090f;--bg2:#0b0f1a;--bg3:#0f1520;
+  --card:#111827;--card2:#162032;--card3:#1c2b40;
+  --blue:#0066ff;--accent:#00aaff;--cyan:#00d4ff;
+  --purple:#7c3aed;--pink:#ec4899;--green:#00e5a0;
+  --orange:#ff6b35;--yellow:#fbbf24;--red:#ef4444;
+  --text:#e2e8f0;--muted:#64748b;--muted2:#4a5568;
+  --border:rgba(255,255,255,0.06);--border2:rgba(0,170,255,0.2);
+  --gblue:linear-gradient(135deg,#0057b8,#00aaff);
+  --gcyan:linear-gradient(135deg,#00aaff,#00d4ff);
+  --gpurp:linear-gradient(135deg,#7c3aed,#a855f7);
+  --ggreen:linear-gradient(135deg,#00c87a,#00e5a0);
+  --gorange:linear-gradient(135deg,#ff6b35,#ff9f1c);
+  --gpink:linear-gradient(135deg,#ec4899,#f472b6);
+  --gyellow:linear-gradient(135deg,#f59e0b,#fbbf24);
+  --shadow:0 8px 40px rgba(0,100,255,0.12);
+  --shadowH:0 24px 80px rgba(0,100,255,0.22);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.7}
+
+/* ── CURSOR ── */
+#cur{width:10px;height:10px;background:var(--cyan);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;mix-blend-mode:screen;transition:background .3s}
+#cur-ring{width:40px;height:40px;border:1.5px solid rgba(0,212,255,0.45);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9998;transition:width .3s,height .3s,border-color .3s}
+#cur-ring.expand{width:58px;height:58px;border-color:var(--blue)}
+
+/* ── PROGRESS ── */
+#prog{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--blue),var(--cyan),var(--purple),var(--pink));z-index:9000;box-shadow:0 0 14px rgba(0,212,255,0.8);transition:width .1s}
+
+/* ── CANVAS ── */
+#bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;height:66px;background:rgba(7,9,15,0.85);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 48px;transition:box-shadow .3s}
+nav.scrolled{box-shadow:0 4px 40px rgba(0,100,255,0.15)}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+.logo-icon{width:36px;height:36px;border-radius:9px;background:var(--gblue);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.9rem;color:#fff;animation:logoPulse 3s ease-in-out infinite}
+@keyframes logoPulse{0%,100%{box-shadow:0 0 0 0 rgba(0,170,255,0.4)}50%{box-shadow:0 0 0 12px rgba(0,170,255,0)}}
+.logo-text{font-size:1.25rem;font-weight:800;color:#fff}
+.logo-text span{color:var(--accent)}
+.nav-right{display:flex;align-items:center;gap:12px}
+.nav-chip{font-size:.65rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;padding:5px 14px;border-radius:20px;color:var(--cyan);background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.2);animation:chipBlink 2.5s ease-in-out infinite}
+.nav-chip:nth-child(2){animation-delay:.6s;color:var(--purple);background:rgba(124,58,237,0.08);border-color:rgba(124,58,237,0.25)}
+@keyframes chipBlink{0%,100%{opacity:1}50%{opacity:.6}}
+
+/* ── HERO ── */
+.hero{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 40px 80px;overflow:hidden}
+.hero-glow{position:absolute;top:30%;left:50%;transform:translate(-50%,-50%);width:1000px;height:700px;pointer-events:none;background:radial-gradient(ellipse,rgba(0,100,255,0.1) 0%,transparent 70%);animation:glowPulse 5s ease-in-out infinite}
+@keyframes glowPulse{0%,100%{opacity:.6;transform:translate(-50%,-50%) scale(1)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.07)}}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(0,100,255,0.1);border:1px solid rgba(0,170,255,0.25);color:var(--accent);font-size:.7rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:6px 20px;border-radius:30px;margin-bottom:28px;animation:fadeUp .9s ease both}
+.pulse-dot{width:7px;height:7px;background:var(--cyan);border-radius:50%;animation:pDot 1.5s ease-in-out infinite}
+@keyframes pDot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.7)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+
+.hero h1{font-size:clamp(2rem,5.5vw,4rem);font-weight:900;line-height:1.1;max-width:900px;margin-bottom:24px;animation:fadeUp .9s .1s ease both}
+.grad-text{background:linear-gradient(135deg,var(--accent),var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:gradShift 6s ease-in-out infinite alternate}
+@keyframes gradShift{0%{filter:hue-rotate(0deg)}100%{filter:hue-rotate(25deg)}}
+.glitch{position:relative;display:inline-block}
+.glitch::before,.glitch::after{content:attr(data-text);position:absolute;inset:0;background:transparent}
+.glitch::before{color:rgba(0,212,255,0.5);animation:gl1 5s infinite;clip-path:polygon(0 20%,100% 20%,100% 30%,0 30%)}
+.glitch::after{color:rgba(124,58,237,0.5);animation:gl2 5s infinite;clip-path:polygon(0 65%,100% 65%,100% 75%,0 75%)}
+@keyframes gl1{0%,88%,100%{transform:none}90%{transform:translate(-4px,1px)}93%{transform:translate(4px,-1px)}96%{transform:none}}
+@keyframes gl2{0%,86%,100%{transform:none}88%{transform:translate(4px,2px)}91%{transform:translate(-4px,-1px)}94%{transform:none}}
+
+.hero-sub{font-size:1.05rem;color:var(--muted);max-width:620px;margin-bottom:48px;animation:fadeUp .9s .2s ease both}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;animation:fadeUp .9s .3s ease both;margin-bottom:60px}
+.btn-p{background:var(--gblue);color:#fff;padding:13px 32px;border-radius:50px;font-weight:700;font-size:.92rem;text-decoration:none;position:relative;overflow:hidden;box-shadow:0 8px 28px rgba(0,100,255,0.35);transition:transform .25s,box-shadow .25s}
+.btn-p::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);transition:left .5s}
+.btn-p:hover::before{left:100%}
+.btn-p:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,100,255,0.5)}
+.btn-s{background:transparent;color:var(--accent);padding:13px 32px;border-radius:50px;font-weight:700;font-size:.92rem;text-decoration:none;border:1.5px solid rgba(0,170,255,0.35);transition:all .25s}
+.btn-s:hover{background:rgba(0,170,255,0.1);transform:translateY(-4px);border-color:var(--accent)}
+
+/* ── STATS ROW ── */
+.stats-row{display:flex;gap:40px;flex-wrap:wrap;justify-content:center;animation:fadeUp .9s .4s ease both}
+.stat-box{text-align:center}
+.stat-num{font-size:2.2rem;font-weight:900;line-height:1;background:var(--gcyan);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-lbl{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-top:4px}
+.stat-div{width:1px;background:var(--border);align-self:stretch}
+
+/* ── SCROLL IND ── */
+.scroll-ind{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:7px;animation:fadeUp .9s .9s ease both}
+.scroll-ind span{font-size:.66rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+.scroll-mouse{width:22px;height:36px;border:1.5px solid rgba(255,255,255,0.12);border-radius:11px;display:flex;align-items:flex-start;justify-content:center;padding-top:5px}
+.scroll-mouse::after{content:'';width:4px;height:7px;background:var(--accent);border-radius:4px;animation:scrollW 1.8s ease infinite}
+@keyframes scrollW{0%{opacity:1;transform:none}100%{opacity:0;transform:translateY(14px)}}
+
+/* ── SECTION BASE ── */
+section{position:relative;z-index:1;padding:80px 40px}
+.container{max-width:1160px;margin:0 auto}
+.sec-label{display:inline-block;font-size:.67rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:5px 16px;border-radius:20px;margin-bottom:14px;background:var(--gblue);color:#fff}
+.sec-title{font-size:clamp(1.8rem,3.5vw,2.7rem);font-weight:900;color:#fff;margin-bottom:14px;line-height:1.2}
+.sec-title span{color:var(--accent)}
+.sec-desc{font-size:.97rem;color:var(--muted);max-width:640px;margin-bottom:52px}
+
+/* ── REVEAL ── */
+.rv{opacity:0;transform:translateY(40px);transition:opacity .7s ease,transform .7s ease}
+.rvL{opacity:0;transform:translateX(-50px);transition:opacity .7s ease,transform .7s ease}
+.rvR{opacity:0;transform:translateX(50px);transition:opacity .7s ease,transform .7s ease}
+.rvS{opacity:0;transform:scale(.94);transition:opacity .7s ease,transform .7s ease}
+.rv.on,.rvL.on,.rvR.on,.rvS.on{opacity:1;transform:none}
+
+/* ── RATING OVERVIEW ── */
+.overview-section{background:var(--bg2)}
+.overview-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
+.ov-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px 20px;text-align:center;position:relative;overflow:hidden;cursor:default;transition:transform .3s,border-color .3s,box-shadow .3s}
+.ov-card:hover{transform:translateY(-6px);border-color:var(--border2);box-shadow:var(--shadowH)}
+.ov-card .company-rank{position:absolute;top:10px;left:14px;font-size:.65rem;font-weight:800;color:var(--muted);letter-spacing:.5px}
+.ov-icon{font-size:2rem;margin-bottom:10px;display:block}
+.ov-name{font-size:.95rem;font-weight:800;color:#fff;margin-bottom:6px}
+.ov-score{display:flex;justify-content:center;gap:3px;margin-bottom:8px}
+.ov-score .star{font-size:.85rem;animation:starPop .4s ease both}
+.ov-badge{font-size:.65rem;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:.3px}
+.ov-card-glow{position:absolute;top:-30px;right:-30px;width:90px;height:90px;border-radius:50%;opacity:.07;pointer-events:none;transition:opacity .3s}
+.ov-card:hover .ov-card-glow{opacity:.15}
+@keyframes starPop{from{transform:scale(0) rotate(-30deg)}to{transform:scale(1) rotate(0)}}
+
+/* ── COMPANY DETAIL ── */
+.detail-section{background:var(--bg)}
+.detail-section:nth-child(even){background:var(--bg2)}
+.detail-grid{display:grid;grid-template-columns:340px 1fr;gap:48px;align-items:start}
+@media(max-width:900px){.detail-grid{grid-template-columns:1fr}}
+.detail-sidebar{position:sticky;top:90px}
+.company-hero{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:32px;text-align:center;position:relative;overflow:hidden;margin-bottom:20px}
+.company-hero::before{content:'';position:absolute;inset:0;opacity:.04;pointer-events:none}
+.company-emoji{font-size:3.5rem;display:block;margin-bottom:14px;animation:floatIcon 4s ease-in-out infinite}
+@keyframes floatIcon{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.company-name{font-size:1.5rem;font-weight:900;color:#fff;margin-bottom:4px}
+.company-sub{font-size:.82rem;color:var(--muted);margin-bottom:16px}
+.score-row{display:flex;justify-content:center;gap:4px;margin-bottom:16px}
+.score-row .s{font-size:1.2rem}
+.company-verdict{font-size:.82rem;color:var(--text);background:rgba(255,255,255,0.04);border-radius:12px;padding:12px 16px;line-height:1.55;border-left:3px solid}
+
+.meta-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:14px}
+.meta-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)}
+.meta-row:last-child{border-bottom:none}
+.meta-key{font-size:.78rem;color:var(--muted);font-weight:600}
+.meta-val{font-size:.8rem;font-weight:700;color:var(--text)}
+
+.detail-content .section-block{margin-bottom:28px}
+.block-title{font-size:.78rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.block-title::after{content:'';flex:1;height:1px;background:var(--border)}
+
+.feat-item{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--border);transition:transform .2s}
+.feat-item:last-child{border-bottom:none}
+.feat-item:hover{transform:translateX(5px)}
+.feat-badge{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0}
+.feat-body strong{display:block;font-size:.88rem;color:#fff;margin-bottom:2px}
+.feat-body span{font-size:.8rem;color:var(--muted)}
+
+.pro-con-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:600px){.pro-con-grid{grid-template-columns:1fr}}
+.pro-list,.con-list{background:var(--card);border-radius:14px;padding:16px}
+.pro-list{border:1px solid rgba(0,229,160,0.15)}
+.con-list{border:1px solid rgba(239,68,68,0.15)}
+.pro-list h4{font-size:.72rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--green);margin-bottom:12px}
+.con-list h4{font-size:.72rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--red);margin-bottom:12px}
+.pro-item,.con-item{display:flex;gap:8px;font-size:.8rem;color:var(--muted);margin-bottom:8px;line-height:1.5}
+.pro-item::before{content:'✓';color:var(--green);font-weight:800;flex-shrink:0}
+.con-item::before{content:'✗';color:var(--red);font-weight:800;flex-shrink:0}
+
+/* ── NEON CARD ── */
+.neon-border{border:1px solid transparent;background:linear-gradient(var(--card),var(--card)) padding-box,linear-gradient(135deg,var(--blue),var(--purple)) border-box;animation:neonP 3s ease-in-out infinite}
+@keyframes neonP{0%,100%{box-shadow:0 0 15px rgba(0,100,255,0.08)}50%{box-shadow:0 0 30px rgba(0,100,255,0.2)}}
+
+/* ── TRENDS SECTION ── */
+.trends-section{background:var(--bg2)}
+.trends-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px}
+.trend-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px;position:relative;overflow:hidden;cursor:default;transition:transform .3s,border-color .3s,box-shadow .3s}
+.trend-card:hover{transform:translateY(-7px);border-color:var(--border2);box-shadow:var(--shadow)}
+.trend-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;transform:scaleX(0);transform-origin:left;transition:transform .4s}
+.trend-card:hover::before{transform:scaleX(1)}
+.trend-num{position:absolute;top:14px;right:18px;font-size:4rem;font-weight:900;color:rgba(255,255,255,0.03);line-height:1}
+.trend-icon{font-size:2rem;margin-bottom:14px;display:block}
+.trend-card h3{font-size:1rem;font-weight:800;color:#fff;margin-bottom:9px}
+.trend-card p{font-size:.83rem;color:var(--muted);line-height:1.65}
+.trend-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:16px}
+.trend-tag{font-size:.68rem;font-weight:700;padding:4px 12px;border-radius:20px;background:rgba(0,170,255,0.08);color:var(--accent)}
+
+/* ── CRO TABLE ── */
+.cro-section{background:var(--bg)}
+.cro-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px;margin-bottom:40px}
+.cro-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:24px;text-align:center;transition:transform .3s,border-color .3s}
+.cro-card:hover{transform:translateY(-6px);border-color:var(--border2)}
+.cro-icon{font-size:2.2rem;display:block;margin-bottom:12px}
+.cro-card h3{font-size:.92rem;font-weight:800;color:#fff;margin-bottom:8px}
+.cro-card p{font-size:.8rem;color:var(--muted)}
+.cro-who{font-size:.7rem;font-weight:700;margin-top:12px;padding:4px 12px;border-radius:20px;display:inline-block;background:rgba(0,229,160,0.1);color:var(--green)}
+
+/* ── BENCHMARK TABLE ── */
+.table-wrap{overflow-x:auto;border-radius:20px;border:1px solid var(--border);box-shadow:var(--shadow)}
+table{width:100%;border-collapse:collapse;background:var(--card);min-width:900px}
+thead th{background:rgba(0,100,255,0.12);color:var(--accent);padding:15px 18px;font-size:.72rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}
+tbody td{padding:13px 18px;font-size:.82rem;color:var(--text);border-bottom:1px solid var(--border);vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr{transition:background .2s}
+tbody tr:hover td{background:rgba(0,170,255,0.04)}
+.co-name{font-weight:800;color:#fff}
+.check{color:var(--green);font-size:1rem}
+.cross{color:var(--red);font-size:1rem}
+.half{color:var(--yellow);font-size:1rem}
+.rating-stars{display:flex;gap:2px}
+.rating-stars .s{font-size:.75rem}
+
+/* ── RECOMMENDATIONS ── */
+.recs-section{background:var(--bg2)}
+.recs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:22px}
+.rec-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px;position:relative;overflow:hidden;transition:transform .3s,border-color .3s,box-shadow .3s;cursor:default}
+.rec-card:hover{transform:translateY(-7px);border-color:var(--border2);box-shadow:var(--shadow)}
+.rec-card .rec-num{position:absolute;top:12px;right:18px;font-size:4.5rem;font-weight:900;color:rgba(255,255,255,0.025);line-height:1}
+.rec-priority{font-size:.65rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:4px 12px;border-radius:20px;margin-bottom:14px;display:inline-block}
+.pri-high{background:rgba(239,68,68,0.12);color:var(--red)}
+.pri-mid{background:rgba(251,191,36,0.12);color:var(--yellow)}
+.pri-low{background:rgba(0,229,160,0.12);color:var(--green)}
+.rec-icon{font-size:1.8rem;display:block;margin-bottom:12px}
+.rec-card h3{font-size:.97rem;font-weight:800;color:#fff;margin-bottom:8px}
+.rec-card p{font-size:.82rem;color:var(--muted);line-height:1.6}
+.rec-source{font-size:.72rem;color:var(--accent);margin-top:14px;padding-top:12px;border-top:1px solid var(--border)}
+
+/* ── WINNER BANNER ── */
+.winner-section{background:var(--bg);position:relative;overflow:hidden}
+.winner-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 30% 50%,rgba(0,100,255,0.1) 0%,transparent 70%),radial-gradient(ellipse 50% 40% at 80% 40%,rgba(124,58,237,0.08) 0%,transparent 60%)}
+.winner-inner{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+@media(max-width:768px){.winner-inner{grid-template-columns:1fr}}
+.winner-badge{display:inline-flex;align-items:center;gap:10px;background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.3);color:var(--yellow);font-size:.7rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:7px 18px;border-radius:30px;margin-bottom:20px;animation:winnerGlow 2s ease-in-out infinite}
+@keyframes winnerGlow{0%,100%{box-shadow:0 0 0 0 rgba(251,191,36,0.3)}50%{box-shadow:0 0 0 12px rgba(251,191,36,0)}}
+.winner-card{background:var(--card);border-radius:24px;padding:36px;border:1px solid rgba(251,191,36,0.2);position:relative;overflow:hidden}
+.winner-card::before{content:'🏆';position:absolute;right:20px;top:12px;font-size:8rem;opacity:.06;line-height:1}
+.winner-card h3{font-size:2rem;font-weight:900;color:#fff;margin-bottom:8px}
+.winner-card .wc-sub{font-size:.9rem;color:var(--muted);margin-bottom:24px}
+.winner-feats{display:flex;flex-direction:column;gap:10px}
+.wf-item{display:flex;gap:12px;align-items:flex-start}
+.wf-dot{width:8px;height:8px;border-radius:50%;background:var(--yellow);flex-shrink:0;margin-top:7px;animation:wfPulse 2s ease-in-out infinite}
+@keyframes wfPulse{0%,100%{box-shadow:0 0 0 0 rgba(251,191,36,0.4)}50%{box-shadow:0 0 0 8px rgba(251,191,36,0)}}
+.wf-text strong{display:block;font-size:.88rem;color:#fff;margin-bottom:2px}
+.wf-text span{font-size:.78rem;color:var(--muted)}
+
+/* ── CTA ── */
+.cta-section{background:var(--bg2);position:relative;overflow:hidden}
+.cta-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(0,100,255,0.12) 0%,transparent 70%);animation:ctaGl 5s ease-in-out infinite alternate}
+@keyframes ctaGl{0%{opacity:.6}100%{opacity:1}}
+.cta-inner{position:relative;z-index:1;text-align:center;max-width:720px;margin:0 auto}
+.cta-inner h2{font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:900;color:#fff;margin-bottom:16px}
+.cta-inner p{font-size:.97rem;color:var(--muted);margin-bottom:36px}
+.cta-chips{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:36px}
+.cta-chip{font-size:.72rem;font-weight:700;padding:6px 16px;border-radius:20px;background:rgba(0,170,255,0.08);border:1px solid rgba(0,170,255,0.2);color:var(--accent)}
+
+/* ── FOOTER ── */
+footer{background:var(--bg);border-top:1px solid var(--border);text-align:center;padding:36px;color:var(--muted);font-size:.8rem;position:relative;z-index:1}
+footer strong{color:var(--accent)}
+
+/* ── PARTICLES ── */
+.particle{position:fixed;border-radius:50%;pointer-events:none;z-index:0;animation:partFloat linear infinite;opacity:0}
+@keyframes partFloat{0%{transform:translateY(100vh) rotate(0deg);opacity:0}10%{opacity:.45}90%{opacity:.2}100%{transform:translateY(-120px) rotate(360deg);opacity:0}}
+
+/* ── SCORE BAR ── */
+.score-bar-wrap{display:flex;align-items:center;gap:10px;margin-top:5px}
+.score-bar-bg{flex:1;height:6px;background:rgba(255,255,255,0.06);border-radius:6px;overflow:hidden}
+.score-bar{height:100%;border-radius:6px;width:0;transition:width 1.4s cubic-bezier(.4,0,.2,1)}
+.score-val{font-size:.72rem;font-weight:700;min-width:28px;text-align:right}
+
+/* ── TILT ── */
+.tilt{transform-style:preserve-3d;transition:transform .15s ease}
+
+/* ── TOOLTIP ── */
+[data-tip]{position:relative}
+[data-tip]:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:rgba(0,0,0,.85);color:#fff;font-size:.7rem;padding:5px 10px;border-radius:8px;white-space:nowrap;pointer-events:none;z-index:100;border:1px solid var(--border)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:600px){nav{padding:0 20px}section{padding:60px 20px}.hero{padding:100px 20px 60px}.stats-row{gap:20px}.stat-div{display:none}}
+
+/* typed cursor */
+.typed-cursor{animation:tcBlink .7s ease infinite}
+@keyframes tcBlink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* counter */
+.counter{display:inline-block}
+
+/* hexpattern */
+.hex-pattern{position:absolute;inset:0;pointer-events:none;overflow:hidden;opacity:.018;z-index:0}
+
+/* wave divider */
+.wave{position:absolute;bottom:0;left:0;right:0;height:60px;z-index:2}
+.wave svg{display:block;width:100%;height:100%}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-ring"></div>
+<div id="prog"></div>
+<canvas id="bg-canvas"></canvas>
+
+<!-- ════════════════ NAV ════════════════ -->
+<nav id="navbar">
+  <a class="logo" href="#">
+    <div class="logo-icon">N</div>
+    <div class="logo-text">NOV<span>ARDIS</span></div>
+  </a>
+  <div class="nav-right">
+    <div class="nav-chip">📊 Digital Audit 2026</div>
+    <div class="nav-chip">Top-10 IT Consulting</div>
+  </div>
+</nav>
+
+<!-- ════════════════ HERO ════════════════ -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-tag"><span class="pulse-dot"></span>Глубокий аудит · 10 компаний · 2026</div>
+  <h1>
+    <span class="glitch grad-text" data-text="Цифровое присутствие">Цифровое присутствие</span><br/>
+    IT-консалтинга России
+  </h1>
+  <p class="hero-sub">Исчерпывающий разбор UX/UI, контент-стратегий, точек конверсии и скрытых инсайтов топ-10 компаний рынка</p>
+  <div class="hero-btns">
+    <a href="#overview" class="btn-p">Смотреть аудит →</a>
+    <a href="#trends"   class="btn-s">Тренды рынка</a>
+  </div>
+  <div class="stats-row">
+    <div class="stat-box"><div class="stat-num"><span class="counter" data-t="10">0</span></div><div class="stat-lbl">Компаний</div></div>
+    <div class="stat-div"></div>
+    <div class="stat-box"><div class="stat-num"><span class="counter" data-t="47">0</span>+</div><div class="stat-lbl">Параметров</div></div>
+    <div class="stat-div"></div>
+    <div class="stat-box"><div class="stat-num"><span class="counter" data-t="1">0</span> 🏆</div><div class="stat-lbl">Эталон</div></div>
+    <div class="stat-div"></div>
+    <div class="stat-box"><div class="stat-num"><span class="counter" data-t="5">0</span></div><div class="stat-lbl">Ключевых трендов</div></div>
+  </div>
+  <div class="scroll-ind"><div class="scroll-mouse"></div><span>Прокрутите вниз</span></div>
+</section>
+
+<!-- ════════════════ OVERVIEW ════════════════ -->
+<section class="overview-section" id="overview">
+  <div class="container">
+    <div class="rv" style="text-align:center">
+      <div class="sec-label">📊 Обзор</div>
+      <h2 class="sec-title" style="text-align:center">Рейтинг <span>цифровой зрелости</span></h2>
+      <p class="sec-desc" style="text-align:center;margin:12px auto 48px">Быстрый обзор всех 10 компаний по уровню проработки сайта</p>
+    </div>
+    <div class="overview-grid">
+      <div class="ov-card rv tilt neon-border" style="transition-delay:.04s">
+        <span class="company-rank">#1</span>
+        <div class="ov-card-glow" style="background:radial-gradient(#ef4444,transparent)"></div>
+        <span class="ov-icon">🔧</span>
+        <div class="ov-name">NDBC</div>
+        <div class="ov-score">
+          <span class="star" style="animation-delay:.1s">⭐</span>
+          <span class="star" style="animation-delay:.2s">⭐</span>
+          <span style="color:#333">⭐⭐⭐</span>
+        </div>
+        <div class="ov-badge" style="background:rgba(239,68,68,0.1);color:#ef4444">Низкий уровень</div>
+      </div>
+      <div class="ov-card rv tilt neon-border" style="transition-delay:.08s">
+        <span class="company-rank">#2</span>
+        <div class="ov-card-glow" style="background:radial-gradient(#ef4444,transparent)"></div>
+        <span class="ov-icon">💀</span>
+        <div class="ov-name">Sapiens</div>
+        <div class="ov-score">
+          <span class="star" style="animation-delay:.1s">⭐</span>
+          <span style="color:#333">⭐⭐⭐⭐</span>
+        </div>
+        <div class="ov-badge" style="background:rgba(239,68,68,0.12);color:#ef4444">Слабое присутствие</div>
+      </div>
+      <div class="ov-card rv tilt neon-border" style="transition-delay:.12s">
+        <span class="company-rank">#3</span>
+        <div class="ov-card-glow" style="background:radial-gradient(#fbbf24,transparent)"></div>
+        <span class="ov-icon">🛒</span>
+        <div class="ov-name">ВДГБ</div>
+        <div class="ov-score">
+          <span class="star" style="animation-delay:.1s">⭐</span>
+          <span class="star" style="animation-delay:.2s">⭐</span>
+          <span class="star" style="animation-delay:.3s">⭐</span>
+          <span style="color:#333">⭐⭐</span>
+        </div>
+        <div class="ov-badge" style="background:rgba(251,191,36,0.1);color:#fbbf24">B2C-ориентирован</div>
+      </div>
+      <div class="ov-card rv tilt neon-border" style="transition-delay:.16s">
+        <span class="company-rank">#4</span>
+        <div class="ov-card-glow" style="background:radial-gradient(#ef4444,transparent)"></div>
+        <span class="ov-icon">🕰️</span>
+        <div class="ov-name">Райтек</div>
+        <div class="ov-score">
+          <span class="star" style="animation-delay:.1s">⭐</span>
+          <span class="star" style="animation-delay:.2s">⭐</span>
+          <span style="color:#333">⭐⭐⭐</span>
+        </div>
+        <div class="ov-badge" style="background:rgba(239,68,68,0.1);color:#ef4444">Устарел</div>
+      </div>
+      <div class="ov-card rv tilt" style="transition-delay:.2s;border:1px solid rgba(251,191,36,0.35);background:linear-gradient(135deg,rgba(21,17,0,1),rgba(18,14,2,1))">
+        <div class="ov-card-glow" style="background:radial-gradient(#fbbf24,transparent)"></div>
+        <span class="ov-icon" style="animation:floatIcon 2.5s ease-in-out infinite">🏆</span>
+        <div class="ov-name" style="color:var(--yellow)">КОРУС</div>
+        <div class="ov-score">
+          <span class="star" style="animation-delay:.1s">⭐</span>
+          <span class="star" style="animation-delay:.2s">⭐</span>
+          <span class="star" style="animation-delay:.3s">⭐</span>
+          <span class="star" style="animation-delay:.4s">⭐</span>
+          <span class="star" style="animation-delay:.5s">⭐</span>
+        </div>
+        <div class="ov-badge" style="background:rgba(251,191,36,0.15);color:var(--yellow)">🏆 Эталон</div>
+      </div>
+      <div class="ov-card rv tilt neon-border" style="transition-delay:.24s">
+        <span class="company-rank">#6</span>
+        <div class="ov-card-glow" style="background:radial-gradient(#00aaff,transparent)"></div>
+        <span class="ov-icon">☕</span>
+        <div class="ov-name">Axenix</div>
+        <div class="ov-score">
+          <span class="star" style="animation-delay:.1s">⭐</span>
+          <span class="star" style="animation-delay:.2s">⭐</span>
+          <span class="star" style="animation-delay:.3s">⭐</span>
+          <span class="star" style="animation-delay:.4s">⭐</span>
+          <span style="color:#333">⭐</span>
+        </div>
+        <div class="ov-badge" style="background:rgba(0,170,255,0.1);color:var(--accent)">Контент-фокус</div>
+      </div>
+      <div class="ov-card rv tilt neon-border" style="transition-delay:.28s">
+        <span class="company-rank">#7</span>
+        <div class="ov-card-glow" style="background:radial-gradient(#ef4444,transparent)"></div>
+        <span class="ov-icon">😵</span>
+        <div class="ov-name">Первый Бит</div>
+        <div class="ov-score">
+          <span class="star" style="animation-delay:.1s">⭐</span>
+          <span class="star" style="animation-delay:.2s">⭐</span>
+          <span style="color:#333">⭐⭐⭐</span>
+        </div>
+        <div class="ov-badge" style="background:rgba(239,68,68,0.1);color:#ef4444">Перегружен</div>
+      </div>
+      <div class="ov-card rv tilt neon-border" style="transition-delay:.32s">
+        <span class="company-rank">#8</span>
+        <div class="ov-card-glow" style="background:radial-gradient(#00e5a0,transparent)"></div>
+        <span class="ov-icon">✨</span>
+        <div class="ov-name">КРОК</div>
+        <div class="ov-score">
+          <span class="star" style="animation-delay:.1s">⭐</span>
+          <span class="star" style="animation-delay:.2s">⭐</span>
+          <span class="star" style="animation-delay:.3s">⭐</span>
+          <span class="star" style="animation-delay:.4s">⭐</span>
+          <span style="color:#333">⭐</span>
+        </div>
+        <div class="ov-badge" style="background:rgba(0,229,160,0.1);color:var(--green)">HR + R&D фокус</div>
+      </div>
+      <div class="ov-card rv tilt neon-border" style="transition-delay:.36s">
+        <span class="company-rank">#9</span>
+        <div class="ov-card-glow" style="background:radial-gradient(#7c3aed,transparent)"></div>
+        <span class="ov-icon">🔎</span>
+        <div class="ov-name">Ланит</div>
+        <div class="ov-score">
+          <span class="star" style="animation-delay:.1s">⭐</span>
+          <span class="star" style="animation-delay:.2s">⭐</span>
+          <span class="star" style="animation-delay:.3s">⭐</span>
+          <span class="star" style="animation-delay:.4s">⭐</span>
+          <span style="color:#333">⭐</span>
+        </div>
+        <div class="ov-badge" style="background:rgba(124,58,237,0.1);color:#a855f7">Инновации в CX</div>
+      </div>
+      <div class="ov-card rv tilt neon-border" style="transition-delay:.4s">
+        <span class="company-rank">#10</span>
+        <div class="ov-card-glow" style="background:radial-gradient(#7c3aed,transparent)"></div>
+        <span class="ov-icon">🪞</span>
+        <div class="ov-name">IBS</div>
+        <div class="ov-score">
+          <span class="star" style="animation-delay:.1s">⭐</span>
+          <span class="star" style="animation-delay:.2s">⭐</span>
+          <span class="star" style="animation-delay:.3s">⭐</span>
+          <span class="star" style="animation-delay:.4s">⭐</span>
+          <span style="color:#333">⭐</span>
+        </div>
+        <div class="ov-badge" style="background:rgba(124,58,237,0.1);color:#a855f7">Клон Ланита</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ КОРУС — ЭТАЛОН ════════════════ -->
+<section class="winner-section">
+  <div class="container">
+    <div class="winner-inner">
+      <div class="rvL">
+        <div class="winner-badge">🏆 Эталонный пример</div>
+        <h2 class="sec-title">КОРУС — <span>лучший сайт</span> рынка</h2>
+        <p style="color:var(--muted);font-size:.95rem;margin-bottom:28px">Премиальный, современный сайт с высочайшим уровнем проработки UX/UI, контента и точек конверсии. Показывает, как должен выглядеть сайт IT-консалтинга 2026 года.</p>
+        <div class="score-bar-wrap rv"><span style="font-size:.78rem;color:var(--muted);width:120px">UX/UI</span><div class="score-bar-bg"><div class="score-bar animated-bar" data-w="98%" style="background:var(--gblue)"></div></div><span class="score-val" style="color:var(--accent)">98%</span></div>
+        <div class="score-bar-wrap rv" style="transition-delay:.1s"><span style="font-size:.78rem;color:var(--muted);width:120px">Конверсия</span><div class="score-bar-bg"><div class="score-bar animated-bar" data-w="96%" style="background:var(--ggreen)"></div></div><span class="score-val" style="color:var(--green)">96%</span></div>
+        <div class="score-bar-wrap rv" style="transition-delay:.2s"><span style="font-size:.78rem;color:var(--muted);width:120px">Контент</span><div class="score-bar-bg"><div class="score-bar animated-bar" data-w="94%" style="background:var(--gpurp)"></div></div><span class="score-val" style="color:#a855f7">94%</span></div>
+        <div class="score-bar-wrap rv" style="transition-delay:.3s"><span style="font-size:.78rem;color:var(--muted);width:120px">HR-бренд</span><div class="score-bar-bg"><div class="score-bar animated-bar" data-w="92%" style="background:var(--gorange)"></div></div><span class="score-val" style="color:var(--orange)">92%</span></div>
+      </div>
+      <div class="rvR">
+        <div class="winner-card">
+          <h3>КОРУС Консалтинг</h3>
+          <div class="wc-sub">⭐⭐⭐⭐⭐ &nbsp;·&nbsp; Сайт собственной разработки</div>
+          <div class="winner-feats">
+            <div class="wf-item">
+              <div class="wf-dot" style="animation-delay:0s"></div>
+              <div class="wf-text"><strong>Sticky header + «Связаться с нами»</strong><span>Постоянный доступ к конверсии при любом скролле</span></div>
+            </div>
+            <div class="wf-item">
+              <div class="wf-dot" style="animation-delay:.3s"></div>
+              <div class="wf-text"><strong>Тарифы на каждой странице услуги</strong><span>Прозрачность ценообразования = доверие клиентов</span></div>
+            </div>
+            <div class="wf-item">
+              <div class="wf-dot" style="animation-delay:.6s"></div>
+              <div class="wf-text"><strong>Фото команды каждого департамента</strong><span>Реальные люди вместо стоковых изображений</span></div>
+            </div>
+            <div class="wf-item">
+              <div class="wf-dot" style="animation-delay:.9s"></div>
+              <div class="wf-text"><strong>Добавление вебинара в личный календарь</strong><span>Уникальная фича — никто из конкурентов не делает</span></div>
+            </div>
+            <div class="wf-item">
+              <div class="wf-dot" style="animation-delay:1.2s"></div>
+              <div class="wf-text"><strong>Интерактивная карта клиентов по городам</strong><span>Визуализирует масштаб и географию присутствия</span></div>
+            </div>
+            <div class="wf-item">
+              <div class="wf-dot" style="animation-delay:1.5s"></div>
+              <div class="wf-text"><strong>Сегментация по ролям</strong><span>Разный контент для CIO, CFO, HRD — каждый находит своё</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ DEEP DIVE: NDBC ════════════════ -->
+<section class="detail-section" style="background:var(--bg2)" id="detail-ndbc">
+  <div class="container">
+    <div class="detail-grid">
+      <div class="detail-sidebar rvL">
+        <div class="company-hero" style="border-color:rgba(239,68,68,0.2)">
+          <span class="company-emoji">🔧</span>
+          <div class="company-name">NDBC</div>
+          <div class="company-sub">In-house разработка</div>
+          <div class="score-row"><span class="s">⭐</span><span class="s">⭐</span><span style="color:#222;font-size:1.2rem">⭐⭐⭐</span></div>
+          <div class="company-verdict" style="border-color:#ef4444">📉 Низкий уровень цифровой зрелости, однако содержит точечно внедрённые рабочие инструменты.</div>
+        </div>
+        <div class="meta-card">
+          <div class="meta-row"><span class="meta-key">Разработка</span><span class="meta-val">In-house</span></div>
+          <div class="meta-row"><span class="meta-key">UX качество</span><span class="meta-val" style="color:#ef4444">Низкое ❌</span></div>
+          <div class="meta-row"><span class="meta-key">Проекты</span><span class="meta-val" style="color:var(--green)">Есть ✓</span></div>
+          <div class="meta-row"><span class="meta-key">Отзывы</span><span class="meta-val" style="color:var(--green)">На главной ✓</span></div>
+          <div class="meta-row"><span class="meta-key">Рек. письма</span><span class="meta-val" style="color:var(--yellow)">В проектах 💎</span></div>
+          <div class="meta-row"><span class="meta-key">ФОС</span><span class="meta-val" style="color:var(--green)">Есть ✓</span></div>
+        </div>
+      </div>
+      <div class="detail-content rvR">
+        <div class="section-block">
+          <div class="block-title">💡 Ключевые находки</div>
+          <div class="feat-item">
+            <div class="feat-badge" style="background:rgba(0,229,160,0.12)">📜</div>
+            <div class="feat-body"><strong>Рекомендательные письма в проектах</strong><span>Уникальная деталь, которой нет у других конкурентов. Существенно усиливает доверие.</span></div>
+          </div>
+          <div class="feat-item">
+            <div class="feat-badge" style="background:rgba(0,229,160,0.12)">💬</div>
+            <div class="feat-body"><strong>Отзывы клиентов на главной странице</strong><span>Отдельный раздел внизу главной — работает на социальное доказательство.</span></div>
+          </div>
+          <div class="feat-item">
+            <div class="feat-badge" style="background:rgba(0,229,160,0.12)">📋</div>
+            <div class="feat-body"><strong>Проекты с описанием и отзывом</strong><span>Такой же принцип, как у нас — описание проекта + отзыв клиента.</span></div>
+          </div>
+          <div class="feat-item">
+            <div class="feat-badge" style="background:rgba(0,229,160,0.12)">📞</div>
+            <div class="feat-body"><strong>Рабочая форма обратной связи</strong><span>Несмотря на общие недостатки, ФОС функционирует корректно.</span></div>
+          </div>
+        </div>
+        <div class="section-block">
+          <div class="block-title">⚖️ Плюсы и минусы</div>
+          <div class="pro-con-grid">
+            <div class="pro-list">
+              <h4>✓ Сильные стороны</h4>
+              <div class="pro-item">Рекомендательные письма в проектах</div>
+              <div class="pro-item">Отзывы клиентов на главной</div>
+              <div class="pro-item">Рабочая ФОС</div>
+              <div class="pro-item">Структура проектов с кейсами</div>
+            </div>
+            <div class="con-list">
+              <h4>✗ Слабые стороны</h4>
+              <div class="con-item">Плохой UX/UI — неинтуитивный</div>
+              <div class="con-item">In-house разработка без профи</div>
+              <div class="con-item">Сложная навигация</div>
+              <div class="con-item">Нет контент-маркетинга</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ DEEP DIVE: КОРУС ════════════════ -->
+<section class="detail-section" style="background:var(--bg)" id="detail-korus">
+  <div class="container">
+    <div class="detail-grid">
+      <div class="detail-sidebar rvL">
+        <div class="company-hero" style="border-color:rgba(251,191,36,0.35)">
+          <span class="company-emoji" style="animation-duration:2s">🏆</span>
+          <div class="company-name" style="color:var(--yellow)">КОРУС Консалтинг</div>
+          <div class="company-sub">Собственная разработка · Эталон</div>
+          <div class="score-row"><span class="s">⭐</span><span class="s">⭐</span><span class="s">⭐</span><span class="s">⭐</span><span class="s">⭐</span></div>
+          <div class="company-verdict" style="border-color:var(--yellow)">⭐⭐⭐⭐⭐ Премиальный сайт с высочайшим уровнем проработки. Ориентир для всего рынка.</div>
+        </div>
+        <div class="meta-card">
+          <div class="meta-row"><span class="meta-key">Разработка</span><span class="meta-val">In-house (premium)</span></div>
+          <div class="meta-row"><span class="meta-key">UX качество</span><span class="meta-val" style="color:var(--green)">Эталонное ✓</span></div>
+          <div class="meta-row"><span class="meta-key">Sticky header</span><span class="meta-val" style="color:var(--green)">Да ✓</span></div>
+          <div class="meta-row"><span class="meta-key">Тарифы</span><span class="meta-val" style="color:var(--yellow)">Открытые 💎</span></div>
+          <div class="meta-row"><span class="meta-key">Медиацентр</span><span class="meta-val" style="color:var(--green)">Полноценный ✓</span></div>
+          <div class="meta-row"><span class="meta-key">HR-бренд</span><span class="meta-val" style="color:var(--green)">Высокий ✓</span></div>
+        </div>
+      </div>
+      <div class="detail-content rvR">
+        <div class="section-block">
+          <div class="block-title">💎 Уникальные фичи</div>
+          <div class="feat-item">
+            <div class="feat-badge" style="background:rgba(251,191,36,0.12)">📅</div>
+            <div class="feat-body"><strong>Добавление вебинара в личный календарь</strong><span>Уникальная фича — пользователь кликает и событие добавляется в Google/Outlook calendar. Никто из конкурентов не делает.</span></div>
+          </div>
+          <div class="feat-item">
+            <div class="feat-badge" style="background:rgba(251,191,36,0.12)">💵</div>
+            <div class="feat-body"><strong>Открытые тарифы на каждой услуге</strong><span>Прозрачность ценообразования — редкость в B2B-консалтинге. Радикально снижает барьер входа.</span></div>
+          </div>
+          <div class="feat-item">
+            <div class="feat-badge" style="background:rgba(251,191,36,0.12)">🗺️</div>
+            <div class="feat-body"><strong>Интерактивная карта клиентов</strong><span>Показывает географию присутствия. Визуально демонстрирует масштаб.</span></div>
+          </div>
+          <div class="feat-item">
+            <div class="feat-badge" style="background:rgba(251,191,36,0.12)">👥</div>
+            <div class="feat-body"><strong>Фото команды по каждому департаменту</strong><span>Реальные живые люди разного возраста — не стоковые фото. Максимальный Trust Factor.</span></div>
+          </div>
+          <div class="feat-item">
+            <div class="feat-badge" style="background:rgba(251,191,36,0.12)">🎯</div>
+            <div class="feat-body"><strong>Сегментация контента по ролям</strong><span>Разный контент для CIO, CFO, HR-директора. Все пути ведут к ФОС.</span></div>
+          </div>
+          <div class="feat-item">
+            <div class="feat-badge" style="background:rgba(251,191,36,0.12)">❓</div>
+            <div class="feat-body"><strong>FAQ-блоки замыкают воронку</strong><span>Множество кликабельных вопросов — все ведут к форме звонка. Закрытие возражений нативно.</span></div>
+          </div>
+        </div>
+        <div class="section-block">
+          <div class="block-title">⚖️ Анализ</div>
+          <div class="pro-con-grid">
+            <div class="pro-list">
+              <h4>✓ Сильные стороны</h4>
+              <div class="pro-item">Sticky header с CTA постоянно</div>
+              <div class="pro-item">Тарифы на каждой услуге</div>
+              <div class="pro-item">Фото реальных сотрудников</div>
+              <div class="pro-item">Медиацентр с вебинарами</div>
+              <div class="pro-item">Сегментация по ролям ЛПР</div>
+              <div class="pro-item">Карта клиентов</div>
+            </div>
+            <div class="con-list">
+              <h4>✗ Слабые стороны</h4>
+              <div class="con-item">Дизайн скоро устареет</div>
+              <div class="con-item">Нативно видно, что всё ведёт к звонку</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ DEEP DIVE: AXENIX ════════════════ -->
+<section class="detail-section" style="background:var(--bg2)" id="detail-axenix">
+  <div class="container">
+    <div class="detail-grid">
+      <div class="detail-sidebar rvL">
+        <div class="company-hero" style="border-color:rgba(0,170,255,0.2)">
+          <span class="company-emoji">☕</span>
+          <div class="company-name">Axenix</div>
+          <div class="company-sub">экс-Accenture · In-house</div>
+          <div class="score-row"><span class="s">⭐</span><span class="s">⭐</span><span class="s">⭐</span><span class="s">⭐</span><span style="color:#222;font-size:1.2rem">⭐</span></div>
+          <div class="company-verdict" style="border-color:var(--accent)">📊 Чистый сайт с сильным упором на контент-маркетинг и комьюнити. Слабые конверсионные точки.</div>
+        </div>
+        <div class="meta-card">
+          <div class="meta-row"><span class="meta-key">Разработка</span><span class="meta-val">In-house</span></div>
+          <div class="meta-row"><span class="meta-key">Sticky header</span><span class="meta-val" style="color:#ef4444">Нет ❌</span></div>
+          <div class="meta-row"><span class="meta-key">Подкасты</span><span class="meta-val" style="color:var(--green)">2 формата ✓</span></div>
+          <div class="meta-row"><span class="meta-key">Дискуссклубы</span><span class="meta-val" style="color:var(--green)">Есть ✓</span></div>
+          <div class="meta-row"><span class="meta-key">Кейсы</span><span class="meta-val" style="color:var(--yellow)">Без отзывов ⚠️</span></div>
+          <div class="meta-row"><span class="meta-key">ИИ-агент</span><span class="meta-val" style="color:var(--yellow)">Уникально 🤖</span></div>
+        </div>
+      </div>
+      <div class="detail-content rvR">
+        <div class="section-block">
+          <div class="block-title">💡 Ключевые находки</div>
+          <div class="feat-item">
+            <div class="feat-badge" style="background:rgba(0,170,255,0.12)">🤖</div>
+            <div class="feat-body"><strong>ИИ-агент как гость дискуссионного клуба</strong><span>Уникальная деталь — специальным гостем клуба является ИИ-агент. Демонстрирует AI-экспертизу.</span></div>
+          </div>
+          <div class="feat-item">
+            <div class="feat-badge" style="background:rgba(0,170,255,0.12)">🔬</div>
+            <div class="feat-body"><strong>Собственные исследования рынка</strong><span>Публикует исследования, которые повышают экспертный статус и привлекают ссылки.</span></div>
+          </div>
+          <div class="feat-item">
+            <div class="feat-badge" style="background:rgba(0,170,255,0.12)">🎪</div>
+            <div class="feat-body"><strong>Закрытые дискуссионные клубы</strong><span>Pharma Day — закрытый клуб. Закрытость создаёт дефицит и повышает интерес.</span></div>
+          </div>
+          <div class="feat-item">
+            <div class="feat-badge" style="background:rgba(239,68,68,0.12)">📞</div>
+            <div class="feat-body"><strong>⚠️ Номер телефона пропадает при скролле</strong><span>Критическая ошибка: нет sticky header. Пользователь теряет возможность быстро позвонить.</span></div>
+          </div>
+        </div>
+        <div class="section-block">
+          <div class="block-title">⚖️ Анализ</div>
+          <div class="pro-con-grid">
+            <div class="pro-list">
+              <h4>✓ Сильные стороны</h4>
+              <div class="pro-item">Мощный контент-маркетинг</div>
+              <div class="pro-item">Исследования повышают авторитет</div>
+              <div class="pro-item">Закрытые клубы = эксклюзивность</div>
+              <div class="pro-item">ИИ-агент как гость — уникально</div>
+              <div class="pro-item">Чёткое деление по индустриям</div>
+            </div>
+            <div class="con-list">
+              <h4>✗ Слабые стороны</h4>
+              <div class="con-item">Нет sticky header с CTA</div>
+              <div class="con-item">Слабая конверсионная проработка</div>
+              <div class="con-item">Нет отзывов в кейсах</div>
+              <div class="con-item">Hot offers не ведут к ФОС</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ DEEP DIVE: КРОК ════════════════ -->
+<section class="detail-section" style="background:var(--bg)" id="detail-krok">
+  <div class="container">
+    <div class="detail-grid">
+      <div class="detail-sidebar rvL">
+        <div class="company-hero" style="border-color:rgba(0,229,160,0.2)">
+          <span class="company-emoji">✨</span>
+          <div class="company-name">КРОК</div>
+          <div class="company-sub">In-house · Стиль «Сбер»</div>
+          <div class="score-row"><span class="s">⭐</span><span class="s">⭐</span><span class="s">⭐</span><span class="s">⭐</span><span style="color:#222;font-size:1.2rem">⭐</span></div>
+          <div class="company-verdict" style="border-color:var(--green)">✨ Современный сайт с HR-брендом, R&D и CSR. Слабо представлены коммерческие проекты.</div>
+        </div>
+        <div class="meta-card">
+          <div class="meta-row"><span class="meta-key">Разработка</span><span class="meta-val">In-house</span></div>
+          <div class="meta-row"><span class="meta-key">Sticky header</span><span class="meta-val" style="color:var(--green)">Да ✓</span></div>
+          <div class="meta-row"><span class="meta-key">Поп-ап чат</span><span class="meta-val" style="color:#ef4444">Нет ❌</span></div>
+          <div class="meta-row"><span class="meta-key">Инфографика</span><span class="meta-val" style="color:var(--green)">Да ✓</span></div>
+          <div class="meta-row"><span class="meta-key">Демо-день</span><span class="meta-val" style="color:var(--yellow)">Уникально 🔬</span></div>
+          <div class="meta-row"><span class="meta-key">Спорт-CSR</span><span class="meta-val" style="color:var(--yellow)">ФК Краснодар ⚽</span></div>
+        </div>
+      </div>
+      <div class="detail-content rvR">
+        <div class="section-block">
+          <div class="block-title">💡 Уникальные элементы</div>
+          <div class="feat-item">
+            <div class="feat-badge" style="background:rgba(0,229,160,0.12)">🏙️</div>
+            <div class="feat-body"><strong>Крокополис — интерактивный город-комикс</strong><span>Кейсы компании в формате интерактивного города. crocopolis.ru — полностью отдельный проект.</span></div>
+          </div>
+          <div class="feat-item">
+            <div class="feat-badge" style="background:rgba(0,229,160,0.12)">⚽</div>
+            <div class="feat-body"><strong>Коллаборация с ФК «Краснодар»</strong><span>Совместные мероприятия, демо-дни на матчах, розыгрыши. Мощный HR-бренд инструмент.</span></div>
+          </div>
+          <div class="feat-item">
+            <div class="feat-badge" style="background:rgba(0,229,160,0.12)">🔬</div>
+            <div class="feat-body"><strong>Демо-день и кейсы лабораторий</strong><span>Индивидуальный день для клиента — знакомство с практиками за 30 лет. Уникальный формат.</span></div>
+          </div>
+          <div class="feat-item">
+            <div class="feat-badge" style="background:rgba(239,68,68,0.12)">📁</div>
+            <div class="feat-body"><strong>⚠️ Нет реальных коммерческих проектов</strong><span>Фокус смещён на внутренние инициативы и спорт. Может снижать доверие B2B-клиентов.</span></div>
+          </div>
+        </div>
+        <div class="section-block">
+          <div class="block-title">⚖️ Анализ</div>
+          <div class="pro-con-grid">
+            <div class="pro-list">
+              <h4>✓ Сильные стороны</h4>
+              <div class="pro-item">Sticky header с телефоном</div>
+              <div class="pro-item">Крокополис — уникальный формат</div>
+              <div class="pro-item">Коллаборация с ФК Краснодар</div>
+              <div class="pro-item">Демо-день для клиентов</div>
+              <div class="pro-item">Сильная инфографика</div>
+            </div>
+            <div class="con-list">
+              <h4>✗ Слабые стороны</h4>
+              <div class="con-item">Нет коммерческих кейсов</div>
+              <div class="con-item">Бренд-проекты без текста</div>
+              <div class="con-item">Нет поп-ап чата</div>
+              <div class="con-item">Слабая продающая функция</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ ОСТАЛЬНЫЕ КОМПАНИИ — КАРТОЧКИ ════════════════ -->
+<section style="background:var(--bg2);padding:80px 40px">
+  <div class="container">
+    <div class="rv" style="text-align:center">
+      <div class="sec-label">📋 Остальные компании</div>
+      <h2 class="sec-title" style="text-align:center">Быстрый <span>разбор</span></h2>
+      <p class="sec-desc" style="text-align:center;margin:12px auto 48px">Sapiens · ВДГБ · Райтек · Первый Бит · Ланит · IBS</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:22px">
+
+      <!-- Sapiens -->
+      <div class="trend-card rv neon-border" style="transition-delay:.05s">
+        <div class="trend-num">02</div>
+        <span class="trend-icon">💀</span>
+        <h3>Sapiens — Критически слабый</h3>
+        <p>«Голый» сайт без глубины. <strong style="color:#ef4444">Критическая ошибка:</strong> карточки услуг некликабельны — мёртвая зона в воронке. Нет аналитики, нет кейсов.</p>
+        <div class="trend-tags">
+          <span class="trend-tag" style="background:rgba(239,68,68,0.1);color:#ef4444">Услуги не кликабельны</span>
+          <span class="trend-tag" style="background:rgba(239,68,68,0.1);color:#ef4444">Нет экспертизы</span>
+          <span class="trend-tag" style="background:rgba(0,229,160,0.1);color:var(--green)">Есть новости ✓</span>
+        </div>
+      </div>
+
+      <!-- ВДГБ -->
+      <div class="trend-card rv neon-border" style="transition-delay:.1s">
+        <div class="trend-num">03</div>
+        <span class="trend-icon">🛒</span>
+        <h3>ВДГБ — B2C-логика в B2B</h3>
+        <p>Ориентирован на продажи 1С. <strong style="color:var(--yellow)">Сильные стороны:</strong> красная кнопка-звонок в центре, живой чат с фото менеджеров, акции на главной.</p>
+        <div class="trend-tags">
+          <span class="trend-tag" style="background:rgba(0,229,160,0.1);color:var(--green)">Чат с фото ✓</span>
+          <span class="trend-tag" style="background:rgba(0,229,160,0.1);color:var(--green)">Быстрый звонок ✓</span>
+          <span class="trend-tag" style="background:rgba(251,191,36,0.1);color:var(--yellow)">Акции и скидки</span>
+        </div>
+      </div>
+
+      <!-- Райтек -->
+      <div class="trend-card rv neon-border" style="transition-delay:.15s">
+        <div class="trend-num">04</div>
+        <span class="trend-icon">🕰️</span>
+        <h3>Райтек — Устаревший, но со структурой</h3>
+        <p>Морально устаревший дизайн с неудобной навигацией. <strong style="color:var(--yellow)">Плюс:</strong> отдельный раздел с ИИ-продуктами. Бесплатная консультация в закрепе.</p>
+        <div class="trend-tags">
+          <span class="trend-tag" style="background:rgba(0,170,255,0.1);color:var(--accent)">ИИ-раздел ✓</span>
+          <span class="trend-tag" style="background:rgba(239,68,68,0.1);color:#ef4444">UX устарел</span>
+          <span class="trend-tag" style="background:rgba(0,229,160,0.1);color:var(--green)">Бесплатная консультация</span>
+        </div>
+      </div>
+
+      <!-- Первый Бит -->
+      <div class="trend-card rv neon-border" style="transition-delay:.2s">
+        <div class="trend-num">07</div>
+        <span class="trend-icon">😵</span>
+        <h3>Первый Бит — Агрессивная лидогенерация</h3>
+        <p>Перегруженный интерфейс с высокой когнитивной нагрузкой. <strong style="color:var(--yellow)">Уникально:</strong> триггерное окно при неактивности, похожие кейсы всплывают автоматически.</p>
+        <div class="trend-tags">
+          <span class="trend-tag" style="background:rgba(251,191,36,0.1);color:var(--yellow)">Триггер неактивности</span>
+          <span class="trend-tag" style="background:rgba(0,229,160,0.1);color:var(--green)">Отзывы в кейсах ✓</span>
+          <span class="trend-tag" style="background:rgba(239,68,68,0.1);color:#ef4444">Перегружен ❌</span>
+        </div>
+      </div>
+
+      <!-- Ланит -->
+      <div class="trend-card rv neon-border" style="transition-delay:.25s">
+        <div class="trend-num">09</div>
+        <span class="trend-icon">🔎</span>
+        <h3>Ланит — Google-поиск как лидогенерация</h3>
+        <p><strong style="color:var(--cyan)">Инновация:</strong> поисковая строка в стиле Google в центре главной. Пользователь задаёт вопрос → система ведёт к ФОС. КСО и Compliance — отдельные разделы.</p>
+        <div class="trend-tags">
+          <span class="trend-tag" style="background:rgba(0,212,255,0.1);color:var(--cyan)">Google-поиск 🏆</span>
+          <span class="trend-tag" style="background:rgba(0,229,160,0.1);color:var(--green)">КСО + Compliance</span>
+          <span class="trend-tag" style="background:rgba(239,68,68,0.1);color:#ef4444">Тяжёлый сайт</span>
+        </div>
+      </div>
+
+      <!-- IBS -->
+      <div class="trend-card rv neon-border" style="transition-delay:.3s">
+        <div class="trend-num">10</div>
+        <span class="trend-icon">🪞</span>
+        <h3>IBS — Клон Ланита от той же студии</h3>
+        <p>Разработан той же студией aic. Идентичная архитектура и проблемы. <strong style="color:var(--yellow)">Плюсы:</strong> фото гендиректора с цитатой, экспертные номера в кейсах, ESG-раздел.</p>
+        <div class="trend-tags">
+          <span class="trend-tag" style="background:rgba(251,191,36,0.1);color:var(--yellow)">Фото CEO</span>
+          <span class="trend-tag" style="background:rgba(0,229,160,0.1);color:var(--green)">ESG раздел</span>
+          <span class="trend-tag" style="background:rgba(239,68,68,0.1);color:#ef4444">Та же «тяжесть»</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ BENCHMARK TABLE ════════════════ -->
+<section style="background:var(--bg);padding:80px 40px">
+  <div class="container">
+    <div class="rv" style="text-align:center">
+      <div class="sec-label">📊 Бенчмарк</div>
+      <h2 class="sec-title" style="text-align:center">Сравнение по <span>ключевым параметрам</span></h2>
+      <p class="sec-desc" style="text-align:center;margin:12px auto 48px">Все 10 компаний по критическим факторам конверсии и доверия</p>
+    </div>
+    <div class="table-wrap rv">
+      <table>
+        <thead>
+          <tr>
+            <th>Компания</th>
+            <th>Sticky CTA</th>
+            <th>Живой чат</th>
+            <th>Кейсы</th>
+            <th>Отзывы</th>
+            <th>Тарифы</th>
+            <th>Медиа</th>
+            <th>HR-фокус</th>
+            <th>Оценка</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="co-name">NDBC</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><div class="rating-stars"><span class="s">⭐</span><span class="s">⭐</span></div></td>
+          </tr>
+          <tr>
+            <td><span class="co-name">Sapiens</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><div class="rating-stars"><span class="s">⭐</span></div></td>
+          </tr>
+          <tr>
+            <td><span class="co-name">ВДГБ</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="half">~</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><div class="rating-stars"><span class="s">⭐</span><span class="s">⭐</span><span class="s">⭐</span></div></td>
+          </tr>
+          <tr>
+            <td><span class="co-name">Райтек</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="half">~</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><div class="rating-stars"><span class="s">⭐</span><span class="s">⭐</span></div></td>
+          </tr>
+          <tr style="background:rgba(251,191,36,0.04)">
+            <td><span class="co-name" style="color:var(--yellow)">КОРУС 🏆</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><div class="rating-stars"><span class="s">⭐</span><span class="s">⭐</span><span class="s">⭐</span><span class="s">⭐</span><span class="s">⭐</span></div></td>
+          </tr>
+          <tr>
+            <td><span class="co-name">Axenix</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><div class="rating-stars"><span class="s">⭐</span><span class="s">⭐</span><span class="s">⭐</span><span class="s">⭐</span></div></td>
+          </tr>
+          <tr>
+            <td><span class="co-name">Первый Бит</span></td>
+            <td><span class="half">~</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="half">~</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><div class="rating-stars"><span class="s">⭐</span><span class="s">⭐</span><span class="s">⭐</span></div></td>
+          </tr>
+          <tr>
+            <td><span class="co-name">КРОК</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><div class="rating-stars"><span class="s">⭐</span><span class="s">⭐</span><span class="s">⭐</span><span class="s">⭐</span></div></td>
+          </tr>
+          <tr>
+            <td><span class="co-name">Ланит</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="half">~</span></td>
+            <td><span class="check">✓</span></td>
+            <td><div class="rating-stars"><span class="s">⭐</span><span class="s">⭐</span><span class="s">⭐</span><span class="s">⭐</span></div></td>
+          </tr>
+          <tr>
+            <td><span class="co-name">IBS</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="half">~</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><div class="rating-stars"><span class="s">⭐</span><span class="s">⭐</span><span class="s">⭐</span><span class="s">⭐</span></div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ TRENDS ════════════════ -->
+<section class="trends-section" id="trends">
+  <div class="container">
+    <div class="rv" style="text-align:center">
+      <div class="sec-label">🔭 Тренды рынка</div>
+      <h2 class="sec-title" style="text-align:center">5 ключевых <span>трендов</span> цифрового присутствия</h2>
+      <p class="sec-desc" style="text-align:center;margin:12px auto 48px">Паттерны, которые объединяют лидеров и отличают их от аутсайдеров</p>
+    </div>
+    <div class="trends-grid">
+      <div class="trend-card rv" style="transition-delay:.05s">
+        <div class="trend-num">01</div>
+        <div class="trend-card" style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--blue),var(--accent));border-radius:20px 20px 0 0"></div>
+        <span class="trend-icon">👴→👶</span>
+        <h3>Поколенческий разрыв в UX</h3>
+        <p>Чёткое разделение рынка: «старая гвардия» (Райтек, 1-Bit, NDBC) — устаревшие перегруженные сайты. «Новая волна» (Корус, КРОК, Axenix) — чистые медиа-ориентированные интерфейсы в стиле Сбера.</p>
+        <div class="trend-tags">
+          <span class="trend-tag" style="background:rgba(239,68,68,0.1);color:#ef4444">Старая гвардия уходит</span>
+          <span class="trend-tag" style="background:rgba(0,229,160,0.1);color:var(--green)">Сберовский дизайн побеждает</span>
+        </div>
+      </div>
+      <div class="trend-card rv" style="transition-delay:.1s">
+        <span class="trend-icon">💬→👤</span>
+        <h3>Эволюция чатов: от роботов к людям</h3>
+        <p>Отказ от безликих поп-апов в пользу живых чатов с реальными фото менеджеров (ВДГБ) или нативных кнопок «Обсудить решение» внутри каждого контентного блока (Корус).</p>
+        <div class="trend-tags">
+          <span class="trend-tag" style="background:rgba(239,68,68,0.1);color:#ef4444">Роботы → Люди</span>
+          <span class="trend-tag" style="background:rgba(0,229,160,0.1);color:var(--green)">Trust Factor растёт</span>
+        </div>
+      </div>
+      <div class="trend-card rv" style="transition-delay:.15s">
+        <span class="trend-icon">📰</span>
+        <h3>Сайт как полноценное медиа</h3>
+        <p>Лидеры рынка (Корус, Axenix, КРОК) превращают сайты в медиа-хабы: календари вебинаров, подкасты, дискуссионные клубы. Удерживают пользователя дольше, формируют лояльность.</p>
+        <div class="trend-tags">
+          <span class="trend-tag">Вебинары 📅</span>
+          <span class="trend-tag">Подкасты 🎧</span>
+          <span class="trend-tag">Клубы 💬</span>
+        </div>
+      </div>
+      <div class="trend-card rv" style="transition-delay:.2s">
+        <span class="trend-icon">👥⚽</span>
+        <h3>HR-бренд как инструмент продаж</h3>
+        <p>Показ реальных «лиц» компании (Корус, Axenix), коллаборации со спортом (КРОК + ФК «Краснодар») работают на доверие B2B-клиентов не хуже, чем кейсы проектов.</p>
+        <div class="trend-tags">
+          <span class="trend-tag" style="background:rgba(0,229,160,0.1);color:var(--green)">Люди = Доверие</span>
+          <span class="trend-tag" style="background:rgba(251,191,36,0.1);color:var(--yellow)">Спорт = Узнаваемость</span>
+        </div>
+      </div>
+      <div class="trend-card rv" style="transition-delay:.25s">
+        <span class="trend-icon">🐢</span>
+        <h3>Технические проблемы гигантов</h3>
+        <p>Крупные игроки (Ланит, IBS — оба от aic) страдают от «тяжести» сайтов: много картинок не загружается, низкая скорость. Это негативно влияет на конверсию и SEO-позиции.</p>
+        <div class="trend-tags">
+          <span class="trend-tag" style="background:rgba(239,68,68,0.1);color:#ef4444">Медленная загрузка</span>
+          <span class="trend-tag" style="background:rgba(239,68,68,0.1);color:#ef4444">SEO страдает</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ CRO BEST PRACTICES ════════════════ -->
+<section class="cro-section" id="cro">
+  <div class="container">
+    <div class="rv" style="text-align:center">
+      <div class="sec-label">🎯 Лучшие практики</div>
+      <h2 class="sec-title" style="text-align:center">Топ-инструменты <span>конверсии</span></h2>
+      <p class="sec-desc" style="text-align:center;margin:12px auto 48px">Самые эффективные CRO-решения, которые используют лидеры</p>
+    </div>
+    <div class="cro-grid">
+      <div class="cro-card rv neon-border" style="transition-delay:.05s">
+        <span class="cro-icon">📌</span>
+        <h3>Sticky Header с CTA</h3>
+        <p>Постоянный доступ к звонку/ФОС при любом положении скролла</p>
+        <div class="cro-who">Корус · КРОК · IBS · Ланит</div>
+      </div>
+      <div class="cro-card rv neon-border" style="transition-delay:.1s">
+        <span class="cro-icon">👤</span>
+        <h3>Живой чат с фото</h3>
+        <p>Реальные фотографии менеджеров вместо абстрактного аватара. Trust+200%</p>
+        <div class="cro-who">ВДГБ · Первый Бит</div>
+      </div>
+      <div class="cro-card rv neon-border" style="transition-delay:.15s">
+        <span class="cro-icon">💵</span>
+        <h3>Открытые тарифы</h3>
+        <p>Прозрачность ценообразования снижает барьер и квалифицирует лиды</p>
+        <div class="cro-who">Корус · ВДГБ</div>
+      </div>
+      <div class="cro-card rv neon-border" style="transition-delay:.2s">
+        <span class="cro-icon">⏰</span>
+        <h3>Триггер неактивности</h3>
+        <p>Поп-ап через 2 мин бездействия с предложением заказать звонок</p>
+        <div class="cro-who">Первый Бит</div>
+      </div>
+      <div class="cro-card rv neon-border" style="transition-delay:.25s">
+        <span class="cro-icon">🔎</span>
+        <h3>Google-поиск как ФОС</h3>
+        <p>Поисковая строка на главной → вопрос → форма обратной связи</p>
+        <div class="cro-who">Ланит</div>
+      </div>
+      <div class="cro-card rv neon-border" style="transition-delay:.3s">
+        <span class="cro-icon">📅</span>
+        <h3>Добавление в календарь</h3>
+        <p>Кнопка «Добавить вебинар в Google Calendar» прямо со страницы</p>
+        <div class="cro-who">Корус</div>
+      </div>
+      <div class="cro-card rv neon-border" style="transition-delay:.35s">
+        <span class="cro-icon">📜</span>
+        <h3>Рекомендательные письма</h3>
+        <p>Письма клиентов в карточках проектов — максимальный Trust Factor</p>
+        <div class="cro-who">NDBC (уникально!)</div>
+      </div>
+      <div class="cro-card rv neon-border" style="transition-delay:.4s">
+        <span class="cro-icon">🔗</span>
+        <h3>Похожие кейсы</h3>
+        <p>Автоматическое всплывание похожих проектов после просмотра кейса</p>
+        <div class="cro-who">Первый Бит</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ RECOMMENDATIONS ════════════════ -->
+<section class="recs-section">
+  <div class="container">
+    <div class="rv" style="text-align:center">
+      <div class="sec-label">🚀 Рекомендации</div>
+      <h2 class="sec-title" style="text-align:center">Что внедрить <span>в первую очередь</span></h2>
+      <p class="sec-desc" style="text-align:center;margin:12px auto 48px">Приоритизированный список улучшений на основе анализа конкурентов</p>
+    </div>
+    <div class="recs-grid">
+      <div class="rec-card rv" style="transition-delay:.04s">
+        <div class="rec-num">1</div>
+        <div class="rec-priority pri-high">🔴 Высокий приоритет</div>
+        <span class="rec-icon">📌</span>
+        <h3>Sticky Header с кнопкой «Связаться»</h3>
+        <p>Закрепить header при скролле с постоянно видимой кнопкой CTA. Это делают КОРУС, КРОК, IBS — и это работает.</p>
+        <div class="rec-source">✓ Пример: КОРУС — sticky «Связаться с нами» всегда в правом углу</div>
+      </div>
+      <div class="rec-card rv" style="transition-delay:.08s">
+        <div class="rec-num">2</div>
+        <div class="rec-priority pri-high">🔴 Высокий приоритет</div>
+        <span class="rec-icon">👤</span>
+        <h3>Живой чат с фото реальных менеджеров</h3>
+        <p>Заменить абстрактный поп-ап на чат с фотографиями, именами и должностями. Доверие растёт на 200%+.</p>
+        <div class="rec-source">✓ Пример: ВДГБ — реальные фото сотрудников в чате</div>
+      </div>
+      <div class="rec-card rv" style="transition-delay:.12s">
+        <div class="rec-num">3</div>
+        <div class="rec-priority pri-high">🔴 Высокий приоритет</div>
+        <span class="rec-icon">💵</span>
+        <h3>Открытые тарифы на страницах услуг</h3>
+        <p>Прозрачность ценообразования — редкость в B2B. Квалифицирует лиды и убирает барьер первого контакта.</p>
+        <div class="rec-source">✓ Пример: КОРУС — тарифы на каждой странице услуги</div>
+      </div>
+      <div class="rec-card rv" style="transition-delay:.16s">
+        <div class="rec-num">4</div>
+        <div class="rec-priority pri-high">🔴 Высокий приоритет</div>
+        <span class="rec-icon">📜</span>
+        <h3>Рекомендательные письма в проектах</h3>
+        <p>Добавить PDF-письма от клиентов к каждому кейсу. Уникальная деталь, которую делает только NDBC — и это сильно.</p>
+        <div class="rec-source">✓ Пример: NDBC — письма усиливают доверие к проекту</div>
+      </div>
+      <div class="rec-card rv" style="transition-delay:.2s">
+        <div class="rec-num">5</div>
+        <div class="rec-priority pri-mid">🟡 Средний приоритет</div>
+        <span class="rec-icon">👥</span>
+        <h3>Фото команды каждого департамента</h3>
+        <p>Реальные люди с именами и должностями вместо стоковых фото. Показывает масштаб и экспертизу изнутри.</p>
+        <div class="rec-source">✓ Пример: КОРУС — фото команды в разделе каждой практики</div>
+      </div>
+      <div class="rec-card rv" style="transition-delay:.24s">
+        <div class="rec-num">6</div>
+        <div class="rec-priority pri-mid">🟡 Средний приоритет</div>
+        <span class="rec-icon">🎪</span>
+        <h3>Медиацентр: вебинары и подкасты</h3>
+        <p>Раздел с видео, подкастами, записями вебинаров и календарём событий. Удерживает пользователя и строит лояльность.</p>
+        <div class="rec-source">✓ Пример: КОРУС — добавление вебинара в личный Google Calendar</div>
+      </div>
+      <div class="rec-card rv" style="transition-delay:.28s">
+        <div class="rec-num">7</div>
+        <div class="rec-priority pri-mid">🟡 Средний приоритет</div>
+        <span class="rec-icon">⏰</span>
+        <h3>Триггерное окно при неактивности</h3>
+        <p>Через 2–3 минуты бездействия — поп-ап с предложением помочь. Классический, но работающий инструмент удержания.</p>
+        <div class="rec-source">✓ Пример: Первый Бит — автоматическое предложение звонка</div>
+      </div>
+      <div class="rec-card rv" style="transition-delay:.32s">
+        <div class="rec-num">8</div>
+        <div class="rec-priority pri-mid">🟡 Средний приоритет</div>
+        <span class="rec-icon">🗺️</span>
+        <h3>Интерактивная карта клиентов</h3>
+        <p>Визуализация клиентов по городам и отраслям — демонстрирует масштаб без слов. Мощный имиджевый инструмент.</p>
+        <div class="rec-source">✓ Пример: КОРУС — кликабельная карта с фильтрами</div>
+      </div>
+      <div class="rec-card rv" style="transition-delay:.36s">
+        <div class="rec-num">9</div>
+        <div class="rec-priority pri-low">🟢 Долгосрочно</div>
+        <span class="rec-icon">⚖️</span>
+        <h3>Разделы Compliance и КСО</h3>
+        <p>Для работы с госзаказчиками и enterprise — разделы о комплаенсе, корпоративной ответственности. Статусность и прозрачность.</p>
+        <div class="rec-source">✓ Пример: Ланит и IBS — отдельные разделы ESG и Compliance</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ CTA ════════════════ -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-inner rv">
+      <div class="sec-label" style="margin-bottom:20px">💎 Итог аудита</div>
+      <h2>КОРУС задаёт <span class="grad-text">стандарт рынка</span></h2>
+      <p>Большинство IT-консалтинговых сайтов России не выполняют ни имиджевую, ни продающую функцию. Разрыв между лидерами и аутсайдерами огромен — и это ваша возможность.</p>
+      <div class="cta-chips">
+        <div class="cta-chip">Sticky CTA = конверсия</div>
+        <div class="cta-chip">Живые люди = доверие</div>
+        <div class="cta-chip">Медиа = лояльность</div>
+        <div class="cta-chip">Кейсы + отзывы = продажи</div>
+        <div class="cta-chip">Скорость = SEO</div>
+        <div class="cta-chip">ESG = статус</div>
+      </div>
+      <a href="#overview" class="btn-p" style="display:inline-block">Изучить снова →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ FOOTER ════════════════ -->
+<footer>
+  <p>Аналитический аудит в стиле <strong>NOVARDIS Consulting</strong> — Digital Strategy для IT-консалтинга</p>
+  <p style="margin-top:8px">Цифровое присутствие — это не витрина, а полноценный канал продаж</p>
+</footer>
+
+<!-- ════════════════ SCRIPTS ════════════════ -->
+<script>
+/* ── CURSOR ── */
+const cur=document.getElementById('cur'),ring=document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+(function animCur(){
+  cur.style.transform=`translate(${mx-5}px,${my-5}px)`;
+  rx+=(mx-rx)*.1;ry+=(my-ry)*.1;
+  ring.style.transform=`translate(${rx-20}px,${ry-20}px)`;
+  requestAnimationFrame(animCur);
+})();
+document.querySelectorAll('a,.ov-card,.trend-card,.rec-card,.cro-card,.company-hero,.feat-item').forEach(el=>{
+  el.addEventListener('mouseenter',()=>ring.classList.add('expand'));
+  el.addEventListener('mouseleave',()=>ring.classList.remove('expand'));
+});
+
+/* ── NAV + PROGRESS ── */
+const nav=document.getElementById('navbar'),prog=document.getElementById('prog');
+window.addEventListener('scroll',()=>{
+  const pct=scrollY/(document.body.scrollHeight-innerHeight)*100;
+  prog.style.width=pct+'%';
+  nav.classList.toggle('scrolled',scrollY>30);
+});
+
+/* ── CANVAS ── */
+const canvas=document.getElementById('bg-canvas'),ctx=canvas.getContext('2d');
+let W,H,nodes=[];
+function resize(){W=canvas.width=innerWidth;H=canvas.height=innerHeight}
+resize();addEventListener('resize',resize);
+function mkNode(){
+  const cols=['rgba(0,100,255,','rgba(0,212,255,','rgba(124,58,237,','rgba(0,229,160,'];
+  return{x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*1.8+.4,col:cols[Math.floor(Math.random()*cols.length)],o:Math.random()*.5+.1}
+}
+for(let i=0;i<100;i++)nodes.push(mkNode());
+(function draw(){
+  ctx.clearRect(0,0,W,H);
+  for(let i=0;i<nodes.length;i++){
+    for(let j=i+1;j<nodes.length;j++){
+      const dx=nodes[i].x-nodes[j].x,dy=nodes[i].y-nodes[j].y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<120){ctx.beginPath();ctx.strokeStyle=`rgba(0,100,255,${(1-d/120)*.1})`;ctx.lineWidth=.7;ctx.moveTo(nodes[i].x,nodes[i].y);ctx.lineTo(nodes[j].x,nodes[j].y);ctx.stroke()}
+    }
+  }
+  nodes.forEach(n=>{
+    ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);ctx.fillStyle=n.col+n.o+')';ctx.fill();
+    n.x+=n.vx;n.y+=n.vy;
+    if(n.x<0||n.x>W)n.vx*=-1;if(n.y<0||n.y>H)n.vy*=-1;
+  });
+  requestAnimationFrame(draw);
+})();
+
+/* ── REVEAL ── */
+const io=new IntersectionObserver(e=>e.forEach(en=>{if(en.isIntersecting)en.target.classList.add('on')}),{threshold:.1});
+document.querySelectorAll('.rv,.rvL,.rvR,.rvS').forEach(el=>io.observe(el));
+
+/* ── COUNTERS ── */
+function animCount(el){
+  const t=+el.dataset.t,d=1600,s=performance.now();
+  (function tick(now){
+    const p=Math.min((now-s)/d,1),e=1-Math.pow(1-p,3);
+    el.textContent=Math.floor(e*t);
+    if(p<1)requestAnimationFrame(tick);else el.textContent=t;
+  })(performance.now());
+}
+const cio=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting){en.target.querySelectorAll('.counter').forEach(animCount);cio.unobserve(en.target)}})},{threshold:.4});
+const sr=document.querySelector('.stats-row');if(sr)cio.observe(sr);
+
+/* ── ANIMATED BARS ── */
+const bObs=new IntersectionObserver(e=>{
+  e.forEach(en=>{if(en.isIntersecting)en.target.querySelectorAll('.animated-bar').forEach(b=>{b.style.width=b.dataset.w})})
+},{threshold:.3});
+document.querySelectorAll('.winner-inner').forEach(el=>bObs.observe(el));
+
+/* ── PARTICLES ── */
+const colors=['rgba(0,100,255,.35)','rgba(0,212,255,.35)','rgba(124,58,237,.3)','rgba(0,229,160,.25)','rgba(236,72,153,.25)'];
+function spawnParticle(){
+  const p=document.createElement('div');p.className='particle';
+  const sz=Math.random()*7+2,shapes=['50%','4px'];
+  p.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}vw;background:${colors[Math.floor(Math.random()*colors.length)]};animation-duration:${Math.random()*14+8}s;animation-delay:${Math.random()*4}s;border-radius:${shapes[Math.floor(Math.random()*shapes.length)]}`;
+  document.body.appendChild(p);setTimeout(()=>p.remove(),22000);
+}
+setInterval(spawnParticle,800);
+
+/* ── 3D TILT ── */
+document.querySelectorAll('.tilt').forEach(card=>{
+  card.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+    card.style.transform=`translateY(-6px) rotateY(${x*8}deg) rotateX(${-y*8}deg)`;
+  });
+  card.addEventListener('mouseleave',()=>{card.style.transform=''});
+});
+
+/* ── TYPING HERO SUB ── */
+const heroSub=document.querySelector('.hero-sub');
+if(heroSub){
+  const orig=heroSub.textContent;heroSub.textContent='';
+  const tc=document.createElement('span');tc.className='typed-cursor';tc.textContent='|';heroSub.appendChild(tc);
+  let i=0;
+  setTimeout(()=>{
+    const iv=setInterval(()=>{
+      if(i<orig.length){heroSub.insertBefore(document.createTextNode(orig[i]),tc);i++}
+      else{clearInterval(iv);setTimeout(()=>tc.remove(),1200)}
+    },20);
+  },1000);
+}
+
+/* ── SMOOTH SCROLL ── */
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    e.preventDefault();
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t)t.scrollIntoView({behavior:'smooth'});
+  });
+});
+
+/* ── STAR STAGGER ON OVERVIEW ── */
+document.querySelectorAll('.ov-score .star').forEach((s,i)=>{
+  s.style.animationDelay=`${i*.1+.3}s`;
+});
+
+/* ── PARALLAX HERO ── */
+const hg=document.querySelector('.hero-glow');
+window.addEventListener('scroll',()=>{if(hg)hg.style.transform=`translate(-50%,calc(-50% + ${scrollY*.12}px))`});
+</script>
+</body>
+</html>
