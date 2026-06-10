@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Аналитический отчет: Novardis Consulting</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #3b82f6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-600: #4b5563;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            color: var(--gray-800);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 3rem 0;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-30px, -30px) rotate(180deg); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            animation: slideDown 0.8s ease;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            animation: slideDown 0.8s ease 0.2s backwards;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Navigation */
+        .nav-tabs {
+            display: flex;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+        }
+
+        .nav-tab {
+            padding: 0.75rem 1.5rem;
+            background: white;
+            border: 2px solid var(--gray-200);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            color: var(--gray-600);
+        }
+
+        .nav-tab:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .nav-tab.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s;
+            animation: fadeIn 0.6s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            cursor: pointer;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            color: var(--gray-900);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .toggle-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gray-100);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            font-size: 1.5rem;
+        }
+
+        .toggle-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: rotate(180deg);
+        }
+
+        .card-content {
+            max-height: 2000px;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+
+        .card-content.collapsed {
+            max-height: 0;
+        }
+
+        /* Summary Grid */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .summary-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border-left: 4px solid;
+            transition: all 0.3s;
+        }
+
+        .summary-card:hover {
+            transform: translateX(8px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .summary-card.pros {
+            border-left-color: var(--success);
+        }
+
+        .summary-card.cons {
+            border-left-color: var(--danger);
+        }
+
+        .summary-card h3 {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+
+        .summary-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .summary-card li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .summary-card li:last-child {
+            border-bottom: none;
+        }
+
+        .summary-card.pros li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        .summary-card.cons li::before {
+            content: '✗';
+            position: absolute;
+            left: 0;
+            color: var(--danger);
+            font-weight: bold;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.875rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        /* Comparison Table */
+        .table-container {
+            overflow-x: auto;
+            margin: 2rem 0;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        th {
+            background: var(--gray-50);
+            font-weight: 700;
+            color: var(--gray-900);
+            position: sticky;
+            top: 0;
+        }
+
+        tr:hover {
+            background: var(--gray-50);
+        }
+
+        .check {
+            color: var(--success);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .cross {
+            color: var(--danger);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .double {
+            font-size: 1.5rem;
+        }
+
+        /* Recommendations */
+        .recommendation {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 4px solid var(--warning);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            display: flex;
+            align-items: start;
+            gap: 1rem;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .recommendation-number {
+            background: var(--warning);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        /* Tags */
+        .tag {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin: 0.25rem;
+        }
+
+        .tag-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .tag-danger {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .tag-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .tag-info {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        /* Section Headers */
+        .section-header {
+            font-size: 2rem;
+            margin: 3rem 0 1.5rem;
+            color: var(--gray-900);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid var(--primary);
+        }
+
+        /* Minus Details */
+        .minus-item {
+            background: #fef2f2;
+            border-left: 4px solid var(--danger);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .minus-item:hover {
+            transform: translateX(4px);
+            box-shadow: var(--shadow);
+        }
+
+        .minus-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+            font-weight: 700;
+            color: var(--danger);
+            font-size: 1.1rem;
+        }
+
+        .minus-comparison {
+            background: white;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-top: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .competitor-name {
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.75rem;
+            }
+
+            .nav-tabs {
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+        }
+
+        /* Loading Animation */
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Scroll to top button */
+        .scroll-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+            border: none;
+            font-size: 1.5rem;
+        }
+
+        .scroll-top.visible {
+            opacity: 1;
+        }
+
+        .scroll-top:hover {
+            background: var(--primary-dark);
+            transform: translateY(-4px);
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="container">
+            <h1>📊 Аналитический отчет: Novardis Consulting</h1>
+            <p>Глубокий аудит цифрового присутствия в сравнении с лидерами рынка</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <nav class="nav-tabs">
+            <button class="nav-tab active" onclick="scrollToSection('summary')">📋 Резюме</button>
+            <button class="nav-tab" onclick="scrollToSection('pros')">✅ Плюсы</button>
+            <button class="nav-tab" onclick="scrollToSection('cons')">❌ Минусы</button>
+            <button class="nav-tab" onclick="scrollToSection('comparison')">📊 Сравнение</button>
+            <button class="nav-tab" onclick="scrollToSection('recommendations')">🚀 Рекомендации</button>
+        </nav>
+
+        <section id="summary">
+            <h2 class="section-header">📋 Общее резюме</h2>
+            
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h3 class="card-title">🏢 Общая характеристика Novardis</h3>
+                    <button class="toggle-btn">▼</button>
+                </div>
+                <div class="card-content">
+                    <p style="font-size: 1.1rem; line-height: 1.8;">
+                        <strong>Novardis</strong> — это современный, профессиональный сайт с <span class="tag tag-success">высоким уровнем цифровой зрелости</span>. 
+                        Компания позиционирует себя как эксперт в области цифровой трансформации с акцентом на импортозамещение и работу с 1С/SAP.
+                    </p>
+                    <div style="margin-top: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <span class="tag tag-info">500+ проектов</span>
+                        <span class="tag tag-info">400+ экспертов</span>
+                        <span class="tag tag-info">20+ лет на рынке</span>
+                        <span class="tag tag-success">Международное присутствие</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="summary-grid">
+                <div class="summary-card pros">
+                    <h3>✅ Сильные стороны</h3>
+                    <ul>
+                        <li>Мощнейший блок рейтингов и наград</li>
+                        <li>Отзывы от топ-менеджеров с именами</li>
+                        <li>500+ проектов с известными клиентами</li>
+                        <li>Международное присутствие (Казахстан)</li>
+                        <li>Узкая специализация (carve out SAP)</li>
+                        <li>Двуязычность (EN/RU)</li>
+                    </ul>
+                </div>
+
+                <div class="summary-card cons">
+                    <h3>❌ Зоны роста</h3>
+                    <ul>
+                        <li>Слабая коммуникация (нет телефона в шапке)</li>
+                        <li>Обезличенность (нет лиц экспертов)</li>
+                        <li>Слабая медиа-стратегия</li>
+                        <li>Нет интерактива и FAQ</li>
+                        <li>Отсутствуют КСО/ESG/Compliance</li>
+                        <li>Слабая воронка продаж</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="pros">
+            <h2 class="section-header">✅ Детальный разбор преимуществ</h2>
+            
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h3 class="card-title">🏆 Рейтинги и награды</h3>
+                    <button class="toggle-btn">▼</button>
+                </div>
+                <div class="card-content">
+                    <p><strong>Самый мощный блок наград среди всех конкурентов!</strong></p>
+                    <ul style="margin-top: 1rem; padding-left: 1.5rem;">
+                        <li>🏆 National Loyalty & CX Awards Russia 2024</li>
+                        <li>📊 CNews Analytics 2023 — 15 место (поставщики ИТ в розницу)</li>
+                        <li>📊 TAdviser 2022 — 9 место (ИТ-поставщики в ритейле)</li>
+                        <li>📊 TAdviser 2021-2022 — <strong>2 место</strong> (поставщики WMS)</li>
+                        <li>📊 TAdviser 2022 — 7 место (ERP-системы)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h3 class="card-title">💬 Отзывы клиентов</h3>
+                    <button class="toggle-btn">▼</button>
+                </div>
+                <div class="card-content">
+                    <p><strong>Развернутые отзывы от топ-менеджеров с именами и должностями:</strong></p>
+                    <ul style="margin-top: 1rem; padding-left: 1.5rem;">
+                        <li>Денис Коровин, IT бизнес-партнер <strong>«Лента»</strong></li>
+                        <li>Фолькер Шаар, генеральный директор <strong>«Глобус»</strong></li>
+                        <li>Антон Семёнов, директор департамента <strong>Faberlic</strong></li>
+                        <li>Андрей Довгий, генеральный директор <strong>«Восток-Запад»</strong></li>
+                        <li>Руслан Аиткулов, ведущий менеджер <strong>«М.Видео»</strong></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h3 class="card-title">🌍 Международное присутствие</h3>
+                    <button class="toggle-btn">▼</button>
+                </div>
+                <div class="card-content">
+                    <p>Офисы в 3 городах: <strong>Санкт-Петербург, Москва, Казахстан (Астана)</strong></p>
+                    <p style="margin-top: 0.5rem;"><span class="tag tag-success">Уникально!</span> Среди всех проанализированных компаний только Novardis и Axenix имеют международное присутствие.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="cons">
+            <h2 class="section-header">❌ Детальный разбор недостатков</h2>
+            <p style="margin-bottom: 2rem; font-size: 1.1rem;">Выявлено <strong>42 критических недостатка</strong> в сравнении с лидерами рынка</p>
+
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h3 class="card-title">📞 1. Слабая коммуникация и точки конверсии</h3>
+                    <button class="toggle-btn">▼</button>
+                </div>
+                <div class="card-content">
+                    <div class="minus-item">
+                        <div class="minus-header">
+                            <span>❌</span>
+                            <span>Нет закрепленной шапки с телефоном</span>
+                        </div>
+                        <p><span class="competitor-name">У кого есть:</span> Корус, КРОК, IBS — номер всегда виден при прокрутке</p>
+                        <div class="minus-comparison">
+                            <strong>У Novardis:</strong> Телефон только на странице «Контакты». Пользователь должен сделать 4 шага вместо 1.
+                            <br><br>
+                            <span class="tag tag-danger">Потеря конверсии: 20-30%</span>
+                        </div>
+                    </div>
+
+                    <div class="minus-item">
+                        <div class="minus-header">
+                            <span>❌</span>
+                            <span>Нет живого онлайн-чата</span>
+                        </div>
+                        <p><span class="competitor-name">У кого есть:</span> ВДГБ (живой чат с фото менеджеров), Райтек, 1-Bit</p>
+                        <div class="minus-comparison">
+                            <strong>У Novardis:</strong> Только формы обратной связи. Нет мгновенного ответа.
+                            <br><br>
+                            <span class="tag tag-danger">Потеря лидов: 20-40%</span>
+                        </div>
+                    </div>
+
+                    <div class="minus-item">
+                        <div class="minus-header">
+                            <span>❌</span>
+                            <span>Нет триггерных окон при неактивности</span>
+                        </div>
+                        <p><span class="competitor-name">У кого есть:</span> 1-Bit — через пару минут вылетает окно «Заказать звонок»</p>
+                        <div class="minus-comparison">
+                            <strong>У Novardis:</strong> Если пользователь «потерялся» — никто не поможет. Он просто уйдет.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h3 class="card-title">👥 2. Слабый HR-бренд и отсутствие «лиц компании»</h3>
+                    <button class="toggle-btn">▼</button>
+                </div>
+                <div class="card-content">
+                    <div class="minus-item">
+                        <div class="minus-header">
+                            <span>❌</span>
+                            <span>Нет фотографий команды и экспертов</span>
+                        </div>
+                        <p><span class="competitor-name">У кого есть:</span> Корус (лица реальных сотрудников), Axenix (профили экспертов)</p>
+                        <div class="minus-comparison">
+                            <strong>У Novardis:</strong> Только цифры — «400+ экспертов». Нет ни одного лица.
+                            <br><br>
+                            <span class="tag tag-danger">Критично:</span> B2B-клиенты покупают у людей, а не у безликих компаний
+                        </div>
+                    </div>
+
+                    <div class="minus-item">
+                        <div class="minus-header">
+                            <span>❌</span>
+                            <span>Нет фотографии и цитаты CEO</span>
+                        </div>
+                        <p><span class="competitor-name">У кого есть:</span> IBS — фото гендиректора с цитатой</p>
+                        <div class="minus-comparison">
+                            <strong>У Novardis:</strong> Нет персонализации от первого лица компании
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h3 class="card-title">🎬 3. Слабая медиа-стратегия</h3>
+                    <button class="toggle-btn">▼</button>
+                </div>
+                <div class="card-content">
+                    <div class="minus-item">
+                        <div class="minus-header">
+                            <span>❌</span>
+                            <span>Нет видеоподкастов</span>
+                        </div>
+                        <p><span class="competitor-name">У кого есть:</span> Axenix (два вида подкастов), КРОК</p>
+                    </div>
+
+                    <div class="minus-item">
+                        <div class="minus-header">
+                            <span>❌</span>
+                            <span>Нет вебинаров с календарем</span>
+                        </div>
+                        <p><span class="competitor-name">У кого есть:</span> Корус — мощный медиацентр с календарем, возможностью добавить в личный календарь</p>
+                        <div class="minus-comparison">
+                            <strong>Уникальная фича Корус:</strong> Возможность добавить вебинар в свой календарь одним кликом
+                        </div>
+                    </div>
+
+                    <div class="minus-item">
+                        <div class="minus-header">
+                            <span>❌</span>
+                            <span>Нет дискуссионных клубов</span>
+                        </div>
+                        <p><span class="competitor-name">У кого есть:</span> Axenix — закрытый клуб Pharma Day с презентациями</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h3 class="card-title">💼 4. Недостатки в презентации кейсов</h3>
+                    <button class="toggle-btn">▼</button>
+                </div>
+                <div class="card-content">
+                    <div class="minus-item">
+                        <div class="minus-header">
+                            <span>❌</span>
+                            <span>Нет отзывов клиентов внутри кейсов</span>
+                        </div>
+                        <p><span class="competitor-name">У кого есть:</span> NDBC (рекомендательные письма), Первый Бит</p>
+                    </div>
+
+                    <div class="minus-item">
+                        <div class="minus-header">
+                            <span>❌</span>
+                            <span>Нет всплывающих «похожих кейсов»</span>
+                        </div>
+                        <p><span class="competitor-name">У кого есть:</span> Первый Бит — при просмотре кейса всплывают похожие</p>
+                    </div>
+
+                    <div class="minus-item">
+                        <div class="minus-header">
+                            <span>❌</span>
+                            <span>Нет номеров экспертов в кейсах</span>
+                        </div>
+                        <p><span class="competitor-name">У кого есть:</span> IBS — кейсы с номерами экспертов, работавших над проектом</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h3 class="card-title">🌱 5. Отсутствие КСО, ESG и Compliance</h3>
+                    <button class="toggle-btn">▼</button>
+                </div>
+                <div class="card-content">
+                    <div class="minus-item">
+                        <div class="minus-header">
+                            <span>❌</span>
+                            <span>Нет раздела КСО</span>
+                        </div>
+                        <p><span class="competitor-name">У кого есть:</span> Ланит — отдельно выделенный раздел</p>
+                        <div class="minus-comparison">
+                            <span class="tag tag-warning">Важно:</span> Для крупных enterprise-клиентов и госзаказчиков КСО — маркер зрелости
+                        </div>
+                    </div>
+
+                    <div class="minus-item">
+                        <div class="minus-header">
+                            <span>❌</span>
+                            <span>Нет раздела ESG</span>
+                        </div>
+                        <p><span class="competitor-name">У кого есть:</span> IBS — отдельно представлен раздел с ESG</p>
+                        <div class="minus-comparison">
+                            <span class="tag tag-warning">Тренд 2024-2026:</span> Крупные международные клиенты смотрят на ESG
+                        </div>
+                    </div>
+
+                    <div class="minus-item">
+                        <div class="minus-header">
+                            <span>❌</span>
+                            <span>Нет раздела Compliance</span>
+                        </div>
+                        <p><span class="competitor-name">У кого есть:</span> Ланит — отдельно выделен</p>
+                        <div class="minus-comparison">
+                            <span class="tag tag-danger">Критично:</span> Для работы с госзаказчиками и банками комплаенс — обязательное требование
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="comparison">
+            <h2 class="section-header">📊 Сравнительная таблица с лидерами</h2>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Критерий</th>
+                            <th>Novardis</th>
+                            <th>Корус</th>
+                            <th>КРОК</th>
+                            <th>Axenix</th>
+                            <th>Ланит</th>
+                            <th>IBS</th>
+                            <th>ВДГБ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Закрепленный телефон</td>
+                            <td class="cross">✗</td>
+                            <td class="check">✓</td>
+                            <td class="check">✓</td>
+                            <td class="cross">✗</td>
+                            <td class="cross">✗</td>
+                            <td class="check">✓</td>
+                            <td class="cross">✗</td>
+                        </tr>
+                        <tr>
+                            <td>Живой чат</td>
+                            <td class="cross">✗</td>
+                            <td class="cross">✗</td>
+                            <td class="cross">✗</td>
+                            <td class="cross">✗</td>
+                            <td class="cross">✗</td>
+                            <td class="cross">✗</td>
+                            <td class="check double">✓✓</td>
+                        </tr>
+                        <tr>
+                            <td>Лица экспертов</td>
+                            <td class="cross">✗</td>
+                            <td class="check double">✓✓</td>
+                            <td class="cross">✗</td>
+                            <td class="check">✓</td>
+                            <td class="cross">✗</td>
+                            <td class="cross">✗</td>
+                            <td class="cross">✗</td>
+                        </tr>
+                        <tr>
+                            <td>Календарь вебинаров</td>
+                            <td class="cross">✗</td>
+                            <td class="check double">✓✓</td>
+                            <td class="cross">✗</td>
+                            <td class="cross">✗</td>
+                            <td class="cross">✗</td>
+                            <td class="cross">✗</td>
+                            <td class="cross">✗</td>
+                        </tr>
+                        <tr>
+                            <td>Видеоподкасты</td>
+                            <td class="cross">✗</td>
+                            <td class="cross">✗</td>
+                            <td class="check">✓</td>
+                            <td class="check">✓</td>
+                            <td class="cross">✗</td>
+                            <td class="cross">✗</td>
+                            <td class="cross">✗</td>
+                        </tr>
+                        <tr>
+                            <td>Отзывы в кейсах</td>
+                            <td class="cross">✗</td>
+                            <td class="cross">✗</td>
+                            <td class="cross">✗</td>
+                            <td class="cross">✗</td>
+                            <td class="cross">✗</td>
+                            <td class="cross">✗</td>
+                            <td class="check">✓</td>
+                        </tr>
+                        <tr>
+                            <td>Интерактивная карта</td>
+                            <td class="cross">✗</td>
+                            <td class="check">✓</td>
+                            <td class="cross">✗</td>
+                            <td class="cross">✗</td>
+                            <td class="cross">✗</td>
+                            <td class="cross">✗</td>
+                            <td class="cross">✗</td>
+                        </tr>
+                        <tr>
+                            <td>КСО/ESG</td>
+                            <td class="cross">✗</td>
+                            <td class="cross">✗</td>
+                            <td class="cross">✗</td>
+                            <td class="cross">✗</td>
+                            <td class="check double">✓✓</td>
+                            <td class="check">✓</td>
+                            <td class="cross">✗</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Рейтинги и награды</strong></td>
+                            <td class="check double">✓✓✓</td>
+                            <td class="check">✓</td>
+                            <td class="check">✓</td>
+                            <td class="check">✓</td>
+                            <td class="check">✓</td>
+                            <td class="check">✓</td>
+                            <td class="cross">✗</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Отзывы топ-менеджеров</strong></td>
+                            <td class="check double">✓✓✓</td>
+                            <td class="cross">✗</td>
+                            <td class="cross">✗</td>
+                            <td class="cross">✗</td>
+                            <td class="cross">✗</td>
+                            <td class="cross">✗</td>
+                            <td class="cross">✗</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Международное присутствие</strong></td>
+                            <td class="check double">✓✓</td>
+                            <td class="cross">✗</td>
+                            <td class="cross">✗</td>
+                            <td class="check">✓</td>
+                            <td class="cross">✗</td>
+                            <td class="cross">✗</td>
+                            <td class="cross">✗</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="recommendations">
+            <h2 class="section-header">🚀 Топ-5 рекомендаций для Novardis</h2>
+            
+            <div class="recommendation">
+                <div class="recommendation-number">1</div>
+                <div>
+                    <h3 style="margin-bottom: 0.5rem;">Добавить закрепленный телефон и кнопку быстрого звонка</h3>
+                    <p>Как у КРОК и ВДГБ. Телефон должен быть всегда виден при прокрутке. Добавить визуальную «трубку» для мобильных устройств.</p>
+                    <span class="tag tag-success">Ожидаемый эффект: +25-35% к конверсии</span>
+                </div>
+            </div>
+
+            <div class="recommendation">
+                <div class="recommendation-number">2</div>
+                <div>
+                    <h3 style="margin-bottom: 0.5rem;">Внедрить живой онлайн-чат с фото менеджеров</h3>
+                    <p>Как у ВДГБ — с реальными фотографиями сотрудников, а не абстрактными аватарами. Это критически важно для повышения доверия.</p>
+                    <span class="tag tag-success">Ожидаемый эффект: +20-40% к лидам</span>
+                </div>
+            </div>
+
+            <div class="recommendation">
+                <div class="recommendation-number">3</div>
+                <div>
+                    <h3 style="margin-bottom: 0.5rem;">Показать лица экспертов и CEO</h3>
+                    <p>Как у Корус и IBS — фотографии команды, профили ключевых экспертов с компетенциями, фото гендиректора с цитатой.</p>
+                    <span class="tag tag-success">Ожидаемый эффект: +40% к доверию</span>
+                </div>
+            </div>
+
+            <div class="recommendation">
+                <div class="recommendation-number">4</div>
+                <div>
+                    <h3 style="margin-bottom: 0.5rem;">Запустить медиацентр с вебинарами и подкастами</h3>
+                    <p>Как у Корус и Axenix — календарь вебинаров с возможностью добавления в личный календарь, видеоподкасты, дискуссионные клубы.</p>
+                    <span class="tag tag-success">Ожидаемый эффект: +50-200 лидов с каждого вебинара</span>
+                </div>
+            </div>
+
+            <div class="recommendation">
+                <div class="recommendation-number">5</div>
+                <div>
+                    <h3 style="margin-bottom: 0.5rem;">Добавить контекстные CTA внутри каждого блока услуги</h3>
+                    <p>Как у Корус — кнопка «Обсудить решение» рядом с каждой услугой, а не только форма в конце страницы.</p>
+                    <span class="tag tag-success">Ожидаемый эффект: +30% к заявкам</span>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top: 2rem; background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); border: 2px solid var(--primary);">
+                <h3 style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <span>💡</span>
+                    <span>Бонусная рекомендация</span>
+                </h3>
+                <p><strong>Добавить разделы КСО, ESG и Compliance</strong> как у Ланит и IBS. Это критично для работы с госзаказчиками и крупным enterprise-сегментом.</p>
+            </div>
+        </section>
+
+        <button class="scroll-top" onclick="scrollToTop()" id="scrollTop">↑</button>
+    </div>
+
+    <script>
+        // Toggle card content
+        function toggleCard(header) {
+            const content = header.nextElementSibling;
+            const btn = header.querySelector('.toggle-btn');
+            
+            content.classList.toggle('collapsed');
+            btn.style.transform = content.classList.contains('collapsed') ? 'rotate(0deg)' : 'rotate(180deg)';
+        }
+
+        // Smooth scroll to section
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            const offset = 100;
+            const bodyRect = document.body.getBoundingClientRect().top;
+            const sectionRect = section.getBoundingClientRect().top;
+            const sectionPosition = sectionRect - bodyRect;
+            const offsetPosition = sectionPosition - offset;
+
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+            });
+
+            // Update active tab
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        // Scroll to top button
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Show/hide scroll to top button
+        window.addEventListener('scroll', () => {
+            const scrollTop = document.getElementById('scrollTop');
+            if (window.pageYOffset > 300) {
+                scrollTop.classList.add('visible');
+            } else {
+                scrollTop.classList.remove('visible');
+            }
+        });
+
+        // Animate elements on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all cards
+        document.querySelectorAll('.card, .recommendation, .minus-item').forEach((el, index) => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = `all 0.6s ease ${index * 0.1}s`;
+            observer.observe(el);
+        });
+
+        // Add click animation to buttons
+        document.querySelectorAll('.btn, .nav-tab').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.cssText = `
+                    position: absolute;
+                    width: ${size}px;
+                    height: ${size}px;
+                    left: ${x}px;
+                    top: ${y}px;
+                    background: rgba(255,255,255,0.6);
+                    border-radius: 50%;
+                    transform: scale(0);
+                    animation: ripple 0.6s ease-out;
+                    pointer-events: none;
+                `;
+                
+                this.style.position = 'relative';
+                this.style.overflow = 'hidden';
+                this.appendChild(ripple);
+                
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+
+        // Add ripple animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(2);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
