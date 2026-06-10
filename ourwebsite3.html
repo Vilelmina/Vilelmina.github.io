@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novardis Analytics | Интерактивный отчет</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none;
+        }
+
+        :root {
+            --bg-deep: #0B1120;
+            --bg-card: rgba(30, 58, 138, 0.25);
+            --novardis-blue: #1e3a8a;
+            --novardis-light: #3b82f6;
+            --novardis-accent: #06b6d4;
+            --text-primary: #f8fafc; /* Кристально белый */
+            --text-secondary: #cbd5e1; /* Мягкий светло-серый для идеальной читаемости */
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --gradient-accent: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-deep);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Scroll Progress Bar */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: var(--gradient-accent);
+            z-index: 10001;
+            width: 0%;
+            transition: width 0.1s;
+            box-shadow: 0 0 10px var(--novardis-accent);
+        }
+
+        /* Custom Cursor */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--novardis-accent);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.15s, opacity 0.15s;
+            mix-blend-mode: difference;
+        }
+
+        .cursor-follower {
+            width: 40px;
+            height: 40px;
+            background: rgba(6, 182, 212, 0.15);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            transition: transform 0.3s ease-out;
+        }
+
+        .cursor.hover {
+            transform: scale(1.5);
+            background: rgba(6, 182, 212, 0.3);
+            border-color: transparent;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 50% 50%, #1e293b 0%, #0B1120 100%);
+            overflow: hidden;
+        }
+
+        .floating-shape {
+            position: absolute;
+            opacity: 0.08;
+            animation: float 25s infinite ease-in-out;
+            filter: blur(60px);
+        }
+
+        .shape-1 { width: 500px; height: 500px; background: var(--novardis-light); top: -10%; right: -10%; animation-delay: 0s; }
+        .shape-2 { width: 400px; height: 400px; background: var(--novardis-accent); bottom: -10%; left: -10%; animation-delay: 5s; }
+        .shape-3 { width: 300px; height: 300px; background: #6366f1; top: 40%; left: 30%; animation-delay: 10s; }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+            33% { transform: translate(30px, -50px) rotate(120deg) scale(1.1); }
+            66% { transform: translate(-20px, 20px) rotate(240deg) scale(0.9); }
+        }
+
+        /* Particles */
+        .particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--novardis-accent);
+            border-radius: 50%;
+            opacity: 0;
+            animation: particle-float 15s infinite linear;
+        }
+        @keyframes particle-float {
+            0% { opacity: 0; transform: translateY(100vh) scale(0); }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { opacity: 0; transform: translateY(-10vh) scale(1); }
+        }
+
+        /* Header */
+        .header {
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            padding: 2rem;
+        }
+
+        .header-content {
+            text-align: center;
+            z-index: 2;
+            max-width: 900px;
+        }
+
+        .header-badge {
+            display: inline-block;
+            padding: 0.5rem 1.25rem;
+            background: rgba(6, 182, 212, 0.1);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            border-radius: 50px;
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--novardis-accent);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .header h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+            color: var(--text-primary);
+        }
+
+        .typing-text {
+            border-right: 3px solid var(--novardis-accent);
+            animation: blink 0.7s step-end infinite;
+        }
+
+        @keyframes blink { 50% { border-color: transparent; } }
+
+        .header-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 3rem;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+            color: var(--text-secondary);
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-15px); }
+            60% { transform: translateX(-50%) translateY(-7px); }
+        }
+
+        /* Navigation */
+        .nav-container {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(11, 17, 32, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 1rem 0;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .nav-tab {
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-tab::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-accent);
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: -1;
+        }
+
+        .nav-tab:hover, .nav-tab.active {
+            color: white;
+            border-color: transparent;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(6, 182, 212, 0.2);
+        }
+
+        .nav-tab:hover::before, .nav-tab.active::before { opacity: 1; }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        /* --- SUMMARY SECTION (Специальный дизайн для читабельности) --- */
+        .summary-hero-card {
+            background: linear-gradient(145deg, rgba(30, 58, 138, 0.4) 0%, rgba(15, 23, 42, 0.6) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 24px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .summary-hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-accent);
+        }
+
+        .summary-hero-card h2 {
+            font-size: 2rem;
+            color: var(--text-primary); /* Белый */
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .summary-hero-card p {
+            font-size: 1.15rem;
+            color: var(--text-secondary); /* Светло-серый для комфорта чтения */
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            max-width: 900px;
+        }
+
+        .highlight-text {
+            color: var(--novardis-accent);
+            font-weight: 600;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.4s;
+            position: relative;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--novardis-accent);
+            background: rgba(6, 182, 212, 0.05);
+            box-shadow: 0 15px 40px rgba(6, 182, 212, 0.15);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        /* Cards General */
+        .card {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Mouse glow effect */
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(6, 182, 212, 0.06), transparent 40%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .card:hover::after { opacity: 1; }
+        .card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(6, 182, 212, 0.2);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            cursor: pointer;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-accent);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .toggle-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .toggle-btn:hover { background: var(--novardis-accent); color: white; }
+
+        .card-content {
+            max-height: 2000px;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s;
+            opacity: 1;
+        }
+
+        .card-content.collapsed {
+            max-height: 0;
+            opacity: 0;
+        }
+
+        /* Pros/Cons Grid */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .comparison-card {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.3s;
+        }
+
+        .comparison-card.pros { border-top: 3px solid var(--success); }
+        .comparison-card.cons { border-top: 3px solid var(--danger); }
+
+        .comparison-card:hover { transform: translateY(-5px); }
+
+        .comparison-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .comparison-list { list-style: none; }
+
+        .comparison-list li {
+            padding: 0.75rem 0;
+            padding-left: 2rem;
+            position: relative;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+            transition: all 0.3s;
+        }
+
+        .comparison-list li:hover {
+            padding-left: 2.5rem;
+            color: var(--text-primary);
+        }
+
+        .comparison-card.pros li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        .comparison-card.cons li::before {
+            content: '✗';
+            position: absolute;
+            left: 0;
+            color: var(--danger);
+            font-weight: bold;
+        }
+
+        /* Minus Items */
+        .minus-container { display: grid; gap: 1.5rem; }
+
+        .minus-item {
+            background: rgba(239, 68, 68, 0.03);
+            border-left: 3px solid var(--danger);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .minus-item:hover {
+            transform: translateX(8px);
+            background: rgba(239, 68, 68, 0.06);
+        }
+
+        .minus-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            color: #fca5a5;
+            font-size: 1.1rem;
+        }
+
+        .minus-comparison {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .competitor-tag {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: rgba(59, 130, 246, 0.2);
+            color: #93c5fd;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin: 0.25rem 0.25rem 0.25rem 0;
+        }
+
+        .impact-tag {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background: rgba(16, 185, 129, 0.15);
+            color: #6ee7b7;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        /* Table */
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            margin: 2rem 0;
+            background: rgba(255, 255, 255, 0.01);
+        }
+
+        table { width: 100%; border-collapse: collapse; }
+
+        th, td {
+            padding: 1.25rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        th {
+            background: rgba(6, 182, 212, 0.1);
+            font-weight: 700;
+            color: var(--novardis-accent);
+            position: sticky;
+            top: 0;
+            backdrop-filter: blur(10px);
+        }
+
+        tr { transition: all 0.3s; }
+        tr:hover { background: rgba(255, 255, 255, 0.03); }
+
+        .check { color: var(--success); font-size: 1.3rem; }
+        .cross { color: var(--danger); font-size: 1.3rem; opacity: 0.7; }
+        .double { font-size: 1.6rem; filter: drop-shadow(0 0 8px currentColor); }
+
+        /* Recommendations */
+        .recommendation {
+            background: rgba(245, 158, 11, 0.05);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            display: flex;
+            gap: 1.5rem;
+            align-items: start;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .recommendation::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--warning);
+            border-radius: 4px 0 0 4px;
+        }
+
+        .recommendation:hover {
+            transform: translateX(10px);
+            background: rgba(245, 158, 11, 0.08);
+            box-shadow: 0 10px 40px rgba(245, 158, 11, 0.1);
+        }
+
+        .rec-number {
+            width: 45px;
+            height: 45px;
+            background: var(--warning);
+            color: #0f172a;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .rec-content h3 { margin-bottom: 0.5rem; color: #fcd34d; }
+        .rec-content p { color: var(--text-secondary); }
+
+        /* Section Headers */
+        .section-header {
+            font-size: 2rem;
+            font-weight: 800;
+            margin: 5rem 0 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: var(--text-primary);
+        }
+
+        .section-header::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--novardis-accent), transparent);
+        }
+
+        /* Floating Action Button */
+        .fab {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 56px;
+            height: 56px;
+            background: var(--gradient-accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 10px 40px rgba(6, 182, 212, 0.4);
+            transition: all 0.3s;
+            z-index: 1000;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            opacity: 0;
+            transform: scale(0);
+        }
+
+        .fab.visible { opacity: 1; transform: scale(1); }
+        .fab:hover { transform: scale(1.1) rotate(90deg); }
+
+        /* Loader */
+        .loader {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-deep);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.6s, visibility 0.6s;
+        }
+        .loader.hidden { opacity: 0; visibility: hidden; }
+
+        .loader-ring {
+            width: 60px; height: 60px;
+            border: 3px solid rgba(6, 182, 212, 0.1);
+            border-top-color: var(--novardis-accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .comparison-grid { grid-template-columns: 1fr; }
+            .cursor, .cursor-follower { display: none; }
+            * { cursor: auto; }
+            .summary-hero-card { padding: 2rem; }
+        }
+    </style>
+    <style>
+        /* Reveal Animation Classes */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Loader -->
+    <div class="loader" id="loader"><div class="loader-ring"></div></div>
+    
+    <!-- Scroll Progress -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <!-- Background -->
+    <div class="bg-animation">
+        <div class="floating-shape shape-1"></div>
+        <div class="floating-shape shape-2"></div>
+        <div class="floating-shape shape-3"></div>
+    </div>
+    <div class="particles" id="particles"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="header-badge">🔍 Аналитический отчет 2026</div>
+            <h1>Novardis Consulting<br><span class="typing-text" id="typingText"></span></h1>
+            <p class="header-subtitle">Глубокий анализ цифрового присутствия в сравнении с лидерами рынка IT-консалтинга</p>
+        </div>
+        <div class="scroll-indicator">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="nav-container">
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="scrollToSection('summary')">📋 Резюме</button>
+            <button class="nav-tab" onclick="scrollToSection('pros')">✅ Преимущества</button>
+            <button class="nav-tab" onclick="scrollToSection('cons')">❌ Недостатки</button>
+            <button class="nav-tab" onclick="scrollToSection('comparison')">📊 Сравнение</button>
+            <button class="nav-tab" onclick="scrollToSection('recommendations')">🚀 Рекомендации</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Summary Section -->
+        <section id="summary">
+            <h2 class="section-header reveal">📊 Резюме компании</h2>
+            
+            <!-- СПЕЦИАЛЬНЫЙ БЛОК ДЛЯ ЧИТАЕЛЬНОСТИ -->
+            <div class="summary-hero-card reveal">
+                <h2>🏢 Общая характеристика Novardis</h2>
+                <p>
+                    <span class="highlight-text">Novardis</span> — это современный, профессиональный сайт с высоким уровнем цифровой зрелости. 
+                    Компания позиционирует себя как эксперт в области цифровой трансформации с акцентом на импортозамещение и работу с 1С/SAP. 
+                    Ресурс демонстрирует сильную экспертизу и системный подход к подаче информации, однако имеет ряд зон роста в части интерактивности и конверсионных элементов.
+                </p>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" data-target="500">0</div>
+                        <div class="stat-label">Реализованных проектов</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" data-target="400">0</div>
+                        <div class="stat-label">Экспертов в команде</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" data-target="20">0</div>
+                        <div class="stat-label">Лет на рынке</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" data-target="42">0</div>
+                        <div class="stat-label">Выявлено точек роста</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="comparison-grid reveal">
+                <div class="comparison-card pros">
+                    <div class="comparison-header"><span>✅</span> Сильные стороны</div>
+                    <ul class="comparison-list">
+                        <li>Мощнейший блок рейтингов и наград на рынке</li>
+                        <li>Развернутые отзывы от топ-менеджеров с именами</li>
+                        <li>500+ проектов с известными enterprise-клиентами</li>
+                        <li>Международное присутствие (офис в Казахстане)</li>
+                        <li>Узкая специализация (carve out SAP-систем)</li>
+                        <li>Полная двуязычность сайта (EN/RU)</li>
+                    </ul>
+                    </div>
+
+                <div class="comparison-card cons">
+                    <div class="comparison-header"><span>❌</span> Зоны роста</div>
+                    <ul class="comparison-list">
+                        <li>Слабая коммуникация (нет телефона в шапке сайта)</li>
+                        <li>Обезличенность (отсутствуют фото лиц экспертов)</li>
+                        <li>Слабая медиа-стратегия (нет видео/подкастов)</li>
+                        <li>Отсутствие интерактивных элементов и FAQ</li>
+                        <li>Нет выделенных разделов КСО / ESG / Compliance</li>
+                        <li>Слабая воронка продаж (мало триггеров к действию)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pros Section -->
+        <section id="pros">
+            <h2 class="section-header reveal">✅ Ключевые преимущества</h2>
+            
+            <div class="card reveal">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <div class="card-title"><div class="card-icon">🏆</div> Рейтинги и награды</div>
+                    <button class="toggle-btn">▼</button>
+                </div>
+                <div class="card-content">
+                    <p style="color: var(--novardis-accent); font-weight: 600; margin-bottom: 1.5rem;">Самый мощный блок наград среди всех проанализированных конкурентов!</p>
+                    <div class="minus-container">
+                        <div class="minus-item" style="border-left-color: var(--success); background: rgba(16, 185, 129, 0.05);">
+                            <div class="minus-header" style="color: var(--success);"><span>🥇</span> Loyalty & CX Awards Russia 2024 (Победитель)</div>
+                        </div>
+                        <div class="minus-item" style="border-left-color: var(--success); background: rgba(16, 185, 129, 0.05);">
+                            <div class="minus-header" style="color: var(--success);"><span>🥈</span> TAdviser 2021-2022: Крупнейшие поставщики WMS — 2 место</div>
+                        </div>
+                        <div class="minus-item" style="border-left-color: var(--success); background: rgba(16, 185, 129, 0.05);">
+                            <div class="minus-header" style="color: var(--success);"><span>🥉</span> CNews Analytics 2023: Поставщики ИТ в розницу — 15 место</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card reveal">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <div class="card-title"><div class="card-icon">💬</div> Отзывы клиентов</div>
+                    <button class="toggle-btn">▼</button>
+                </div>
+                <div class="card-content">
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">Реальные отзывы с именами и должностями, что критически важно для B2B:</p>
+                    <div class="minus-container">
+                        <div class="minus-item" style="border-left-color: var(--novardis-accent); background: rgba(6, 182, 212, 0.05);">
+                            <div class="minus-header" style="color: var(--novardis-accent);"><span>👤</span> Денис Коровин, IT бизнес-партнер «Лента»</div>
+                        </div>
+                        <div class="minus-item" style="border-left-color: var(--novardis-accent); background: rgba(6, 182, 212, 0.05);">
+                            <div class="minus-header" style="color: var(--novardis-accent);"><span>👤</span> Фолькер Шаар, генеральный директор «Глобус»</div>
+                        </div>
+                        <div class="minus-item" style="border-left-color: var(--novardis-accent); background: rgba(6, 182, 212, 0.05);">
+                            <div class="minus-header" style="color: var(--novardis-accent);"><span>👤</span> Антон Семёнов, директор департамента Faberlic</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cons Section -->
+        <section id="cons">
+            <h2 class="section-header reveal">❌ Детальный разбор недостатков</h2>
+
+            <div class="card reveal">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <div class="card-title"><div class="card-icon">📞</div> 1. Слабая коммуникация и точки конверсии</div>
+                    <button class="toggle-btn">▼</button>
+                </div>
+                <div class="card-content">
+                    <div class="minus-container">
+                        <div class="minus-item">
+                            <div class="minus-header"><span>❌</span> Нет закрепленной шапки с телефоном</div>
+                            <div>
+                                <span class="competitor-tag">Корус</span>
+                                <span class="competitor-tag">КРОК</span>
+                                <span class="competitor-tag">IBS</span>
+                            </div>
+                            <div class="minus-comparison">
+                                <strong style="color: var(--text-primary);">У Novardis:</strong> Телефон только на странице «Контакты». Пользователь должен сделать 4 шага вместо 1.
+                                <br><br>
+                                <span class="competitor-tag" style="background: rgba(239, 68, 68, 0.2); color: #fca5a5;">Потеря конверсии: 20-30%</span>
+                            </div>
+                        </div>
+
+                        <div class="minus-item">
+                            <div class="minus-header"><span>❌</span> Нет живого онлайн-чата</div>
+                            <div>
+                                <span class="competitor-tag">ВДГБ</span>
+                                <span class="competitor-tag">Райтек</span>
+                            </div>
+                            <div class="minus-comparison">
+                                <strong style="color: var(--text-primary);">У Novardis:</strong> Только формы обратной связи. Нет мгновенного ответа на простые вопросы.
+                                <br><br>
+                                <span class="competitor-tag" style="background: rgba(239, 68, 68, 0.2); color: #fca5a5;">Потеря лидов: 20-40%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card reveal">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <div class="card-title"><div class="card-icon">👥</div> 2. Слабый HR-бренд и обезличенность</div>
+                    <button class="toggle-btn">▼</button>
+                </div>
+                <div class="card-content">
+                    <div class="minus-item">
+                        <div class="minus-header"><span>❌</span> Нет фотографий команды и ключевых экспертов</div>
+                        <div>
+                            <span class="competitor-tag">Корус</span>
+                            <span class="competitor-tag">Axenix</span>
+                        </div>
+                        <div class="minus-comparison">
+                            <strong style="color: var(--text-primary);">У Novardis:</strong> Только сухие цифры — «400+ экспертов». Нет ни одного лица.
+                            <br><br>
+                            <span class="competitor-tag" style="background: rgba(239, 68, 68, 0.2); color: #fca5a5;">Критично:</span> B2B-клиенты покупают у людей, а не у безликих логотипов.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card reveal">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <div class="card-title"><div class="card-icon">🌱</div> 3. Отсутствие КСО, ESG и Compliance</div>
+                    <button class="toggle-btn">▼</button>
+                </div>
+                <div class="card-content">
+                    <div class="minus-item">
+                        <div class="minus-header"><span>❌</span> Нет выделенных разделов КСО и Комплаенс</div>
+                        <div>
+                            <span class="competitor-tag">Ланит</span>
+                            <span class="competitor-tag">IBS</span>
+                        </div>
+                        <div class="minus-comparison">
+                            Для крупных enterprise-клиентов и госзаказчиков наличие разделов <strong style="color: var(--text-primary);">КСО</strong> и <strong style="color: var(--text-primary);">Compliance</strong> является обязательным маркером зрелости и надежности компании.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Comparison Section -->
+        <section id="comparison">
+            <h2 class="section-header reveal">📊 Сравнительная таблица с лидерами</h2>
+            
+            <div class="table-wrapper reveal">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Критерий</th>
+                            <th>Novardis</th>
+                            <th>Корус</th>
+                            <th>КРОК</th>
+                            <th>Axenix</th>
+                            <th>Ланит</th>
+                            <th>IBS</th>
+                            <th>ВДГБ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Закрепленный телефон</td><td class="cross">✗</td><td class="check">✓</td><td class="check">✓</td><td class="cross">✗</td><td class="cross">✗</td><td class="check">✓</td><td class="cross">✗</td></tr>
+                        <tr><td>Живой чат с фото</td><td class="cross">✗</td><td class="cross">✗</td><td class="cross">✗</td><td class="cross">✗</td><td class="cross">✗</td><td class="cross">✗</td><td class="check double">✓✓</td></tr>
+                        <tr><td>Лица экспертов на сайте</td><td class="cross">✗</td><td class="check double">✓✓</td><td class="cross">✗</td><td class="check">✓</td><td class="cross">✗</td><td class="cross">✗</td><td class="cross">✗</td></tr>
+                        <tr><td>Календарь вебинаров</td><td class="cross">✗</td><td class="check double">✓✓</td><td class="cross">✗</td><td class="cross">✗</td><td class="cross">✗</td><td class="cross">✗</td><td class="cross">✗</td></tr>
+                        <tr><td>Видеоподкасты</td><td class="cross">✗</td><td class="cross">✗</td><td class="check">✓</td><td class="check">✓</td><td class="cross">✗</td><td class="cross">✗</td><td class="cross">✗</td></tr>
+                        <tr><td><strong>Рейтинги и награды</strong></td><td class="check double">✓✓✓</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td><td class="cross">✗</td></tr>
+                        <tr><td><strong>Отзывы топ-менеджеров</strong></td><td class="check double">✓✓✓</td><td class="cross">✗</td><td class="cross">✗</td><td class="cross">✗</td><td class="cross">✗</td><td class="cross">✗</td><td class="cross">✗</td></tr>
+                        <tr><td><strong>Международное присутствие</strong></td><td class="check double">✓✓</td><td class="cross">✗</td><td class="cross">✗</td><td class="check">✓</td><td class="cross">✗</td><td class="cross">✗</td><td class="cross">✗</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Recommendations Section -->
+        <section id="recommendations">
+            <h2 class="section-header reveal">🚀 Топ-5 рекомендаций для Novardis</h2>
+            
+            <div class="recommendation reveal">
+                <div class="rec-number">1</div>
+                <div class="rec-content">
+                    <h3>Добавить закрепленный телефон и кнопку быстрого звонка</h3>
+                    <p>Как у КРОК и ВДГБ. Номер должен быть всегда виден при прокрутке. Добавить визуальную «трубку» для мобильных устройств.</p>
+                    <span class="impact-tag">📈 Ожидаемый эффект: +25-35% к конверсии</span>
+                </div>
+            </div>
+
+            <div class="recommendation reveal">
+                <div class="rec-number">2</div>
+                <div class="rec-content">
+                    <h3>Внедрить живой онлайн-чат с фото менеджеров</h3>
+                    <p>Как у ВДГБ — с реальными фотографиями сотрудников, а не абстрактными аватарами. Это критически важно для Trust Factor.</p>
+                    <span class="impact-tag">📈 Ожидаемый эффект: +20-40% к лидам</span>
+                </div>
+            </div>
+
+            <div class="recommendation reveal">
+                <div class="rec-number">3</div>
+                <div class="rec-content">
+                    <h3>Показать лица экспертов и CEO</h3>
+                    <p>Как у Корус и IBS — фотографии команды, профили ключевых экспертов с компетенциями, фото гендиректора с цитатой.</p>
+                    <span class="impact-tag">📈 Ожидаемый эффект: +40% к доверию B2B-клиентов</span>
+                </div>
+            </div>
+
+            <div class="recommendation reveal">
+                <div class="rec-number">4</div>
+                <div class="rec-content">
+                    <h3>Запустить медиацентр с вебинарами и подкастами</h3>
+                    <p>Как у Корус и Axenix — календарь вебинаров с возможностью добавления в личный календарь, видеоподкасты, закрытые дискуссионные клубы.</p>
+                    <span class="impact-tag">📈 Ожидаемый эффект: +50-200 квалифицированных лидов с каждого ивента</span>
+                </div>
+            </div>
+
+            <div class="recommendation reveal">
+                <div class="rec-number">5</div>
+                <div class="rec-content">
+                    <h3>Добавить контекстные CTA внутри каждого блока услуги</h3>
+                    <p>Как у Корус — кнопка «Обсудить решение» рядом с каждым описанием услуги, а не только общая форма в самом низу страницы.</p>
+                    <span class="impact-tag">📈 Ожидаемый эффект: +30% к количеству заявок</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Floating Action Button -->
+    <button class="fab" id="fab" onclick="scrollToTop()" title="Наверх">↑</button>
+
+    <script>
+        // 1. Loader
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hidden');
+                startTypingAnimation();
+                observeElements();
+            }, 800);
+        });
+
+        // 2. Typing Animation for Header
+        function startTypingAnimation() {
+            const text = "Цифровой аудит";
+            const element = document.getElementById('typingText');
+            let i = 0;
+            element.textContent = '';
+            const typeInterval = setInterval(() => {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                } else {
+                    clearInterval(typeInterval);
+                }
+            }, 100);
+        }
+
+        // 3. Custom Cursor
+        const cursor = document.querySelector('.cursor');
+        const cursorFollower = document.querySelector('.cursor-follower');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            setTimeout(() => {
+                cursorFollower.style.left = (e.clientX - 10) + 'px';
+                cursorFollower.style.top = (e.clientY - 10) + 'px';
+            }, 80);
+        });
+
+        document.querySelectorAll('a, button, .card, .nav-tab, .stat-card').forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+        });
+
+        // 4. Mouse Glow Effect for Cards
+        document.querySelectorAll('.card, .summary-hero-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+
+        // 5. Scroll Progress Bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('scrollProgress').style.width = scrolled + '%';
+
+            // FAB visibility
+            const fab = document.getElementById('fab');
+            if (winScroll > 500) fab.classList.add('visible');
+            else fab.classList.remove('visible');
+        });
+
+        // 6. Intersection Observer for Reveal Animations & Counters
+        function observeElements() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        
+                        // Trigger counters if it's a stat number
+                        const counters = entry.target.querySelectorAll('.stat-number');
+                        counters.forEach(counter => {
+                            if (!counter.classList.contains('counted')) {
+                                animateCounter(counter);
+                                counter.classList.add('counted');
+                            }
+                        });
+                    }
+                });
+            }, { threshold: 0.15 });
+
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        }
+
+        function animateCounter(el) {
+            const target = +el.getAttribute('data-target');
+            const duration = 2000;
+            const increment = target / (duration / 16);
+            let current = 0;
+
+            const update = () => {
+                current += increment;
+                if (current < target) {
+                    el.innerText = Math.ceil(current);
+                    requestAnimationFrame(update);
+                } else {
+                    el.innerText = target + '+';
+                }
+            };
+            update();
+        }
+
+        // 7. Toggle Card Content
+        function toggleCard(header) {
+            const content = header.nextElementSibling;
+            const btn = header.querySelector('.toggle-btn');
+            content.classList.toggle('collapsed');
+            btn.style.transform = content.classList.contains('collapsed') ? 'rotate(0deg)' : 'rotate(180deg)';
+        }
+
+        // 8. Smooth Scroll
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            const offset = 80;
+            const bodyRect = document.body.getBoundingClientRect().top;
+            const sectionRect = section.getBoundingClientRect().top;
+            const sectionPosition = sectionRect - bodyRect;
+            
+            window.scrollTo({
+                top: sectionPosition - offset,
+                behavior: 'smooth'
+            });
+
+            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 9. Generate Particles
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 40; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 15 + 's';
+            particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        // 10. Ripple Effect on Buttons
+        document.querySelectorAll('.nav-tab, .fab').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.cssText = `
+                    position: absolute; width: ${size}px; height: ${size}px;
+                    left: ${x}px; top: ${y}px; background: rgba(255,255,255,0.4);
+                    border-radius: 50%; transform: scale(0); animation: ripple 0.6s ease-out;
+                    pointer-events: none;
+                `;
+                this.style.position = 'relative';
+                this.style.overflow = 'hidden';
+                this.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+
+        const style = document.createElement('style');
+        style.textContent = `@keyframes ripple { to { transform: scale(2); opacity: 0; } }`;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
