@@ -1,0 +1,1608 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Выбор веб-студии для Novardis | Стратегический анализ</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none;
+        }
+
+        :root {
+            --bg-deep: #0B1120;
+            --bg-card: rgba(30, 58, 138, 0.25);
+            --novardis-blue: #1e3a8a;
+            --novardis-light: #3b82f6;
+            --novardis-accent: #06b6d4;
+            --gold: #fbbf24;
+            --silver: #94a3b8;
+            --bronze: #d97706;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --gradient-accent: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+            --gradient-gold: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-deep);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Scroll Progress Bar */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: var(--gradient-accent);
+            z-index: 10001;
+            width: 0%;
+            transition: width 0.1s;
+            box-shadow: 0 0 10px var(--novardis-accent);
+        }
+
+        /* Custom Cursor */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--novardis-accent);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.15s, opacity 0.15s;
+            mix-blend-mode: difference;
+        }
+
+        .cursor-follower {
+            width: 40px;
+            height: 40px;
+            background: rgba(6, 182, 212, 0.15);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            transition: transform 0.3s ease-out;
+        }
+
+        .cursor.hover {
+            transform: scale(1.5);
+            background: rgba(6, 182, 212, 0.3);
+            border-color: transparent;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 50% 50%, #1e293b 0%, #0B1120 100%);
+            overflow: hidden;
+        }
+
+        .floating-shape {
+            position: absolute;
+            opacity: 0.08;
+            animation: float 25s infinite ease-in-out;
+            filter: blur(60px);
+        }
+
+        .shape-1 { width: 500px; height: 500px; background: var(--novardis-light); top: -10%; right: -10%; }
+        .shape-2 { width: 400px; height: 400px; background: var(--novardis-accent); bottom: -10%; left: -10%; animation-delay: 5s; }
+        .shape-3 { width: 300px; height: 300px; background: #6366f1; top: 40%; left: 30%; animation-delay: 10s; }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+            33% { transform: translate(30px, -50px) rotate(120deg) scale(1.1); }
+            66% { transform: translate(-20px, 20px) rotate(240deg) scale(0.9); }
+        }
+
+        /* Particles */
+        .particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--novardis-accent);
+            border-radius: 50%;
+            opacity: 0;
+            animation: particle-float 15s infinite linear;
+        }
+        @keyframes particle-float {
+            0% { opacity: 0; transform: translateY(100vh) scale(0); }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { opacity: 0; transform: translateY(-10vh) scale(1); }
+        }
+
+        /* Header */
+        .header {
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            padding: 2rem;
+        }
+
+        .header-content {
+            text-align: center;
+            z-index: 2;
+            max-width: 1000px;
+        }
+
+        .header-badge {
+            display: inline-block;
+            padding: 0.5rem 1.25rem;
+            background: rgba(251, 191, 36, 0.1);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            border-radius: 50px;
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--gold);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .header h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+            color: var(--text-primary);
+        }
+
+        .typing-text {
+            border-right: 3px solid var(--gold);
+            animation: blink 0.7s step-end infinite;
+        }
+
+        @keyframes blink { 50% { border-color: transparent; } }
+
+        .header-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 3rem;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+            color: var(--text-secondary);
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-15px); }
+            60% { transform: translateX(-50%) translateY(-7px); }
+        }
+
+        /* Navigation */
+        .nav-container {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(11, 17, 32, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 1rem 0;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .nav-tab {
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-tab::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-accent);
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: -1;
+        }
+
+        .nav-tab:hover, .nav-tab.active {
+            color: white;
+            border-color: transparent;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(6, 182, 212, 0.2);
+        }
+
+        .nav-tab:hover::before, .nav-tab.active::before { opacity: 1; }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        /* Section Headers */
+        .section-header {
+            font-size: 2rem;
+            font-weight: 800;
+            margin: 5rem 0 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: var(--text-primary);
+        }
+
+        .section-header::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--novardis-accent), transparent);
+        }
+
+        /* Summary Hero Card */
+        .summary-hero-card {
+            background: linear-gradient(145deg, rgba(30, 58, 138, 0.4) 0%, rgba(15, 23, 42, 0.6) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 24px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .summary-hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-accent);
+        }
+
+        .summary-hero-card h2 {
+            font-size: 2rem;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .summary-hero-card p {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            max-width: 900px;
+        }
+
+        .highlight-text {
+            color: var(--novardis-accent);
+            font-weight: 600;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.4s;
+            position: relative;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--novardis-accent);
+            background: rgba(6, 182, 212, 0.05);
+            box-shadow: 0 15px 40px rgba(6, 182, 212, 0.15);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        /* Cards */
+        .card {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(6, 182, 212, 0.06), transparent 40%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .card:hover::after { opacity: 1; }
+        .card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(6, 182, 212, 0.2);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            cursor: pointer;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-accent);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .toggle-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .toggle-btn:hover { background: var(--novardis-accent); color: white; }
+
+        .card-content {
+            max-height: 3000px;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s;
+            opacity: 1;
+        }
+
+        .card-content.collapsed {
+            max-height: 0;
+            opacity: 0;
+        }
+
+        /* Studio Cards */
+        .studio-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .studio-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: var(--gradient-accent);
+        }
+
+        .studio-card.gold::before { background: var(--gradient-gold); }
+        .studio-card.silver::before { background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%); }
+        .studio-card.bronze::before { background: linear-gradient(135deg, #d97706 0%, #92400e 100%); }
+
+        .studio-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(6, 182, 212, 0.3);
+            box-shadow: 0 20px 60px rgba(6, 182, 212, 0.15);
+        }
+
+        .studio-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .studio-title {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.75rem;
+            font-weight: 800;
+        }
+
+        .medal {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #0f172a;
+            animation: medalShine 3s infinite;
+        }
+
+        .medal.gold { background: var(--gradient-gold); box-shadow: 0 0 30px rgba(251, 191, 36, 0.5); }
+        .medal.silver { background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%); }
+        .medal.bronze { background: linear-gradient(135deg, #d97706 0%, #92400e 100%); }
+
+        @keyframes medalShine {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .studio-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(251, 191, 36, 0.1);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            border-radius: 50px;
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        .studio-subtitle {
+            color: var(--novardis-accent);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .studio-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .studio-section-title {
+            color: var(--text-primary);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .studio-list {
+            list-style: none;
+        }
+
+        .studio-list li {
+            padding: 0.75rem 0;
+            padding-left: 2rem;
+            position: relative;
+            color: var(--text-secondary);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s;
+        }
+
+        .studio-list li:hover {
+            padding-left: 2.5rem;
+            color: var(--text-primary);
+        }
+
+        .studio-list.pros li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .studio-list.cons li::before {
+            content: '✗';
+            position: absolute;
+            left: 0;
+            color: var(--danger);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .studio-list.gifts li::before {
+            content: '🎁';
+            position: absolute;
+            left: 0;
+        }
+
+        .competitor-tag {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: rgba(59, 130, 246, 0.2);
+            color: #93c5fd;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin: 0.25rem 0.25rem 0.25rem 0;
+        }
+
+        .verdict {
+            margin-top: 1.5rem;
+            padding: 1.25rem;
+            background: rgba(6, 182, 212, 0.05);
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-weight: 600;
+        }
+
+        .verdict-icon {
+            font-size: 1.5rem;
+        }
+
+        /* Comparison Table */
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            margin: 2rem 0;
+            background: rgba(255, 255, 255, 0.01);
+        }
+
+        table { width: 100%; border-collapse: collapse; }
+
+        th, td {
+            padding: 1.25rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        th {
+            background: rgba(6, 182, 212, 0.1);
+            font-weight: 700;
+            color: var(--novardis-accent);
+            position: sticky;
+            top: 0;
+            backdrop-filter: blur(10px);
+        }
+
+        tr { transition: all 0.3s; }
+        tr:hover { background: rgba(255, 255, 255, 0.03); }
+
+        .star-cell {
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        .total-cell {
+            font-weight: 800;
+            color: var(--novardis-accent);
+            font-size: 1.1rem;
+        }
+
+        /* Final Recommendation */
+        .final-rec {
+            background: linear-gradient(145deg, rgba(251, 191, 36, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%);
+            border: 2px solid rgba(251, 191, 36, 0.4);
+            border-radius: 24px;
+            padding: 3rem;
+            margin: 3rem 0;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(251, 191, 36, 0.1);
+        }
+
+        .final-rec::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-gold);
+        }
+
+        .final-rec-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .final-rec-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--gold);
+        }
+
+        .final-rec-badge {
+            padding: 0.5rem 1rem;
+            background: var(--gradient-gold);
+            color: #0f172a;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .final-rec-reasons {
+            display: grid;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .reason-item {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1.25rem;
+            border-radius: 12px;
+            border-left: 3px solid var(--gold);
+            transition: all 0.3s;
+        }
+
+        .reason-item:hover {
+            transform: translateX(8px);
+            background: rgba(251, 191, 36, 0.05);
+        }
+
+        .reason-item h4 {
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .reason-item p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* Next Steps */
+        .next-steps {
+            display: grid;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .step-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            gap: 1.5rem;
+            align-items: start;
+            transition: all 0.3s;
+        }
+
+        .step-item:hover {
+            transform: translateX(8px);
+            border-color: rgba(6, 182, 212, 0.3);
+            background: rgba(6, 182, 212, 0.03);
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-accent);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+            color: white;
+        }
+
+        .step-content h4 {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .step-content p {
+            color: var(--text-secondary);
+        }
+
+        /* Insight Card */
+        .insight-card {
+            background: linear-gradient(145deg, rgba(99, 102, 241, 0.1) 0%, rgba(99, 102, 241, 0.05) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .insight-card::before {
+            content: '💡';
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            font-size: 8rem;
+            opacity: 0.1;
+        }
+
+        .insight-card h3 {
+            color: #a5b4fc;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .insight-card p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        /* FAB */
+        .fab {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 56px;
+            height: 56px;
+            background: var(--gradient-accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 10px 40px rgba(6, 182, 212, 0.4);
+            transition: all 0.3s;
+            z-index: 1000;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            opacity: 0;
+            transform: scale(0);
+        }
+
+        .fab.visible { opacity: 1; transform: scale(1); }
+        .fab:hover { transform: scale(1.1) rotate(90deg); }
+
+        /* Loader */
+        .loader {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-deep);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.6s, visibility 0.6s;
+        }
+        .loader.hidden { opacity: 0; visibility: hidden; }
+
+        .loader-ring {
+            width: 60px; height: 60px;
+            border: 3px solid rgba(251, 191, 36, 0.1);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .cursor, .cursor-follower { display: none; }
+            * { cursor: auto; }
+            .summary-hero-card, .studio-card, .final-rec { padding: 2rem; }
+            .studio-header { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loader -->
+    <div class="loader" id="loader"><div class="loader-ring"></div></div>
+    
+    <!-- Scroll Progress -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <!-- Background -->
+    <div class="bg-animation">
+        <div class="floating-shape shape-1"></div>
+        <div class="floating-shape shape-2"></div>
+        <div class="floating-shape shape-3"></div>
+    </div>
+    <div class="particles" id="particles"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="header-badge">🏆 Стратегический выбор подрядчика</div>
+            <h1>Выбор веб-студии<br><span class="typing-text" id="typingText"></span></h1>
+            <p class="header-subtitle">Глубокий анализ топ-5 digital-агентств из Рейтинга Рунета для редизайна сайта Novardis Consulting</p>
+        </div>
+        <div class="scroll-indicator">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="nav-container">
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="scrollToSection('context')">📋 Контекст</button>
+            <button class="nav-tab" onclick="scrollToSection('studios')">🏢 Топ-5 студий</button>
+            <button class="nav-tab" onclick="scrollToSection('comparison')">📊 Сравнение</button>
+            <button class="nav-tab" onclick="scrollToSection('final')">🥇 Финальный выбор</button>
+            <button class="nav-tab" onclick="scrollToSection('next')">🚀 Следующие шаги</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+        
+        <!-- Context Section -->
+        <section id="context">
+            <h2 class="section-header reveal">📋 Контекст задачи</h2>
+            
+            <div class="summary-hero-card reveal">
+                <h2>🎯 Что мы должны реализовать на новом сайте</h2>
+                <p>
+                    На основе глубокого аудита сайта <span class="highlight-text">Novardis</span> и анализа 10 конкурентов мы выявили <span class="highlight-text">42 точки роста</span> и сформировали четкие требования к новому сайту. Теперь наша задача — найти веб-студию, которая сможет реализовать эти требования на высшем уровне.
+                </p>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" data-target="42">0</div>
+                        <div class="stat-label">Точек роста выявлено</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" data-target="10">0</div>
+                        <div class="stat-label">Конкурентов проанализировано</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" data-target="7">0</div>
+                        <div class="stat-label">Ключевых требований</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" data-target="5">0</div>
+                        <div class="stat-label">Студий в шорт-листе</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card reveal">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <div class="card-title"><div class="card-icon">🎯</div> 7 ключевых требований к новому сайту</div>
+                    <button class="toggle-btn">▼</button>
+                </div>
+                <div class="card-content">
+                    <div style="display: grid; gap: 1rem;">
+                        <div class="reason-item">
+                            <h4><span>1️⃣</span> Медиацентр</h4>
+                            <p>Календарь вебинаров, подкасты, дискуссионные клубы <span class="competitor-tag">Референс: Корус</span> <span class="competitor-tag">Axenix</span></p>
+                        </div>
+                        <div class="reason-item">
+                            <h4><span>2️⃣</span> HR-бренд с лицами</h4>
+                            <p>Фото экспертов, CEO, профили команды <span class="competitor-tag">Референс: Корус</span> <span class="competitor-tag">IBS</span></p>
+                        </div>
+                        <div class="reason-item">
+                            <h4><span>3️⃣</span> Разделы КСО / ESG / Compliance</h4>
+                            <p>Для enterprise-сегмента и госзаказчиков <span class="competitor-tag">Референс: Ланит</span> <span class="competitor-tag">IBS</span></p>
+                        </div>
+                        <div class="reason-item">
+                            <h4><span>4️⃣</span> Интерактивные элементы</h4>
+                            <p>Карта клиентов, FAQ с переходом к звонку, контекстные CTA <span class="competitor-tag">Референс: Корус</span></p>
+                        </div>
+                        <div class="reason-item">
+                            <h4><span>5️⃣</span> Спецпроекты</h4>
+                            <p>Демо-дни, лаборатории, интерактивные форматы <span class="competitor-tag">Референс: КРОК</span></p>
+                        </div>
+                        <div class="reason-item">
+                            <h4><span>6️⃣</span> Премиальный UX/UI</h4>
+                            <p>В стиле экосистем (Сбер, Тинькофф) с glassmorphism и анимациями</p>
+                        </div>
+                        <div class="reason-item">
+                            <h4><span>7️⃣</span> Конверсионная воронка</h4>
+                            <p>Закрепленный телефон, живой чат с фото менеджеров, триггерные окна <span class="competitor-tag">Референс: ВДГБ</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Studios Section -->
+        <section id="studios">
+            <h2 class="section-header reveal">🏢 Топ-5 веб-студий</h2>
+
+            <!-- #1 AIC -->
+            <div class="studio-card gold reveal">
+                <div class="studio-header">
+                    <div class="studio-title">
+                        <div class="medal gold">1</div>
+                        <div>AIC</div>
+                    </div>
+                    <div class="studio-rating">⭐ 35/35 баллов</div>
+                </div>
+                <div class="studio-subtitle">Сервис-дизайн и консалтинг | Премиум-сегмент</div>
+
+                <div class="studio-section">
+                    <div class="studio-section-title">💎 Почему AIC — идеальный выбор для Novardis</div>
+                    <ul class="studio-list pros">
+                        <li><strong>Доказанная экспертиза в нашем сегменте:</strong> AIC разработала сайты для <strong>Ланит</strong> и <strong>IBS</strong> — именно тех компаний, которые мы взяли как референсы по разделам КСО, ESG и Compliance</li>
+                        <li><strong>Опыт с enterprise-решениями:</strong> создали онлайн-ресурс «Госуслуги» — доказательство работы со сложнейшими корпоративными структурами</li>
+                        <li><strong>Специализация на сервисном дизайне и CX/UX:</strong> что критично для нашей задачи создания премиального пользовательского опыта</li>
+                        <li><strong>Философия «человек в центре»:</strong> совпадает с нашей целью показать «лица компании» и создать человечный B2B-бренд</li>
+                        <li><strong>Опыт с IT-интеграторами:</strong> кейс IBS — «редизайн и разработка шести сайтов группы компаний для IT-интегратора»</li>
+                    </ul>
+                </div>
+
+                <div class="studio-section">
+                    <div class="studio-section-title">🎁 Что они дадут Novardis</div>
+                    <ul class="studio-list gifts">
+                        <li>Разделы КСО, ESG, Compliance мирового уровня</li>
+                        <li>Премиальный UX/UI с фокусом на человеко-центричность</li>
+                        <li>Глубокое понимание специфики IT-консалтинга</li>
+                        <li>Опыт работы с enterprise-сегментом и госзаказчиками</li>
+                        <li>Стратегический подход к позиционированию</li>
+                    </ul>
+                </div>
+
+                <div class="studio-section">
+                    <div class="studio-section-title">⚠️ Риски</div>
+                    <ul class="studio-list cons">
+                        <li>Высокая стоимость (премиум-сегмент)</li>
+                        <li>Возможная загруженность крупными проектами — долгий старт</li>
+                    </ul>
+                </div>
+
+                <div class="verdict">
+                    <div class="verdict-icon">🏆</div>
+                    <div><strong>Вердикт:</strong> Лучший выбор для Novardis. Единственная студия, которая уже работала с нашими референсами.</div>
+                </div>
+            </div>
+
+            <!-- #2 AGIMA -->
+            <div class="studio-card silver reveal">
+                <div class="studio-header">
+                    <div class="studio-title">
+                        <div class="medal silver">2</div>
+                        <div>AGIMA</div>
+                    </div>
+                    <div class="studio-rating">⭐ 30/35 баллов</div>
+                </div>
+                <div class="studio-subtitle">Крупнейший интегратор digital-решений в России</div>
+
+                <div class="studio-section">
+                    <div class="studio-section-title">💎 Почему AGIMA — сильный кандидат</div>
+                    <ul class="studio-list pros">
+                        <li><strong>Масштаб и экспертиза:</strong> крупнейший интегратор digital-решений в России, 800+ завершенных проектов</li>
+                        <li><strong>Работа с топами рынка:</strong> MOEX, СберБанк, Leroy Merlin, Пятерочка, М.Видео</li>
+                        <li><strong>Опыт с IT-компаниями:</strong> разработали карьерный сайт для X5 Tech (IT-кластер X5 Group)</li>
+                        <li><strong>Широкая экспертиза:</strong> банки, ритейл, страховые компании, телеком- и медиа-бренды</li>
+                        <li><strong>Техническая мощь:</strong> способны реализовать сложнейшие интеграции и медиацентры</li>
+                    </ul>
+                </div>
+
+                <div class="studio-section">
+                    <div class="studio-section-title">🎁 Что они дадут Novardis</div>
+                    <ul class="studio-list gifts">
+                        <li>Техническую экспертизу для создания сложных медиацентров</li>
+                        <li>Опыт работы с крупными корпорациями</li>
+                        <li>Возможность масштабирования проекта</li>
+                        <li>Сильную техническую поддержку post-launch</li>
+                    </ul>
+                </div>
+
+                <div class="studio-section">
+                    <div class="studio-section-title">⚠️ Риски</div>
+                    <ul class="studio-list cons">
+                        <li>Меньше фокуса на креатив и HR-бренд</li>
+                        <li>Могут предложить «корпоративный стандарт», а не инновационное решение</li>
+                    </ul>
+                </div>
+
+                <div class="verdict">
+                    <div class="verdict-icon">🥈</div>
+                    <div><strong>Вердикт:</strong> Отличный выбор для технической реализации сложных интеграций и медиацентров.</div>
+                </div>
+            </div>
+
+            <!-- #3 Only Digital -->
+            <div class="studio-card bronze reveal">
+                <div class="studio-header">
+                    <div class="studio-title">
+                        <div class="medal bronze">3</div>
+                        <div>Only Digital</div>
+                    </div>
+                    <div class="studio-rating">⭐ 27/35 баллов</div>
+                </div>
+                <div class="studio-subtitle">Креативное digital-агентство для B2B</div>
+
+                <div class="studio-section">
+                    <div class="studio-section-title">💎 Почему Only — интересный вариант</div>
+                    <ul class="studio-list pros">
+                        <li><strong>Фокус на B2B:</strong> позиционируют себя как «Креативное digital-агентство для B2B»</li>
+                        <li><strong>Специализация:</strong> промышленность, UX/UI, корпоративные бренды</li>
+                        <li><strong>Сильная аналитика:</strong> digital-агентство с фокусом на аналитику, дизайн и разработку</li>
+                        <li><strong>Упаковка экспертизы:</strong> кейс «как мы упаковали 10 лет опыта в один сайт»</li>
+                        <li><strong>Идеи на стыке стратегии, креатива и технологий</strong></li>
+                    </ul>
+                </div>
+
+                <div class="studio-section">
+                    <div class="studio-section-title">🎁 Что они дадут Novardis</div>
+                    <ul class="studio-list gifts">
+                        <li>Стратегический подход к позиционированию</li>
+                        <li>Креативные решения для HR-бренда и показа «лиц компании»</li>
+                        <li>Глубокое понимание B2B-аудитории</li>
+                        <li>Баланс между креативом и бизнес-задачами</li>
+                    </ul>
+                </div>
+
+                <div class="studio-section">
+                    <div class="studio-section-title">⚠️ Риски</div>
+                    <ul class="studio-list cons">
+                        <li>Меньше опыта с медиацентрами и сложными интеграциями</li>
+                        <li>Не такой большой масштаб, как у AGIMA или AIC</li>
+                    </ul>
+                </div>
+
+                <div class="verdict">
+                    <div class="verdict-icon">🥉</div>
+                    <div><strong>Вердикт:</strong> Отличный выбор для стратегии и креатива, упаковки экспертизы.</div>
+                </div>
+            </div>
+
+            <!-- #4 Liqium -->
+            <div class="studio-card reveal">
+                <div class="studio-header">
+                    <div class="studio-title">
+                        <div class="medal" style="background: rgba(255,255,255,0.1); color: var(--text-secondary);">4</div>
+                        <div>Liqium</div>
+                    </div>
+                    <div class="studio-rating" style="background: rgba(148, 163, 184, 0.1); border-color: rgba(148, 163, 184, 0.3); color: var(--silver);">⭐ 24/35 баллов</div>
+                </div>
+                <div class="studio-subtitle">Креативное интернет-агентство полного цикла | 10+ лет</div>
+
+                <div class="studio-section">
+                    <div class="studio-section-title">💎 Почему Liqium — солидный вариант</div>
+                    <ul class="studio-list pros">
+                        <li><strong>253 проекта с 2009 года</strong> — огромный опыт именно в корпоративных сайтах</li>
+                        <li><strong>Специализация:</strong> корпоративные и промо-сайты, порталы, e-commerce</li>
+                        <li><strong>Требовательные заказчики:</strong> «наши проекты утверждаются крупнейшими и наиболее требовательными заказчиками»</li>
+                        <li><strong>Полный цикл:</strong> от дизайна до продвижения</li>
+                    </ul>
+                </div>
+
+                <div class="studio-section">
+                    <div class="studio-section-title">⚠️ Риски</div>
+                    <ul class="studio-list cons">
+                        <li>Меньше информации о работе с IT-консалтингом</li>
+                        <li>Не такой сильный HR-бренд, как у AIC или Only</li>
+                    </ul>
+                </div>
+
+                <div class="verdict">
+                    <div class="verdict-icon">✓</div>
+                    <div><strong>Вердикт:</strong> Надежный выбор для корпоративного сайта с проверенным опытом.</div>
+                </div>
+            </div>
+
+            <!-- #5 Digital Lab -->
+            <div class="studio-card reveal">
+                <div class="studio-header">
+                    <div class="studio-title">
+                        <div class="medal" style="background: rgba(255,255,255,0.1); color: var(--text-secondary);">5</div>
+                        <div>Digital Lab</div>
+                    </div>
+                    <div class="studio-rating" style="background: rgba(148, 163, 184, 0.1); border-color: rgba(148, 163, 184, 0.3); color: var(--silver);">⭐ 20/35 баллов</div>
+                </div>
+                <div class="studio-subtitle">Индивидуальные решения для B2B и B2C</div>
+
+                <div class="studio-section">
+                    <div class="studio-section-title">💎 Почему Digital Lab — запасной вариант</div>
+                    <ul class="studio-list pros">
+                        <li><strong>Широкий спектр:</strong> корпоративные сайты, интернет-магазины, мобильные приложения</li>
+                        <li><strong>Разные отрасли:</strong> банки, ритейл, FMCG, IT</li>
+                        <li><strong>Гибкость:</strong> индивидуальные решения под задачи клиента</li>
+                    </ul>
+                </div>
+
+                <div class="studio-section">
+                    <div class="studio-section-title">⚠️ Риски</div>
+                    <ul class="studio-list cons">
+                        <li>Меньше информации о конкретных кейсах с IT-консалтингом</li>
+                        <li>Не такой сильный бренд, как у топ-3 студий</li>
+                    </ul>
+                </div>
+
+                <div class="verdict">
+                    <div class="verdict-icon">✓</div>
+                    <div><strong>Вердикт:</strong> Хороший запасной вариант при ограничении бюджета.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Comparison Section -->
+        <section id="comparison">
+            <h2 class="section-header reveal">📊 Сравнительная таблица</h2>
+            
+            <div class="table-wrapper reveal">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Критерий</th>
+                            <th>AIC 🥇</th>
+                            <th>AGIMA 🥈</th>
+                            <th>Only 🥉</th>
+                            <th>Liqium</th>
+                            <th>Digital Lab</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Опыт с IT-консалтингом</td>
+                            <td class="star-cell">⭐⭐⭐⭐⭐</td>
+                            <td class="star-cell">⭐⭐⭐⭐</td>
+                            <td class="star-cell">⭐⭐⭐</td>
+                            <td class="star-cell">⭐⭐⭐</td>
+                            <td class="star-cell">⭐⭐⭐</td>
+                        </tr>
+                        <tr>
+                            <td>Экспертиза в КСО/ESG</td>
+                            <td class="star-cell">⭐⭐⭐⭐⭐</td>
+                            <td class="star-cell">⭐⭐⭐</td>
+                            <td class="star-cell">⭐⭐</td>
+                            <td class="star-cell">⭐⭐</td>
+                            <td class="star-cell">⭐⭐</td>
+                        </tr>
+                        <tr>
+                            <td>HR-бренд и «лица»</td>
+                            <td class="star-cell">⭐⭐⭐⭐</td>
+                            <td class="star-cell">⭐⭐⭐</td>
+                            <td class="star-cell">⭐⭐⭐⭐⭐</td>
+                            <td class="star-cell">⭐⭐⭐</td>
+                            <td class="star-cell">⭐⭐⭐</td>
+                        </tr>
+                        <tr>
+                            <td>Медиацентры / интеграции</td>
+                            <td class="star-cell">⭐⭐⭐⭐</td>
+                            <td class="star-cell">⭐⭐⭐⭐⭐</td>
+                            <td class="star-cell">⭐⭐⭐</td>
+                            <td class="star-cell">⭐⭐⭐</td>
+                            <td class="star-cell">⭐⭐⭐</td>
+                        </tr>
+                        <tr>
+                            <td>Премиальный UX/UI</td>
+                            <td class="star-cell">⭐⭐⭐⭐⭐</td>
+                            <td class="star-cell">⭐⭐⭐⭐</td>
+                            <td class="star-cell">⭐⭐⭐⭐</td>
+                            <td class="star-cell">⭐⭐⭐</td>
+                            <td class="star-cell">⭐⭐⭐</td>
+                        </tr>
+                        <tr>
+                            <td>Понимание enterprise</td>
+                            <td class="star-cell">⭐⭐⭐⭐⭐</td>
+                            <td class="star-cell">⭐⭐⭐⭐⭐</td>
+                            <td class="star-cell">⭐⭐⭐⭐</td>
+                            <td class="star-cell">⭐⭐⭐⭐</td>
+                            <td class="star-cell">⭐⭐⭐</td>
+                        </tr>
+                        <tr>
+                            <td>Стоимость</td>
+                            <td>💰💰💰💰💰</td>
+                            <td>💰💰💰💰</td>
+                            <td>💰💰💰</td>
+                            <td>💰💰💰</td>
+                            <td>💰💰</td>
+                        </tr>
+                        <tr style="background: rgba(6, 182, 212, 0.05);">
+                            <td><strong>ИТОГО</strong></td>
+                            <td class="total-cell">🥇 35/35</td>
+                            <td class="total-cell">🥈 30/35</td>
+                            <td class="total-cell">🥉 27/35</td>
+                            <td class="total-cell">24/35</td>
+                            <td class="total-cell">20/35</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Final Recommendation -->
+        <section id="final">
+            <h2 class="section-header reveal">🥇 Финальная рекомендация</h2>
+
+            <div class="final-rec reveal">
+                <div class="final-rec-header">
+                    <div class="medal gold" style="width: 70px; height: 70px; font-size: 2rem;">1</div>
+                    <div>
+                        <div class="final-rec-title">AIC</div>
+                        <div style="color: var(--text-secondary);">Основной выбор для Novardis</div>
+                    </div>
+                    <div class="final-rec-badge">⭐⭐⭐⭐⭐ РЕКОМЕНДУЕМ</div>
+                </div>
+
+                <p style="color: var(--text-secondary); font-size: 1.1rem; line-height: 1.8;">
+                    <strong style="color: var(--gold);">Почему именно AIC:</strong> это единственная студия из шорт-листа, которая уже работала с нашими ключевыми референсами — Ланит и IBS. Они создали сайты, которые мы взяли как эталон по разделам КСО, ESG и Compliance. Это означает, что они уже понимают специфику enterprise IT-компаний и не будут изобретать велосипед.
+                </p>
+
+                <div class="final-rec-reasons">
+                    <div class="reason-item">
+                        <h4><span>🎯</span> Доказанная экспертиза в нашем референсе</h4>
+                        <p>AIC уже сделала сайты для <strong>Ланит</strong> и <strong>IBS</strong> — компаний, которые мы взяли как эталон по разделам КСО, ESG и Compliance. Они уже понимают специфику enterprise IT-компаний.</p>
+                    </div>
+                    <div class="reason-item">
+                        <h4><span>💡</span> Философия совпадает с нашими целями</h4>
+                        <p>AIC позиционирует: «решение бизнес-задач, сохраняя человека в центре». Это именно то, что нам нужно: показать «лица компании», создать человечный B2B-бренд.</p>
+                    </div>
+                    <div class="reason-item">
+                        <h4><span>🏆</span> Уникальная экспертиза</h4>
+                        <p>Опыт создания <strong>Госуслуг</strong> — доказательство работы со сложнейшими корпоративными структурами. Специализация на сервисном дизайне — именно то, что нужно для премиального UX.</p>
+                    </div>
+                    <div class="reason-item">
+                        <h4><span>🔧</span> Понимание IT-интеграторов</h4>
+                        <p>Кейс IBS: «редизайн и разработка шести сайтов группы компаний для IT-интегратора». Они уже работали с компаниями нашего профиля и знают все подводные камни.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="insight-card reveal">
+                <h3><span>💡</span> Альтернативный сценарий: гибрид AGIMA + Only</h3>
+                <p>
+                    Если AIC недоступна или слишком дорога, рекомендую <strong style="color: var(--novardis-accent);">гибридный подход</strong>:<br><br>
+                    <strong style="color: var(--gold);">AGIMA</strong> — для технической реализации: создание сложного медиацентра с интеграциями, техническая инфраструктура для вебинаров и подкастов, масштабируемая архитектура.<br><br>
+                    <strong style="color: var(--gold);">Only Digital</strong> — для стратегии и креатива: разработка HR-бренда и концепции «лиц компании», стратегическое позиционирование, креативные решения для спецпроектов.<br><br>
+                    Такой подход даст лучшее из обоих миров: техническую мощь AGIMA и стратегический креатив Only.
+                </p>
+            </div>
+
+            <div class="insight-card reveal" style="background: linear-gradient(145deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%); border-color: rgba(16, 185, 129, 0.3);">
+                <h3 style="color: #6ee7b7;"><span>🔍</span> Важный инсайт из анализа конкурентов</h3>
+                <p>
+                    Изучив подход лидеров рынка, я обнаружил интересную закономерность: <strong style="color: var(--success);">КРОК</strong> имеет внутреннюю <strong>Croc Creative Lab</strong>, которая занимается визуальными коммуникациями, а <strong>Корус</strong> сотрудничает с <strong>Webrover</strong>, но основной контроль внутри.<br><br>
+                    <strong style="color: var(--novardis-accent);">Возможная стратегия для Novardis:</strong> рассмотреть создание внутренней digital-команды или гибридную модель:<br>
+                    • <strong>AIC</strong> — для стратегии, UX/UI и ключевых разделов (КСО, ESG, Compliance)<br>
+                    • <strong>Внутренняя команда</strong> — для поддержки, контента, медиацентра<br><br>
+                    Это даст больший контроль и гибкость в долгосрочной перспективе, а также снизит зависимость от внешних подрядчиков.
+                </p>
+            </div>
+        </section>
+
+        <!-- Next Steps -->
+        <section id="next">
+            <h2 class="section-header reveal">🚀 Следующие шаги</h2>
+
+            <div class="next-steps">
+                <div class="step-item reveal">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Подготовить бриф для AIC</h4>
+                        <p>С детальным описанием задач на основе нашего анализа 10 конкурентов и 42 точек роста. Включить референсы (Корус, КРОК, Ланит, IBS) и четкие KPI.</p>
+                    </div>
+                </div>
+
+                <div class="step-item reveal">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Запросить коммерческое предложение</h4>
+                        <p>С разбивкой по этапам: стратегия, UX/UI-дизайн, разработка, контент, запуск. Отдельно выделить блоки КСО/ESG/Compliance и медиацентр.</p>
+                    </div>
+                </div>
+
+                <div class="step-item reveal">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>Попросить показать релевантные кейсы</h4>
+                        <p>Именно с IT-консалтингом и enterprise-сегментом. Изучить, как AIC решала похожие задачи для Ланит и IBS.</p>
+                    </div>
+                </div>
+
+                <div class="step-item reveal">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h4>Провести встречу с командой</h4>
+                        <p>Именно с теми людьми, которые будут работать над проектом. Оценить химию, понимание задачи, предложат ли они свои идеи сверх брифа.</p>
+                    </div>
+                </div>
+
+                <div class="step-item reveal">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <h4>Запросить референсы от клиентов</h4>
+                        <p>Из IT-сектора. Поговорить с ними напрямую о процессе работы, сроках, коммуникации, качестве поддержки после запуска.</p>
+                    </div>
+                </div>
+
+                <div class="step-item reveal">
+                    <div class="step-number">6</div>
+                    <div class="step-content">
+                        <h4>Параллельно провести встречи с AGIMA и Only</h4>
+                        <p>Для сравнения подходов и получения альтернативных предложений. Это даст рычаг для переговоров с AIC и страховку на случай отказа.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="summary-hero-card reveal" style="border-color: rgba(251, 191, 36, 0.3);">
+                <h2 style="color: var(--gold);">💎 Финальный вывод</h2>
+                <p>
+                    На основе глубокого анализа рынка веб-студий, наших требований и референсов, <span style="color: var(--gold); font-weight: 700;">AIC является оптимальным выбором</span> для редизайна сайта Novardis. Их уникальный опыт работы с нашими ключевыми референсами (Ланит, IBS), специализация на сервисном дизайне и философия «человек в центре» делают их идеальным партнером для реализации всех 7 ключевых требований.<br><br>
+                    При этом важно сохранить альтернативные варианты (AGIMA для технической реализации, Only Digital для стратегии) и рассмотреть гибридную модель с внутренней digital-командой для долгосрочной гибкости.
+                </p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Floating Action Button -->
+    <button class="fab" id="fab" onclick="scrollToTop()" title="Наверх">↑</button>
+
+    <script>
+        // 1. Loader
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hidden');
+                startTypingAnimation();
+                observeElements();
+            }, 800);
+        });
+
+        // 2. Typing Animation
+        function startTypingAnimation() {
+            const text = "для Novardis";
+            const element = document.getElementById('typingText');
+            let i = 0;
+            element.textContent = '';
+            const typeInterval = setInterval(() => {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                } else {
+                    clearInterval(typeInterval);
+                }
+            }, 100);
+        }
+
+        // 3. Custom Cursor
+        const cursor = document.querySelector('.cursor');
+        const cursorFollower = document.querySelector('.cursor-follower');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            setTimeout(() => {
+                cursorFollower.style.left = (e.clientX - 10) + 'px';
+                cursorFollower.style.top = (e.clientY - 10) + 'px';
+            }, 80);
+        });
+
+        document.querySelectorAll('a, button, .card, .nav-tab, .stat-card, .studio-card').forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+        });
+
+        // 4. Mouse Glow Effect
+        document.querySelectorAll('.card, .summary-hero-card, .studio-card, .final-rec, .insight-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+
+        // 5. Scroll Progress
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('scrollProgress').style.width = scrolled + '%';
+
+            const fab = document.getElementById('fab');
+            if (winScroll > 500) fab.classList.add('visible');
+            else fab.classList.remove('visible');
+        });
+
+        // 6. Intersection Observer
+        function observeElements() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        
+                        const counters = entry.target.querySelectorAll('.stat-number');
+                        counters.forEach(counter => {
+                            if (!counter.classList.contains('counted')) {
+                                animateCounter(counter);
+                                counter.classList.add('counted');
+                            }
+                        });
+                    }
+                });
+            }, { threshold: 0.15 });
+
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        }
+
+        function animateCounter(el) {
+            const target = +el.getAttribute('data-target');
+            const duration = 2000;
+            const increment = target / (duration / 16);
+            let current = 0;
+
+            const update = () => {
+                current += increment;
+                if (current < target) {
+                    el.innerText = Math.ceil(current);
+                    requestAnimationFrame(update);
+                } else {
+                    el.innerText = target + '+';
+                }
+            };
+            update();
+        }
+
+        // 7. Toggle Card
+        function toggleCard(header) {
+            const content = header.nextElementSibling;
+            const btn = header.querySelector('.toggle-btn');
+            content.classList.toggle('collapsed');
+            btn.style.transform = content.classList.contains('collapsed') ? 'rotate(0deg)' : 'rotate(180deg)';
+        }
+
+        // 8. Smooth Scroll
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            const offset = 80;
+            const bodyRect = document.body.getBoundingClientRect().top;
+            const sectionRect = section.getBoundingClientRect().top;
+            const sectionPosition = sectionRect - bodyRect;
+            
+            window.scrollTo({
+                top: sectionPosition - offset,
+                behavior: 'smooth'
+            });
+
+            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 9. Particles
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 40; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 15 + 's';
+            particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        // 10. Ripple Effect
+        document.querySelectorAll('.nav-tab, .fab').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.cssText = `
+                    position: absolute; width: ${size}px; height: ${size}px;
+                    left: ${x}px; top: ${y}px; background: rgba(255,255,255,0.4);
+                    border-radius: 50%; transform: scale(0); animation: ripple 0.6s ease-out;
+                    pointer-events: none;
+                `;
+                this.style.position = 'relative';
+                this.style.overflow = 'hidden';
+                this.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+
+        const style = document.createElement('style');
+        style.textContent = `@keyframes ripple { to { transform: scale(2); opacity: 0; } }`;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
