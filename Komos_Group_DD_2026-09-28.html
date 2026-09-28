@@ -1,0 +1,637 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ГК КОМОС ГРУПП — справка для продаж</title>
+<script>document.documentElement.classList.add('js')</script>
+<style>
+:root{
+  --bg:#f4f6f8;--card:#fff;--ink:#18212b;--muted:#66717e;
+  --accent:#b21f3a;--accent2:#e85d75;--line:#e4e8ed;--soft:#fff4f6;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,Segoe UI,Arial,sans-serif;line-height:1.55}
+.wrap{max-width:1180px;margin:auto;padding:34px 26px 70px}
+.hero{background:linear-gradient(135deg,#24141a,#8e1831 60%,#d84b68);color:white;border-radius:24px;padding:44px 46px;margin-bottom:22px;box-shadow:0 18px 50px rgba(80,20,35,.18)}
+.hero h1{font-size:42px;line-height:1.08;margin:0 0 14px}
+.hero p{max-width:820px;margin:7px 0;color:#ffeef2}
+.badge{display:inline-block;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);padding:6px 11px;border-radius:999px;font-size:13px;margin:3px}
+nav{position:sticky;top:0;z-index:5;background:rgba(244,246,248,.94);backdrop-filter:blur(10px);padding:12px 0;border-bottom:1px solid var(--line);margin-bottom:24px}
+nav a{color:var(--accent);text-decoration:none;font-size:13px;margin-right:14px;white-space:nowrap}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px 28px;margin:18px 0;box-shadow:0 6px 20px rgba(20,30,40,.04)}
+h2{font-size:27px;margin:0 0 14px}
+h3{font-size:19px;margin-top:25px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.kpi{background:#fafbfc;border:1px solid var(--line);border-radius:14px;padding:18px}
+.kpi .v{font-size:27px;font-weight:750}
+.kpi .l{color:var(--muted);font-size:13px}
+table{width:100%;border-collapse:collapse;margin:15px 0;font-size:14px}
+th,td{padding:11px 10px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}
+th{background:#fafbfc;font-weight:700}
+.num{text-align:right;white-space:nowrap}
+.source{font-size:12px;color:var(--muted);margin-top:8px}
+.source a,.links a{color:var(--accent);text-decoration:none}
+.source a:hover,.links a:hover{text-decoration:underline}
+.callout{border-left:4px solid var(--accent);background:var(--soft);padding:15px 18px;border-radius:10px;margin:16px 0}
+.warn{border-left-color:#d88916;background:#fff9ee}
+.tree{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;background:#171a1f;color:#f4f5f7;border-radius:16px;padding:22px;overflow:auto;line-height:1.45}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.small{font-size:13px;color:var(--muted)}
+.footer{margin-top:30px;color:var(--muted);font-size:12px}
+@media(max-width:800px){.kpis{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}.hero h1{font-size:32px}}
+@media print{nav{display:none}.card{break-inside:avoid}.hero{box-shadow:none}}
+/* ---------- Структурные схемы ---------- */
+.viz{margin:18px 0 8px}
+.viz-hint{display:none;margin:0 0 8px}
+@media(max-width:800px){.viz-hint{display:block}}
+.viz-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:16px;background:#fafbfc;padding:14px 10px}
+.own-svg{display:block;width:100%;min-width:780px;height:auto}
+.own-svg text{font-family:Inter,Segoe UI,Arial,sans-serif}
+.own-node{cursor:pointer;outline:none}
+.own-node rect.box{stroke-width:1.2}
+.own-node.person rect.box{fill:#fff4f6;stroke:#f1c6cf}
+.own-node.plain rect.box{fill:#fff;stroke:#d9dee4}
+.own-node.soft rect.box{fill:#fff4f6;stroke:#f1c6cf}
+.own-node.hold rect.box{fill:var(--accent);stroke:none}
+.own-node.uk rect.box{fill:#24141a;stroke:none}
+.own-node .av{fill:#fff;stroke:#f1c6cf;stroke-width:1.2}
+.own-node .av-i{fill:none;stroke:var(--accent);stroke-width:1.6;stroke-linecap:round}
+.own-node .t1{font-size:15px;font-weight:700;fill:var(--ink)}
+.own-node .t1.big{font-size:18px}
+.own-node .t2{font-size:12.5px;fill:var(--muted)}
+.own-node.hold .t1,.own-node.uk .t1{fill:#fff}
+.own-node.hold .t2,.own-node.uk .t2{fill:#ffe3ea}
+.own-node:focus-visible rect.box{stroke:var(--accent);stroke-width:2.5}
+.own-edge path{fill:none;stroke:var(--accent);stroke-width:2}
+.own-edge.mgmt path{stroke:var(--muted);stroke-dasharray:7 6}
+.own-edge .own-lbl{font-size:12.5px;fill:var(--muted)}
+.own-pill rect{fill:#fff;stroke:var(--accent);stroke-width:1.2}
+.own-pill text{fill:var(--accent);font-size:12.5px;font-weight:700}
+.own-svg.focus .own-node:not(.hl)>*,.own-svg.focus .own-edge:not(.hl)>*{opacity:.22;transition:opacity .2s}
+.own-edge.hl path{stroke-width:3}
+.legend{display:flex;flex-wrap:wrap;gap:6px 22px;font-size:13px;color:var(--muted);margin:10px 2px 4px}
+.legend i{display:inline-block;width:30px;height:0;border-top:2px solid var(--accent);vertical-align:middle;margin-right:8px}
+.legend i.dash{border-top:2px dashed var(--muted)}
+
+/* Иконки направлений */
+.ic{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ico{flex:none;width:44px;height:44px;border-radius:12px;background:var(--soft);color:var(--accent);display:grid;place-items:center}
+.ico svg{width:26px;height:26px}
+
+/* Дерево направлений (раздел 5) */
+.orgtree{--spine:30px}
+.ot-root{position:relative;display:inline-flex;flex-direction:column;background:linear-gradient(135deg,#24141a,#8e1831);color:#fff;border-radius:14px;padding:14px 20px;min-width:260px;max-width:100%}
+.ot-root b{font-size:17px}
+.ot-root span{font-size:13px;color:#ffe3ea}
+.ot-branches{margin-left:var(--spine);padding-left:28px}
+.ot-row{position:relative;display:flex;gap:14px;align-items:flex-start;background:#fafbfc;border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-top:12px}
+.ot-row::before{content:"";position:absolute;left:-30px;top:-14px;width:29px;height:50px;border-left:2px solid var(--accent);border-bottom:2px solid var(--accent);border-bottom-left-radius:12px}
+.ot-row:not(:last-child)::after{content:"";position:absolute;left:-30px;top:34px;bottom:-14px;border-left:2px solid var(--accent)}
+.ot-name{font-weight:700;font-size:16px;line-height:1.3}
+.ot-meta{font-size:13px;color:var(--muted);margin:2px 0 9px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:inherit;font-size:13px;line-height:1.3;background:#fff;border:1px solid var(--line);color:var(--ink);border-radius:999px;padding:5px 11px;cursor:pointer;text-decoration:none;transition:border-color .15s,background .15s}
+.chip:hover,.chip:focus-visible{border-color:var(--accent);background:var(--soft);outline:none}
+.chip.static{cursor:default;border-style:dashed;color:var(--muted)}
+.chip.static:hover{background:#fff;border-color:var(--line)}
+tr.flash td{animation:rowFlash 2.4s ease-out}
+@keyframes rowFlash{0%,35%{background:#ffe1e7}100%{background:transparent}}
+
+/* Цепочка «от поля до прилавка» (раздел 6) */
+.chain{display:grid;grid-template-columns:1fr 26px 1fr 26px 1fr 26px 1fr 26px 1fr;align-items:stretch}
+.ch-step{background:#fafbfc;border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.ch-t{font-weight:700;font-size:15px;line-height:1.3}
+.ch-d{font-size:13px;color:var(--muted);line-height:1.45}
+.ch-arrow{display:grid;place-items:center;color:var(--accent)}
+.ch-arrow svg{width:20px;height:20px}
+
+/* Слои IT-ландшафта (раздел 8) */
+.stack{display:flex;flex-direction:column}
+.st-layer{border:1px solid var(--line);border-radius:14px;background:#fafbfc;padding:14px 16px}
+.st-layer.core{background:linear-gradient(135deg,#24141a,#8e1831 70%,#b21f3a);color:#fff;border-color:transparent}
+.st-head{display:flex;justify-content:space-between;align-items:baseline;gap:4px 14px;flex-wrap:wrap;margin-bottom:10px}
+.st-head b{font-size:16px}
+.st-head span{font-size:13px;color:var(--muted)}
+.st-layer.core .st-head span{color:#ffe3ea}
+.st-cells{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.st-cell{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:13px;color:var(--muted);line-height:1.45}
+.st-cell b{display:block;color:var(--ink);font-size:14px;margin-bottom:2px}
+.st-layer.core .st-cell{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.28);color:#ffe3ea}
+.st-layer.core .st-cell b{color:#fff}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:13px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:4px 11px}
+.st-link{display:flex;align-items:center;justify-content:center;gap:8px;height:40px;font-size:12.5px;color:var(--muted)}
+.st-link svg{width:18px;height:18px;color:var(--accent)}
+
+/* Анимация появления: один проход, когда схема попадает в экран */
+.js .viz [data-a]{opacity:0}
+.js .viz.is-in [data-a]{animation:vizIn .55s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--d,0) * 1ms)}
+.js .viz .own-edge{opacity:0}
+.js .viz.is-in .own-edge{animation:vizFade .3s ease-out both;animation-delay:calc(var(--d,0) * 1ms)}
+.js .viz .own-edge.own path{stroke-dasharray:1;stroke-dashoffset:1}
+.js .viz.is-in .own-edge.own path{animation:vizDraw .55s ease-out both;animation-delay:calc(var(--d,0) * 1ms)}
+.js .viz.is-in .own-edge.mgmt path{animation:vizMarch 1.1s linear 4;animation-delay:calc(var(--d,0) * 1ms)}
+@keyframes vizIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes vizFade{from{opacity:0}to{opacity:1}}
+@keyframes vizDraw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+@keyframes vizMarch{from{stroke-dashoffset:26}to{stroke-dashoffset:0}}
+
+@media(max-width:900px){
+  .chain{grid-template-columns:1fr}
+  .ch-arrow{height:28px}
+  .ch-arrow svg{transform:rotate(90deg)}
+  .st-cells{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+  .orgtree{--spine:16px}
+  .ot-branches{padding-left:22px}
+  .ot-row::before{left:-24px;width:23px}
+  .ot-row:not(:last-child)::after{left:-24px}
+  .ot-row{padding:12px}
+  .ico{width:38px;height:38px}
+}
+@media (prefers-reduced-motion:reduce){
+  .js .viz [data-a],.js .viz .own-edge{opacity:1!important;animation:none!important}
+  .js .viz .own-edge.own path{stroke-dashoffset:0!important;animation:none!important}
+  .js .viz .own-edge.mgmt path{animation:none!important}
+  tr.flash td{animation:none}
+}
+@media print{
+  .js .viz [data-a],.js .viz .own-edge{opacity:1!important;animation:none!important}
+  .js .viz .own-edge.own path{stroke-dashoffset:0!important;animation:none!important}
+  .viz-scroll{overflow:visible}
+  .own-svg{min-width:0}
+}
+
+/* Ссылки в тексте */
+.card p a,.card li a,.callout a,.entry a,.person a,.footer a{color:var(--accent);text-decoration:underline;text-decoration-color:rgba(178,31,58,.35);text-underline-offset:2px}
+.card p a:hover,.card li a:hover,.callout a:hover,.entry a:hover,.person a:hover{text-decoration-color:var(--accent)}
+.hero a{color:#fff;text-decoration:underline;text-decoration-color:rgba(255,255,255,.55);text-underline-offset:2px}
+.hero a:hover{text-decoration-color:#fff}
+
+/* Текущие проекты на схеме IT */
+.st-layer.now{background:var(--soft);border-color:#f1c6cf}
+
+/* Точки входа */
+.entries{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.entry{background:#fafbfc;border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.entry.how{background:var(--soft);border-color:#f1c6cf}
+.entry-h{display:flex;gap:10px;align-items:center;margin-bottom:8px;font-size:16px;line-height:1.3}
+.entry-n{flex:none;width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-size:14px}
+.entry p{margin:6px 0;font-size:14px}
+.entry .lbl{display:block;color:var(--muted);font-size:12.5px;font-weight:600}
+.people{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.person{display:flex;gap:12px;align-items:flex-start;background:#fafbfc;border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.person b{display:block;font-size:15px}
+.person span{font-size:13.5px;color:var(--muted)}
+@media(max-width:800px){.entries,.people{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<section class="hero">
+  <div><span class="badge">Проверено по открытым источникам</span><span class="badge">срез: 28.09.2026</span><span class="badge">для продаж Новардис</span></div>
+  <h1>ГК «КОМОС ГРУПП»</h1>
+  <p>Справка для продажи IT-решений: кто владеет группой и принимает решения, как устроен бизнес, какой у группы IT-ландшафт и где точки входа.</p>
+  <p><b>Главное для продавца:</b> IT в группе централизовано. ООО «КОМОС ГРУПП» управляет всеми предприятиями (<a href="https://www.ra-national.ru/press_release/ooo-selo-zeljonoe-holding/45326/">НРА, 08.09.2026</a>), а его IT-центр «КОМОС ИНФОРМ» сейчас внедряет 1С:ERP и 1С:УХ на предприятиях и автоматизирует единый торговый дом на 1С:УТ (<a href="https://dreamjob.ru/employers/36214/vakansii/123869229">вакансия от 10.09.2026</a>).</p>
+</section>
+
+<nav>
+<a href="#summary">Резюме</a>
+<a href="#ownership">Собственность</a>
+<a href="#finance">Финансы</a>
+<a href="#entities">Юрлица</a>
+<a href="#business">Бизнес</a>
+<a href="#it">IT</a>
+<a href="#sales">Точки входа</a>
+<a href="#sources">Источники</a>
+</nav>
+
+<section id="summary" class="card">
+<h2>1. Коротко о группе</h2>
+<div class="kpis">
+<div class="kpi"><div class="v">106,2 млрд ₽</div><div class="l">выручка группы, 2025</div></div>
+<div class="kpi"><div class="v">52</div><div class="l">юрлица и 19 производственных площадок в едином IT-контуре</div></div>
+<div class="kpi"><div class="v">72</div><div class="l">региона поставок продукции</div></div>
+<div class="kpi"><div class="v">32</div><div class="l">ИТ-продукта в ландшафте группы</div></div>
+</div>
+<p>Вертикально интегрированный агрохолдинг из Удмуртии: молоко и мороженое, птица и яйцо, свинина и мясопереработка, корма, собственная логистика и розница. Материнская компания — ООО «Село Зелёное Холдинг», конечные бенефициары — Андрей Осколков и Андрей Шутов (<a href="https://www.ra-national.ru/press_release/ooo-selo-zeljonoe-holding/45326/">НРА</a>). ООО «КОМОС ГРУПП» — единая управляющая компания всех предприятий.</p>
+<p>В 2025 году выручка выросла до 106,2 млрд ₽ (<a href="https://ratings.ru/ratings/press-releases/selo-zelenoe-RA-110926/">НКР</a>); в сентябре 2026 года рейтинги подтверждены: A|ru| от <a href="https://www.ra-national.ru/press_release/ooo-selo-zeljonoe-holding/45326/">НРА</a> и A.ru от <a href="https://ratings.ru/ratings/press-releases/selo-zelenoe-RA-110926/">НКР</a>. В 2025 году группа завершила трёхлетнюю программу цифровизации на BPMSoft (<a href="https://globalcio.ru/projectoftheyear/list/54853/">GlobalCIO</a>) и теперь переводит учёт предприятий на 1С:ERP (<a href="https://dreamjob.ru/employers/36214/vakansii/123869229">вакансия КОМОС ИНФОРМ</a>).</p>
+<div class="callout"><b>Для ABM:</b> покупатель — не отдельные заводы, а управляющая компания и её IT-центр в Ижевске. Самые «горячие» темы сейчас — тиражирование 1С:ERP и 1С:УХ, единый торговый дом на 1С:УТ и централизация НСИ. Подробно — в разделе 7.</div>
+<div class="source">Источники:
+<a href="https://www.ra-national.ru/press_release/ooo-selo-zeljonoe-holding/45326/">НРА, 08.09.2026</a> ·
+<a href="https://ratings.ru/ratings/press-releases/selo-zelenoe-RA-110926/">НКР, 11.09.2026</a> ·
+<a href="https://globalcio.ru/projectoftheyear/list/54853/">GlobalCIO</a> ·
+<a href="https://dreamjob.ru/employers/36214/vakansii/123869229">вакансия КОМОС ИНФОРМ, 10.09.2026</a>
+</div>
+</section>
+
+<section id="ownership" class="card">
+<h2>2. Структура собственности</h2>
+<div class="viz">
+<p class="small viz-hint">Схема шире экрана — прокрутите её вбок.</p>
+<div class="viz-scroll">
+<svg class="own-svg" viewBox="0 0 1080 520" role="img" aria-labelledby="ownT ownD">
+<title id="ownT">Структура собственности ГК «КОМОС ГРУПП»</title>
+<desc id="ownD">А.В. Шутову принадлежит 100% ООО «Приволжский Продовольственный Концерн», А.Э. Осколкову — 100% ООО «Аграрий Прикамья». Участники ООО «Село Зелёное Холдинг»: ППК — 50%, «Аграрий Прикамья» — 49,99%, С.Р. Вердиян — 0,01%. Холдингу принадлежат 100% ООО «КОМОС ГРУПП» и дочерние операционные компании; «КОМОС ГРУПП» управляет ими как единоличный исполнительный орган.</desc>
+<defs>
+<marker id="arA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 10 5 0 10z" fill="#b21f3a"/></marker>
+<marker id="arM" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 10 5 0 10z" fill="#66717e"/></marker>
+</defs>
+
+<!-- связи -->
+<g class="own-edge own" data-ends="shutov ppk" style="--d:250"><path pathLength="1" d="M200 78V135" marker-end="url(#arA)"/><g class="own-pill"><rect x="176" y="95" width="48" height="22" rx="11"/><text x="200" y="110.5" text-anchor="middle">100%</text></g></g>
+<g class="own-edge own" data-ends="oskolkov ap" style="--d:250"><path pathLength="1" d="M560 78V135" marker-end="url(#arA)"/><g class="own-pill"><rect x="536" y="95" width="48" height="22" rx="11"/><text x="560" y="110.5" text-anchor="middle">100%</text></g></g>
+<g class="own-edge own" data-ends="ppk holding" style="--d:600"><path pathLength="1" d="M200 214V240H440V269" marker-end="url(#arA)"/><g class="own-pill"><rect x="298" y="229" width="44" height="22" rx="11"/><text x="320" y="244.5" text-anchor="middle">50%</text></g></g>
+<g class="own-edge own" data-ends="ap holding" style="--d:600"><path pathLength="1" d="M560 214V269" marker-end="url(#arA)"/><g class="own-pill"><rect x="529" y="230" width="62" height="22" rx="11"/><text x="560" y="245.5" text-anchor="middle">49,99%</text></g></g>
+<g class="own-edge own" data-ends="verdiyan holding" style="--d:600"><path pathLength="1" d="M910 78V240H680V269" marker-end="url(#arA)"/><g class="own-pill"><rect x="772" y="229" width="56" height="22" rx="11"/><text x="800" y="244.5" text-anchor="middle">0,01%</text></g></g>
+<g class="own-edge own" data-ends="holding komos" style="--d:1100"><path pathLength="1" d="M450 354V382H260V409" marker-end="url(#arA)"/><g class="own-pill"><rect x="331" y="371" width="48" height="22" rx="11"/><text x="355" y="386.5" text-anchor="middle">100%</text></g></g>
+<g class="own-edge own" data-ends="holding ops" style="--d:1100"><path pathLength="1" d="M670 354V382H820V409" marker-end="url(#arA)"/><g class="own-pill"><rect x="675" y="371" width="140" height="22" rx="11"/><text x="745" y="386.5" text-anchor="middle">дочерние общества</text></g></g>
+<g class="own-edge mgmt" data-ends="komos ops" style="--d:1650"><path d="M462 458H597" marker-end="url(#arM)"/><text class="own-lbl" x="530" y="447" text-anchor="middle">управление</text><text class="own-lbl" x="530" y="477" text-anchor="middle">функции ЕИО</text></g>
+
+<!-- участники -->
+<g class="own-node person" data-id="shutov" tabindex="0" data-a style="--d:0">
+<rect class="box" x="40" y="16" width="320" height="62" rx="31"/>
+<circle class="av" cx="70" cy="47" r="16"/><circle class="av-i" cx="70" cy="43" r="4"/><path class="av-i" d="M62.5 55.5c1.3-4 4.2-6 7.5-6s6.2 2 7.5 6"/>
+<text class="t1" x="98" y="43">Андрей Васильевич Шутов</text>
+<text class="t2" x="98" y="62">конечный бенефициар</text>
+</g>
+<g class="own-node person" data-id="oskolkov" tabindex="0" data-a style="--d:80">
+<rect class="box" x="400" y="16" width="320" height="62" rx="31"/>
+<circle class="av" cx="430" cy="47" r="16"/><circle class="av-i" cx="430" cy="43" r="4"/><path class="av-i" d="M422.5 55.5c1.3-4 4.2-6 7.5-6s6.2 2 7.5 6"/>
+<text class="t1" x="458" y="43">Андрей Эдуардович Осколков</text>
+<text class="t2" x="458" y="62">конечный бенефициар</text>
+</g>
+<g class="own-node person" data-id="verdiyan" tabindex="0" data-a style="--d:160">
+<rect class="box" x="760" y="16" width="300" height="62" rx="31"/>
+<circle class="av" cx="790" cy="47" r="16"/><circle class="av-i" cx="790" cy="43" r="4"/><path class="av-i" d="M782.5 55.5c1.3-4 4.2-6 7.5-6s6.2 2 7.5 6"/>
+<text class="t1" x="818" y="43">Сергей Рудольфович Вердиян</text>
+<text class="t2" x="818" y="62">миноритарный участник</text>
+</g>
+
+<g class="own-node plain" data-id="ppk" tabindex="0" data-a style="--d:400">
+<rect class="box" x="35" y="136" width="330" height="78" rx="14"/>
+<text class="t1" x="200" y="162" text-anchor="middle">ООО «ППК»</text>
+<text class="t2" x="200" y="182" text-anchor="middle">Приволжский Продовольственный Концерн</text>
+<text class="t2" x="200" y="200" text-anchor="middle">ИНН 1831192409</text>
+</g>
+<g class="own-node plain" data-id="ap" tabindex="0" data-a style="--d:400">
+<rect class="box" x="395" y="136" width="330" height="78" rx="14"/>
+<text class="t1" x="560" y="170" text-anchor="middle">ООО «Аграрий Прикамья»</text>
+<text class="t2" x="560" y="190" text-anchor="middle">ИНН 1831170740</text>
+</g>
+
+<g class="own-node hold" data-id="holding" tabindex="0" data-a style="--d:900">
+<rect class="box" x="340" y="270" width="440" height="84" rx="16"/>
+<text class="t1 big" x="560" y="299" text-anchor="middle">ООО «Село Зелёное Холдинг»</text>
+<text class="t2" x="560" y="320" text-anchor="middle">материнская компания, ИНН 1832043008</text>
+<text class="t2" x="560" y="339" text-anchor="middle">прежнее название — ООО «Хайперфудс Холдинг»</text>
+</g>
+
+<g class="own-node uk" data-id="komos" tabindex="0" data-a style="--d:1350">
+<rect class="box" x="60" y="410" width="400" height="96" rx="16"/>
+<text class="t1 big" x="260" y="443" text-anchor="middle">ООО «КОМОС ГРУПП»</text>
+<text class="t2" x="260" y="465" text-anchor="middle">единая управляющая компания группы</text>
+<text class="t2" x="260" y="485" text-anchor="middle">ИНН 1831089218</text>
+</g>
+<g class="own-node soft" data-id="ops" tabindex="0" data-a style="--d:1350">
+<rect class="box" x="600" y="410" width="440" height="96" rx="16"/>
+<text class="t1" x="820" y="441" text-anchor="middle">Операционные компании группы</text>
+<text class="t2" x="820" y="463" text-anchor="middle">по данным СПАРК — 20 дочерних юрлиц холдинга</text>
+<text class="t2" x="820" y="483" text-anchor="middle">АО «МИЛКОМ», ООО «Восточный», птицефабрики и др.</text>
+</g>
+</svg>
+</div>
+<div class="legend"><span><i></i>владение — доля в уставном капитале</span><span><i class="dash"></i>управление — функции единоличного исполнительного органа</span><span>Наведите или нажмите на участника, чтобы подсветить его связи</span></div>
+</div>
+<div class="callout"><b>Кто кому принадлежит.</b> Участники «Село Зелёное Холдинг» по <a href="https://firmoteka.ru/1832043008">ЕГРЮЛ</a>: ППК — 50% (100% у Андрея Шутова), «Аграрий Прикамья» — 49,99% (100% у Андрея Осколкова), Сергей Вердиян — 0,01%. Операционные предприятия — дочерние общества холдинга, их у него 20 (<a href="https://www.kommersant.ru/doc/8080873">«Коммерсантъ» по данным СПАРК</a>); «КОМОС ГРУПП» тоже принадлежит холдингу и управляет предприятиями как их единоличный исполнительный орган.</div>
+<div class="callout"><b>Для ABM:</b> решения по IT и закупкам принимаются централизованно — через «КОМОС ГРУПП», а не на уровне заводов. В базах вроде СПАРК холдинг может встречаться под прежним названием ООО «Хайперфудс Холдинг» (<a href="https://kontragent.skrin.ru/issuers/HYPHG">SKRIN</a>) — учтите это при поиске и заведении компании в CRM.</div>
+<div class="source">Источники:
+<a href="https://selo-zelenoe.ru/investors/%D0%A1%D0%B5%D0%BB%D0%BE_%D0%97%D0%B5%D0%BB%D0%B5%D0%BD%D0%BE%D0%B5_%D0%A5%D0%BE%D0%BB%D0%B4%D0%B8%D0%BD%D0%B3_%D0%9F%D1%80%D0%B5%D0%B7%D0%B5%D0%BD%D1%82%D0%B0%D1%86%D0%B8%D1%8F_%D0%B4%D0%BB%D1%8F_%D0%B8%D0%BD%D0%B2%D0%B5%D1%81%D1%82%D0%BE%D1%80%D0%BE%D0%B2.pdf">инвесторская презентация</a> ·
+<a href="https://firmoteka.ru/1832043008">карточка «Село Зелёное Холдинг»</a> ·
+<a href="https://kontragent.skrin.ru/issuers/HYPHG">SKRIN</a> ·
+<a href="https://www.kommersant.ru/doc/8080873">«Коммерсантъ», 02.10.2025</a> ·
+<a href="https://www.rusprofile.ru/id/3924725">карточка ООО «КОМОС ГРУПП»</a> ·
+<a href="https://www.ra-national.ru/press_release/ooo-selo-zeljonoe-holding/45326/">НРА, 08.09.2026</a>
+</div>
+</section>
+
+<section id="finance" class="card">
+<h2>3. Финансы группы</h2>
+<p>Консолидированные показатели «Село Зелёное Холдинг» по МСФО в расчёте <a href="https://ratings.ru/ratings/press-releases/selo-zelenoe-RA-110926/">НКР</a> (2023 год — по <a href="https://ratings.ru/ratings/press-releases/selo-zelenoe-RA-220925/">релизу 2025 года</a>).</p>
+<table>
+<thead><tr><th>Показатель, млрд ₽</th><th class="num">2023</th><th class="num">2024</th><th class="num">2025</th><th>2023→2025</th></tr></thead>
+<tbody>
+<tr><td>Выручка</td><td class="num">80,7</td><td class="num">93,7</td><td class="num">106,2</td><td>+31,6%</td></tr>
+<tr><td>OIBDA</td><td class="num">14,0</td><td class="num">11,8</td><td class="num">11,9</td><td>−15,0%</td></tr>
+<tr><td>Чистая прибыль</td><td class="num">7,7</td><td class="num">4,1</td><td class="num">0,2</td><td>−97,4%</td></tr>
+<tr><td>Совокупный долг*</td><td class="num">38,7</td><td class="num">42,7</td><td class="num">55,7</td><td>+43,9%</td></tr>
+</tbody>
+</table>
+<p>Выручка растёт, но маржа и прибыль снижаются, а долг высокий: около 4,7× OIBDA по <a href="https://ratings.ru/ratings/press-releases/selo-zelenoe-RA-110926/">НКР</a> и 4,0× EBITDA на 30.06.2026 по <a href="https://www.ra-national.ru/press_release/ooo-selo-zeljonoe-holding/45326/">НРА</a>. При этом ликвидность есть: неиспользованные кредитные линии — 35 млрд ₽ (<a href="https://www.ra-national.ru/press_release/ooo-selo-zeljonoe-holding/45326/">НРА</a>), инвестпрограмма продолжается.</p>
+<div class="callout"><b>Для ABM:</b> деньги на развитие у группы есть, но IT-проекты защищаются экономическим эффектом. Группа сама считает эффект в рублях: 453 млн ₽ по программе BPMSoft, дебиторская задолженность −40%, затраты на закупку молока-сырья −15% (<a href="https://globalcio.ru/projectoftheyear/list/54853/">GlobalCIO</a>). Приходите с расчётом окупаемости и поэтапным планом.</div>
+<p class="small">* По методологии НКР — с арендой, поручительствами и квазикапиталом. Отчётность самого ООО «КОМОС ГРУПП» (выручка 23,68 млрд ₽ за 2025 год, <a href="https://b2b.house/company/OOO-KOMOS-GRUPP_5f41345a-953b-47c1-9cfd-b290cea19f1b/">B2B.House</a>) — это управляющая компания, а не группа.</p>
+<div class="source">Источники:
+<a href="https://ratings.ru/ratings/press-releases/selo-zelenoe-RA-220925/">НКР — 2023–2024</a> ·
+<a href="https://ratings.ru/ratings/press-releases/selo-zelenoe-RA-110926/">НКР — 2024–2025</a> ·
+<a href="https://www.ra-national.ru/press_release/ooo-selo-zeljonoe-holding/45326/">НРА, 08.09.2026</a> ·
+<a href="https://b2b.house/company/OOO-KOMOS-GRUPP_5f41345a-953b-47c1-9cfd-b290cea19f1b/">B2B.House</a>
+</div>
+</section>
+
+<section id="entities" class="card">
+<h2>4. Юрлица и предприятия</h2>
+<p>В IT-периметре группы — 52 юрлица и 19 производственных площадок (<a href="https://www.komos.ru/press-center/news/33165/">КОМОС, 11.02.2026</a>). Полного публичного реестра всех 52 нет, поэтому ниже — ключевые компании по направлениям.</p>
+<div class="viz orgtree" aria-label="Управленческая структура по направлениям">
+<div class="ot-root" data-a style="--d:0"><b>ООО «КОМОС ГРУПП»</b><span>управляющая компания предприятий группы; собственник — «Село Зелёное Холдинг»</span></div>
+<div class="ot-branches">
+<div class="ot-row" data-a style="--d:150">
+<div class="ico"><svg class="ic" viewBox="0 0 24 24"><path d="M9 2.5h6M9.5 2.5v3L7 9v11a1.5 1.5 0 0 0 1.5 1.5h7A1.5 1.5 0 0 0 17 20V9l-2.5-3.5v-3"/><path d="M7 13h10"/></svg></div>
+<div><div class="ot-name">Молоко и мороженое</div><div class="ot-meta">субхолдинг АО «МИЛКОМ»: четыре площадки в Удмуртии, Казань, Пермь и с 01.12.2025 — Уфа</div>
+<div class="chips"><button class="chip" data-row="e-milkom">АО «МИЛКОМ»</button><button class="chip" data-row="e-kmk">Казанский молочный комбинат</button><button class="chip" data-row="e-sozv">ПХК «Созвездие»</button><span class="chip static">Уфимский молочный завод</span></div></div>
+</div>
+<div class="ot-row" data-a style="--d:260">
+<div class="ico"><svg class="ic" viewBox="0 0 24 24"><path d="M12 21.5V7"/><path d="M12 7c0-2.4 1-4 2.8-4.5.2 2.3-.9 4-2.8 4.5zM12 7c0-2.4-1-4-2.8-4.5-.2 2.3.9 4 2.8 4.5z"/><path d="M12 12c.3-2.3 1.8-3.7 3.9-3.8-.2 2.2-1.7 3.6-3.9 3.8zM12 12c-.3-2.3-1.8-3.7-3.9-3.8.2 2.2 1.7 3.6 3.9 3.8z"/><path d="M12 17c.3-2.3 1.8-3.7 3.9-3.8-.2 2.2-1.7 3.6-3.9 3.8zM12 17c-.3-2.3-1.8-3.7-3.9-3.8.2 2.2 1.7 3.6 3.9 3.8z"/></svg></div>
+<div><div class="ot-name">Корма и сельхозсырьё</div><div class="ot-meta">комбикорма, элеватор, молочное животноводство и растениеводство</div>
+<div class="chips"><button class="chip" data-row="e-niva">«Русская нива»</button><button class="chip" data-row="e-gkz">Глазовский комбикормовый завод</button><button class="chip" data-row="e-yan">Янаульский элеватор</button></div></div>
+</div>
+<div class="ot-row" data-a style="--d:370">
+<div class="ico"><svg class="ic" viewBox="0 0 24 24"><path d="M12 2.5c3.6 0 6.5 6 6.5 10.5a6.5 6.5 0 0 1-13 0C5.5 8.5 8.4 2.5 12 2.5z"/><path d="M9 14.5a3 3 0 0 0 3 3"/></svg></div>
+<div><div class="ot-name">Птица и яйцо</div><div class="ot-meta">бройлер — Удмуртская птицефабрика; пищевое яйцо — три птицефабрики</div>
+<div class="chips"><button class="chip" data-row="e-upf">Удмуртская птицефабрика</button><button class="chip" data-row="e-var">«Вараксино»</button><button class="chip" data-row="e-mend">«Менделеевская»</button><button class="chip" data-row="e-derzh">«Державинская»</button></div></div>
+</div>
+<div class="ot-row" data-a style="--d:480">
+<div class="ico"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="13" r="7.5"/><path d="M6.8 7.6 5.5 3.5l4 1.9M17.2 7.6l1.3-4.1-4 1.9"/><ellipse cx="12" cy="15.3" rx="3" ry="2.1"/><path d="M10.9 15.3h.01M13.1 15.3h.01M8.8 11h.01M15.2 11h.01"/></svg></div>
+<div><div class="ot-name">Свинина и мясопереработка</div><div class="ot-meta">свиноводческий контур «Восточного» и два мясокомбината; «Кунгурский» — через ООО «ЮМИКО» (99,99%)</div>
+<div class="chips"><button class="chip" data-row="e-vost">ООО «Восточный»</button><button class="chip" data-row="e-smk">Сарапульский мясокомбинат</button><button class="chip" data-row="e-yumiko">ООО «ЮМИКО»</button><button class="chip" data-row="e-kung">Мясокомбинат «Кунгурский»</button></div></div>
+</div>
+<div class="ot-row" data-a style="--d:590">
+<div class="ico"><svg class="ic" viewBox="0 0 24 24"><path d="M2.5 6.5h11v10h-11z"/><path d="M13.5 10h4l3 3.2v3.3h-7"/><circle cx="6.5" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></svg></div>
+<div><div class="ot-name">Сбыт, логистика и лизинг</div><div class="ot-meta">поставки в 72 региона, 199 единиц техники, 240 фирменных магазинов</div>
+<div class="chips"><button class="chip" data-row="e-log">«КОМОС-Логистика»</button><button class="chip" data-row="e-myaso">«Мясная компания»</button><button class="chip" data-row="e-lizing">«КОМОС Лизинг»</button></div></div>
+</div>
+<div class="ot-row" data-a style="--d:700">
+<div class="ico"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3 21 8l-9 5-9-5 9-5z"/><path d="m3 12.5 9 5 9-5"/><path d="m3 16.5 9 5 9-5"/></svg></div>
+<div><div class="ot-name">Общий центр обслуживания</div><div class="ot-meta">IT, HR и юридическая функция для всех предприятий группы — подробнее в разделе 6</div>
+<div class="chips"><a class="chip" href="#it">«КОМОС ИНФОРМ»</a><a class="chip" href="#it">«ЦЕС-КОМОС»</a><a class="chip" href="#it">«КОМОС ПРАВО»</a></div></div>
+</div>
+<div class="ot-row" data-a style="--d:810">
+<div class="ico"><svg class="ic" viewBox="0 0 24 24"><path d="M4 21V6l8-3v18M12 9h8v12M2.5 21h19"/><path d="M7 9h2M7 13h2M7 17h2M15 13h2M15 17h2"/></svg></div>
+<div><div class="ot-name">Имущество и вспомогательные компании</div><div class="ot-meta">недвижимость, топливо, строительство</div>
+<div class="chips"><button class="chip" data-row="e-gauda">«Гауда Холдер»</button><button class="chip" data-row="e-tzk">ТЗК «Крылатский»</button><button class="chip" data-row="e-stroy">«Стройкласс»</button></div></div>
+</div>
+</div>
+</div>
+<p class="small">Схема показывает управленческую структуру по направлениям. Нажмите на компанию — в таблице ниже подсветится её строка.</p>
+<table>
+<thead><tr><th>Юрлицо / объект</th><th>ИНН</th><th>Роль</th></tr></thead>
+<tbody>
+<tr id="e-holding"><td>ООО «Село Зелёное Холдинг»</td><td>1832043008</td><td>Материнская / владельческая компания</td></tr>
+<tr id="e-komos"><td>ООО «КОМОС ГРУПП»</td><td>1831089218</td><td>Управляющая компания (функции ЕИО предприятий группы)</td></tr>
+<tr id="e-ppk"><td>ООО «Приволжский Продовольственный Концерн»</td><td>1831192409</td><td>Участник материнской компании, 50%; 100% — А.В. Шутов</td></tr>
+<tr id="e-ap"><td>ООО «Аграрий Прикамья»</td><td>1831170740</td><td>Участник материнской компании, 49,99%; 100% — А.Э. Осколков</td></tr>
+<tr id="e-milkom"><td>АО «МИЛКОМ»</td><td>1834100340</td><td>Молочная переработка; головная компания молочного субхолдинга</td></tr>
+<tr id="e-niva"><td>ООО «Русская нива»</td><td>1838001692</td><td>Молочное животноводство / растениеводство</td></tr>
+<tr id="e-kmk"><td>ООО «Казанский молочный комбинат»</td><td>1660297582</td><td>Молочная переработка (Татарстан); по НРА — объект инвестпрограммы по расширению мощностей</td></tr>
+<tr id="e-sozv"><td>ООО «ПХК «Созвездие»</td><td>5904415600</td><td>Мороженое (Пермь); производственная площадка молочного субхолдинга</td></tr>
+<tr id="e-gkz"><td>ООО «ГКЗ» / Глазовский комбикормовый завод</td><td>1829013726</td><td>Комбикорма</td></tr>
+<tr id="e-upf"><td>ООО «Удмуртская птицефабрика»</td><td>1837008416</td><td>Бройлерное птицеводство</td></tr>
+<tr id="e-var"><td>ООО «Птицефабрика «Вараксино»</td><td>1841017448</td><td>Яичное птицеводство</td></tr>
+<tr id="e-mend"><td>ООО «Птицефабрика «Менделеевская»</td><td>5933008039</td><td>Яичное птицеводство</td></tr>
+<tr id="e-derzh"><td>ООО «Птицефабрика «Державинская»</td><td>1624016275</td><td>Яичное птицеводство</td></tr>
+<tr id="e-vost"><td>ООО «Восточный»</td><td>1841017491</td><td>Свиноводство / мясопереработка</td></tr>
+<tr id="e-yan"><td>ООО «Янаульский элеватор»</td><td>0271109832</td><td>Элеватор / кормовой контур (Башкортостан)</td></tr>
+<tr id="e-smk"><td>ООО «Сарапульский мясокомбинат»</td><td>1832157012</td><td>Мясопереработка; управляющая организация — ООО «КОМОС ГРУПП»</td></tr>
+<tr id="e-kung"><td>ООО «Мясокомбинат «Кунгурский»</td><td>5902134178</td><td>Мясопереработка (Пермский край); 99,99% — ООО «ЮМИКО»</td></tr>
+<tr id="e-log"><td>ООО «КОМОС-Логистика»</td><td>1841023311</td><td>Логистика</td></tr>
+<tr id="e-myaso"><td>ООО «Мясная компания»</td><td>1841030252</td><td>Фирменная розница, 240 магазинов</td></tr>
+<tr id="e-lizing"><td>ООО «КОМОС Лизинг»</td><td>1834037306</td><td>Лизинг техники и оборудования (работает с 2021 года)</td></tr>
+<tr id="e-tzk"><td>ООО «ТЗК «Крылатский»</td><td>1831174103</td><td>Топливный контур: оптовая торговля и хранение топлива, включая авиатопливо</td></tr>
+<tr id="e-gauda"><td>ООО «Гауда Холдер»</td><td>1831132167</td><td>Имущественный контур: аренда и управление недвижимостью</td></tr>
+<tr id="e-yumiko"><td>ООО «ЮМИКО»</td><td>5917597193</td><td>Пермская промежуточная компания: владеет 99,99% Мясокомбината «Кунгурский»; управляется ООО «КОМОС ГРУПП»</td></tr>
+<tr id="e-stroy"><td>ООО «Стройкласс»</td><td>1835079404</td><td>Строительный контур; действующая, зарегистрирована по адресу управляющей компании (Ижевск, ул. Песочная, 11)</td></tr>
+</tbody>
+</table>
+<div class="source">Источники: <a href="https://selo-zelenoe.ru/investors/%D0%A1%D0%B5%D0%BB%D0%BE_%D0%97%D0%B5%D0%BB%D0%B5%D0%BD%D0%BE%D0%B5_%D0%A5%D0%BE%D0%BB%D0%B4%D0%B8%D0%BD%D0%B3_%D0%9F%D1%80%D0%B5%D0%B7%D0%B5%D0%BD%D1%82%D0%B0%D1%86%D0%B8%D1%8F_%D0%B4%D0%BB%D1%8F_%D0%B8%D0%BD%D0%B2%D0%B5%D1%81%D1%82%D0%BE%D1%80%D0%BE%D0%B2.pdf">инвесторская схема</a> · <a href="https://www.komos.ru/contact/">перечень предприятий КОМОС</a> · <a href="https://zakupkikomos.ru/">общества под управлением КОМОС ГРУПП</a> · <a href="https://www.kommersant.ru/doc/8080873">«Коммерсантъ»</a> · <a href="https://www.rusprofile.ru/id/1310278">ЮМИКО</a> · <a href="https://www.rusprofile.ru/id/268480">Стройкласс</a> · <a href="https://www.rusprofile.ru/id/7717988">ТЗК «Крылатский»</a></div>
+</section>
+
+<section id="business" class="card">
+<h2>5. Операционная модель</h2>
+<div class="viz chain" aria-label="Цепочка от поля до прилавка">
+<div class="ch-step" data-a style="--d:0"><div class="ico"><svg class="ic" viewBox="0 0 24 24"><path d="M12 21.5V7"/><path d="M12 7c0-2.4 1-4 2.8-4.5.2 2.3-.9 4-2.8 4.5zM12 7c0-2.4-1-4-2.8-4.5-.2 2.3.9 4 2.8 4.5z"/><path d="M12 12c.3-2.3 1.8-3.7 3.9-3.8-.2 2.2-1.7 3.6-3.9 3.8zM12 12c-.3-2.3-1.8-3.7-3.9-3.8.2 2.2 1.7 3.6 3.9 3.8z"/><path d="M12 17c.3-2.3 1.8-3.7 3.9-3.8-.2 2.2-1.7 3.6-3.9 3.8zM12 17c-.3-2.3-1.8-3.7-3.9-3.8.2 2.2 1.7 3.6 3.9 3.8z"/></svg></div><div class="ch-t">Корма и растениеводство</div><div class="ch-d">Глазовский комбикормовый завод, Янаульский элеватор, растениеводство «Русской нивы»</div></div>
+<div class="ch-arrow" data-a style="--d:120"><svg class="ic" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+<div class="ch-step" data-a style="--d:200"><div class="ico"><svg class="ic" viewBox="0 0 24 24"><path d="M3 21V10l9-6.5L21 10v11"/><path d="M9 21v-6.5h6V21"/><path d="M1.5 21h21"/><path d="m9 14.5 6 6.5M15 14.5 9 21"/></svg></div><div class="ch-t">Животноводство</div><div class="ch-d">молочные фермы «Русской нивы», четыре птицефабрики, свиноводческий контур «Восточного»</div></div>
+<div class="ch-arrow" data-a style="--d:320"><svg class="ic" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+<div class="ch-step" data-a style="--d:400"><div class="ico"><svg class="ic" viewBox="0 0 24 24"><path d="M9 2.5h6M9.5 2.5v3L7 9v11a1.5 1.5 0 0 0 1.5 1.5h7A1.5 1.5 0 0 0 17 20V9l-2.5-3.5v-3"/><path d="M7 13h10"/></svg></div><div class="ch-t">Переработка</div><div class="ch-d">семь молочных предприятий субхолдинга «МИЛКОМ», Сарапульский и Кунгурский мясокомбинаты</div></div>
+<div class="ch-arrow" data-a style="--d:520"><svg class="ic" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+<div class="ch-step" data-a style="--d:600"><div class="ico"><svg class="ic" viewBox="0 0 24 24"><path d="M2.5 6.5h11v10h-11z"/><path d="M13.5 10h4l3 3.2v3.3h-7"/><circle cx="6.5" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></svg></div><div class="ch-t">Логистика</div><div class="ch-d">«КОМОС-Логистика»: 199 единиц техники, поставки в 72 региона</div></div>
+<div class="ch-arrow" data-a style="--d:720"><svg class="ic" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+<div class="ch-step" data-a style="--d:800"><div class="ico"><svg class="ic" viewBox="0 0 24 24"><path d="M3.5 9 5 4h14l1.5 5"/><path d="M3.5 9h17v1.5a2.8 2.8 0 0 1-5.6 0 2.8 2.8 0 0 1-5.8 0 2.8 2.8 0 0 1-5.6 0z"/><path d="M5 12.8V21h14v-8.2M10 21v-5h4v5"/></svg></div><div class="ch-t">Продажи</div><div class="ch-d">федеральные сети (около 46% выручки — X5, «Магнит», «Лента») и 240 фирменных магазинов</div></div>
+</div>
+<div class="grid2">
+<div>
+<h3>Производство</h3>
+<p>Молочный субхолдинг «МИЛКОМ» в 2024 году переработал 522,8 тыс. т молока; с 1 декабря 2025 года в него вошёл Уфимский молочный завод, к 2030 году его мощность планируют довести до 500 т сырья в сутки (<a href="https://www.komos.ru/about/structure/milk_and_cream/">КОМОС</a>). Также в группе четыре птицефабрики, свиноводческий контур «Восточного», два мясокомбината и комбикормовый завод.</p>
+</div>
+<div>
+<h3>Сбыт и логистика</h3>
+<p>Собственный автопарк — 199 единиц техники, поставки в 72 региона (<a href="https://www.komos.ru/about/structure/brand-retail/">КОМОС</a>); 240 фирменных магазинов (<a href="https://www.komos.ru/enterprises/ooo-myasnaya-kompaniya/">«Мясная компания»</a>). Около 46% выручки дают X5, «Магнит» и «Лента» (<a href="https://alfabank.ru/alfa-investor/t/obligatsii-selo-zelenoe-otlichnaya-vozmozhnost/">Альфа-Инвестиции</a>).</p>
+</div>
+</div>
+<div class="callout"><b>Для ABM:</b> у предприятий разная цифровая зрелость (<a href="https://globalcio.ru/projectoftheyear/list/54853/">GlobalCIO</a>), а группа продолжает присоединять и расширять площадки: Уфа, Казанский молочный комбинат, новая птицефабрика (<a href="https://www.ra-national.ru/press_release/ooo-selo-zeljonoe-holding/45326/">НРА</a>). Каждая новая площадка — это тиражирование учётного шаблона. Отдельная тема — склад и доставка: какая у группы WMS/TMS, в открытых источниках не видно, это стоит выяснить на первой встрече.</div>
+<div class="source">Источники: <a href="https://www.komos.ru/about/structure/milk_and_cream/">молочный субхолдинг</a> · <a href="https://www.komos.ru/about/structure/brand-retail/">дистрибуция и логистика</a> · <a href="https://www.komos.ru/enterprises/ooo-myasnaya-kompaniya/">«Мясная компания»</a> · <a href="https://alfabank.ru/alfa-investor/t/obligatsii-selo-zelenoe-otlichnaya-vozmozhnost/">Альфа-Инвестиции</a> · <a href="https://www.ra-national.ru/press_release/ooo-selo-zeljonoe-holding/45326/">НРА</a></div>
+</section>
+
+<section id="it" class="card">
+<h2>6. IT-ландшафт и текущие проекты</h2>
+<p>IT, HR и юридические функции вынесены в общий центр обслуживания (<a href="https://www.komos.ru/about/structure/service/">КОМОС</a>). IT-центр ООО «КОМОС ИНФОРМ» растёт: 60 сотрудников в 2021 году, 206 в 2025 году (<a href="https://www.rusprofile.ru/id/1211800006318">Rusprofile</a>).</p>
+<div class="viz stack" aria-label="Слои IT-ландшафта группы">
+<div class="st-layer" data-a style="--d:0">
+<div class="st-head"><b>Общий центр обслуживания</b><span>сервисные юрлица, работают на все предприятия</span></div>
+<div class="st-cells">
+<div class="st-cell"><b>ООО «КОМОС ИНФОРМ»</b>IT-инфраструктура, автоматизация процессов, порталы, Service Desk, НСИ</div>
+<div class="st-cell"><b>ООО «ЦЕС-КОМОС»</b>HR: payroll, кадры, подбор, оценка, обучение, учёт рабочего времени</div>
+<div class="st-cell"><b>ООО «КОМОС ПРАВО»</b>договорная, претензионно-исковая, имущественная и исполнительная работа</div>
+</div>
+</div>
+<div class="st-link" data-a style="--d:180"><svg class="ic" viewBox="0 0 24 24"><path d="M12 4v16M6 14l6 6 6-6"/></svg>IT-центр отвечает за внедрение и развитие систем</div>
+<div class="st-layer core" data-a style="--d:300">
+<div class="st-head"><b>Единая цифровая платформа BPMSoft</b><span>ноябрь 2022 — ноябрь 2025, 19 площадок, 52 юрлица</span></div>
+<div class="st-cells">
+<div class="st-cell"><b>CRM</b>единый контакт-центр для семи производственных предприятий, приём заказов, инциденты</div>
+<div class="st-cell"><b>SRM</b>полный цикл закупок молока-сырья, офлайн-режим для полевых менеджеров</div>
+<div class="st-cell"><b>СЭД</b>договоры и внутренние документы всех 52 юрлиц, ЭЦП, юридически значимый ЭДО</div>
+</div>
+</div>
+<div class="st-link" data-a style="--d:480"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v18M7 8l5-5 5 5M7 16l5 5 5-5"/></svg>двусторонняя интеграция</div>
+<div class="st-layer" data-a style="--d:600">
+<div class="st-head"><b>Учётный и интеграционный слой</b><span>32 ИТ-продукта в ландшафте, собственный ЦОД</span></div>
+<div class="tags"><span class="tag">1С:УПП</span><span class="tag">1С:УТ</span><span class="tag">1С:ERP</span><span class="tag">1С:УХ</span><span class="tag">1С:MDM</span><span class="tag">шина данных Datareon</span><span class="tag">ЭДО «Контур.Диадок»</span><span class="tag">1С:ITILIUM (Service Desk)</span><span class="tag">КриптоПро</span><span class="tag">телефония</span><span class="tag">MS AD</span></div>
+</div>
+<div class="st-link" data-a style="--d:720"><svg class="ic" viewBox="0 0 24 24"><path d="M12 4v16M6 14l6 6 6-6"/></svg>в работе сейчас</div>
+<div class="st-layer now" data-a style="--d:840">
+<div class="st-head"><b>Текущие проекты КОМОС ИНФОРМ</b><span>по вакансии от 10.09.2026</span></div>
+<div class="st-cells">
+<div class="st-cell"><b>1С:ERP и 1С:УХ</b>внедрение ERP на предприятиях холдинга, консолидация на 1С:УХ</div>
+<div class="st-cell"><b>Единый торговый дом</b>автоматизация на 1С:УТ; ранее — централизованный сбыт мясной продукции</div>
+<div class="st-cell"><b>НСИ и интеграции</b>централизация справочников на отраслевом 1С:MDM (Axelot), потоки в Datareon ESB</div>
+</div>
+</div>
+</div>
+<h3>Что уже сделано</h3>
+<p>С ноября 2022 по ноябрь 2025 года на BPMSoft построена единая платформа: CRM с единым контакт-центром для семи предприятий, SRM для закупок молока-сырья и СЭД для всех 52 юрлиц. Платформа интегрирована с 1С, 1С:MDM, шиной Datareon и ЭДО; подрядчики — «Клиентоматика» и «Программные технологии», проект шёл с грантом РФРИТ (<a href="https://globalcio.ru/projectoftheyear/list/54853/">GlobalCIO</a>). Проект стал победителем конкурса GlobalCIO «Проект года» (<a href="https://www.komos.ru/press-center/news/33165/">КОМОС, 11.02.2026</a>). Отдельно на 1С:УТ построена централизованная система сбыта мясной продукции на 500 пользователей в режиме 24/7 (<a href="https://eawards.1c.ru/projects/avtomatizaciya-unificirovannyh-torgovo-logisticheskih-biznes-processov-sbytovogo-podrazdeleniya-ooo-komos-grupp-v-ramkah-kompleksnoy-cifrovoy-transformacii-holdinga-221631/">1С:Проект года</a>).</p>
+<h3>Что делается сейчас</h3>
+<p>По вакансии от 10.09.2026 «КОМОС ИНФОРМ» ведёт внедрение 1С:ERP и 1С:УХ на предприятиях, автоматизацию единого торгового дома на 1С:УТ и централизацию НСИ на отраслевом 1С:MDM от Axelot с интеграциями через Datareon ESB (<a href="https://dreamjob.ru/employers/36214/vakansii/123869229">вакансия</a>). При этом синхронизация с учётом и ЭДО пока заявлена только для 7 площадок из 19, а закупки молока завязаны на 1С:УПП шести площадок (<a href="https://globalcio.ru/projectoftheyear/list/54853/">GlobalCIO</a>).</p>
+<div class="callout"><b>Практический вывод для IT/ABM:</b> вопрос не «нужна ли КОМОС автоматизация», а где разрывы. Платформенный слой уже закрыт подрядчиками BPMSoft, IT-центр делает основную работу своими силами. Наиболее вероятные потребности — на стыках: перевод площадок с 1С:УПП на 1С:ERP, консолидация на 1С:УХ, коммерческий контур единого торгового дома, НСИ и интеграции между 32 системами.</div>
+<div class="source">Источники: <a href="https://www.komos.ru/about/structure/service/">ОЦО КОМОС</a> · <a href="https://www.komos.ru/press-center/news/33165/">КОМОС, 11.02.2026</a> · <a href="https://globalcio.ru/projectoftheyear/list/54853/">GlobalCIO</a> · <a href="https://dreamjob.ru/employers/36214/vakansii/123869229">вакансия КОМОС ИНФОРМ</a> · <a href="https://eawards.1c.ru/projects/avtomatizaciya-unificirovannyh-torgovo-logisticheskih-biznes-processov-sbytovogo-podrazdeleniya-ooo-komos-grupp-v-ramkah-kompleksnoy-cifrovoy-transformacii-holdinga-221631/">1С:Проект года</a> · <a href="https://1c-itilium.ru/about-company/cases/komos_gr">кейс 1С:ITILIUM</a> · <a href="https://www.rusprofile.ru/id/1211800006318">карточка КОМОС ИНФОРМ</a></div>
+</section>
+
+<section id="sales" class="card">
+<h2>7. Точки входа для Новардис</h2>
+<div class="viz entries">
+<div class="entry" data-a style="--d:0">
+<div class="entry-h"><span class="entry-n">1</span><b>Тиражирование 1С:ERP на предприятия</b></div>
+<p><span class="lbl">Сигнал</span>ERP внедряется своими силами, команда добирается (<a href="https://dreamjob.ru/employers/36214/vakansii/123869229">вакансия</a>); часть площадок ещё на 1С:УПП (<a href="https://globalcio.ru/projectoftheyear/list/54853/">GlobalCIO</a>).</p>
+<p><span class="lbl">Что предложить</span>усиление команды на тиражировании, отраслевой шаблон для молочного, мясного и птицеводческого производства, перевод площадок с УПП на ERP.</p>
+</div>
+<div class="entry" data-a style="--d:90">
+<div class="entry-h"><span class="entry-n">2</span><b>Единый торговый дом на 1С:УТ</b></div>
+<p><span class="lbl">Сигнал</span>автоматизация ЕТД идёт сейчас (<a href="https://dreamjob.ru/employers/36214/vakansii/123869229">вакансия</a>); около 46% выручки — три федеральные сети (<a href="https://alfabank.ru/alfa-investor/t/obligatsii-selo-zelenoe-otlichnaya-vozmozhnost/">Альфа-Инвестиции</a>).</p>
+<p><span class="lbl">Что предложить</span>коммерческий контур: заказы и отгрузки сетям, EDI, цены и промо, прогноз спроса, связка УТ с CRM на BPMSoft.</p>
+</div>
+<div class="entry" data-a style="--d:180">
+<div class="entry-h"><span class="entry-n">3</span><b>Консолидация и МСФО на 1С:УХ</b></div>
+<p><span class="lbl">Сигнал</span>компания стала публичной и публикует МСФО дважды в год, есть банковские ковенанты (<a href="https://www.ra-national.ru/press_release/ooo-selo-zeljonoe-holding/45326/">НРА</a>); 1С:УХ в периметре внедрения (<a href="https://dreamjob.ru/employers/36214/vakansii/123869229">вакансия</a>).</p>
+<p><span class="lbl">Что предложить</span>ускорение закрытия периода, МСФО-трансформацию, казначейство и контроль ковенантов.</p>
+</div>
+<div class="entry" data-a style="--d:270">
+<div class="entry-h"><span class="entry-n">4</span><b>НСИ и интеграции</b></div>
+<p><span class="lbl">Сигнал</span>идёт централизация НСИ на 1С:MDM (Axelot) и Datareon ESB (<a href="https://dreamjob.ru/employers/36214/vakansii/123869229">вакансия</a>); в ландшафте 32 системы (<a href="https://globalcio.ru/projectoftheyear/list/54853/">GlobalCIO</a>).</p>
+<p><span class="lbl">Что предложить</span>методологию НСИ, разработку и сопровождение интеграционных потоков, аудит архитектуры обменов.</p>
+</div>
+<div class="entry" data-a style="--d:360">
+<div class="entry-h"><span class="entry-n">5</span><b>Склад и логистика (WMS/TMS)</b></div>
+<p><span class="lbl">Сигнал</span>собственный автопарк из 199 единиц, 72 региона, 240 магазинов (<a href="https://www.komos.ru/about/structure/brand-retail/">КОМОС</a>); складская система публично не раскрыта — требует уточнения.</p>
+<p><span class="lbl">Что предложить</span>экспресс-диагностику складов и доставки, затем WMS/TMS на пилотной площадке.</p>
+</div>
+<div class="entry how" data-a style="--d:450">
+<div class="entry-h"><span class="entry-n">→</span><b>Как заходить</b></div>
+<p>Первый контакт — Евгений Галиулин (руководил программой BPMSoft со стороны заказчика) и руководство «КОМОС ИНФОРМ». Повод — тиражирование ERP/УХ и единый торговый дом. Формат — экспертиза и усиление in-house команды, а не «внедрение под ключ»: пилот на 1–2 площадках, расчёт эффекта в рублях, отраслевые референсы из агро и FMCG. Закупки группы идут через <a href="https://zakupkikomos.ru/">ЭТП КОМОС</a> — стоит заранее зарегистрироваться там поставщиком.</p>
+</div>
+</div>
+
+<h3>Кто принимает решения</h3>
+<div class="people">
+<div class="person"><div class="ico"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M5 20c1.2-3.8 3.9-5.6 7-5.6s5.8 1.8 7 5.6"/></svg></div><div><b>Андрей Шутов</b><span>совладелец; управляющий ООО «КОМОС ГРУПП» и генеральный директор холдинга (<a href="https://www.rusprofile.ru/id/3924725">Rusprofile</a>, <a href="https://firmoteka.ru/1832043008">карточка холдинга</a>)</span></div></div>
+<div class="person"><div class="ico"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M5 20c1.2-3.8 3.9-5.6 7-5.6s5.8 1.8 7 5.6"/></svg></div><div><b>Андрей Осколков</b><span>совладелец, 49,99% через «Аграрий Прикамья» (<a href="https://www.ra-national.ru/press_release/ooo-selo-zeljonoe-holding/45326/">НРА</a>)</span></div></div>
+<div class="person"><div class="ico"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M5 20c1.2-3.8 3.9-5.6 7-5.6s5.8 1.8 7 5.6"/></svg></div><div><b>Евгений Галиулин</b><span>начальник центра экспертизы бизнес-процессов и управления проектами «КОМОС ГРУПП» (<a href="https://globalcio.ru/projectoftheyear/list/54853/">GlobalCIO</a>)</span></div></div>
+<div class="person"><div class="ico"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M5 20c1.2-3.8 3.9-5.6 7-5.6s5.8 1.8 7 5.6"/></svg></div><div><b>Александр Пискарёв</b><span>генеральный директор ООО «КОМОС ИНФОРМ» с июня 2021 года (<a href="https://www.rusprofile.ru/id/1211800006318">Rusprofile</a>)</span></div></div>
+</div>
+
+<h3>Что учесть в переговорах</h3>
+<ul>
+<li><b>IT делают своими силами.</b> «КОМОС ИНФОРМ» — инсорсинговый центр компетенций, который сам ведёт ERP-проекты и нанимает разработчиков (<a href="https://dreamjob.ru/employers/36214/vakansii/123869229">вакансия</a>). Лучше предлагать экспертизу и усиление, чем полный аутсорсинг.</li>
+<li><b>CRM, SRM и СЭД уже на BPMSoft.</b> Здесь не конкурировать, а встраиваться: интеграции, аналитика, смежные контуры (<a href="https://globalcio.ru/projectoftheyear/list/54853/">GlobalCIO</a>).</li>
+<li><b>Давление на маржу.</b> Чистая прибыль 2025 года — 0,2 млрд ₽ при выручке 106,2 млрд ₽ (<a href="https://ratings.ru/ratings/press-releases/selo-zelenoe-RA-110926/">НКР</a>): нужны короткая окупаемость и поэтапный бюджет.</li>
+<li><b>Опыт господдержки.</b> Программа BPMSoft шла с грантом РФРИТ (<a href="https://globalcio.ru/projectoftheyear/list/54853/">GlobalCIO</a>) — проект на российском ПО с господдержкой будет понятным аргументом.</li>
+</ul>
+<div class="source">Источники: <a href="https://dreamjob.ru/employers/36214/vakansii/123869229">вакансия КОМОС ИНФОРМ</a> · <a href="https://globalcio.ru/projectoftheyear/list/54853/">GlobalCIO</a> · <a href="https://www.ra-national.ru/press_release/ooo-selo-zeljonoe-holding/45326/">НРА</a> · <a href="https://alfabank.ru/alfa-investor/t/obligatsii-selo-zelenoe-otlichnaya-vozmozhnost/">Альфа-Инвестиции</a> · <a href="https://www.rusprofile.ru/id/3924725">карточка КОМОС ГРУПП</a> · <a href="https://www.rusprofile.ru/id/1211800006318">карточка КОМОС ИНФОРМ</a> · <a href="https://zakupkikomos.ru/">ЭТП КОМОС</a></div>
+</section>
+
+<section id="sources" class="card">
+<h2>8. Источники</h2>
+<div class="links">
+<p><a href="https://www.komos.ru/">Официальный сайт КОМОС ГРУПП</a></p>
+<p><a href="https://www.komos.ru/about/structure/milk_and_cream/">КОМОС — молочное производство и переработка</a></p>
+<p><a href="https://www.komos.ru/about/structure/brand-retail/">КОМОС — дистрибуция, розница, логистика и лизинг</a></p>
+<p><a href="https://www.komos.ru/about/structure/service/">КОМОС — ОЦО: IT, HR, право</a></p>
+<p><a href="https://www.komos.ru/press-center/news/33165/">КОМОС — цифровая трансформация, 11.02.2026</a></p>
+<p><a href="https://www.komos.ru/contact/">КОМОС — контакты и перечень ключевых предприятий</a></p>
+<p><a href="https://www.komos.ru/enterprises/ooo-myasnaya-kompaniya/">КОМОС — ООО «Мясная компания»</a></p>
+<p><a href="https://www.komos.ru/about/geography/">КОМОС — география присутствия</a></p>
+<p><a href="https://zakupkikomos.ru/">ЭТП КОМОС — закупки и перечень обществ под управлением</a></p>
+<p><a href="https://globalcio.ru/projectoftheyear/list/54853/">GlobalCIO — проект единой цифровой платформы на BPMSoft</a></p>
+<p><a href="https://eawards.1c.ru/projects/avtomatizaciya-unificirovannyh-torgovo-logisticheskih-biznes-processov-sbytovogo-podrazdeleniya-ooo-komos-grupp-v-ramkah-kompleksnoy-cifrovoy-transformacii-holdinga-221631/">1С:Проект года — сбытовая система КОМОС ГРУПП на 1С:УТ</a></p>
+<p><a href="https://1c-itilium.ru/about-company/cases/komos_gr">1С:ITILIUM — кейс КОМОС ГРУПП</a></p>
+<p><a href="https://dreamjob.ru/employers/36214/vakansii/123869229">Вакансия КОМОС ИНФОРМ (1С:MDM), 10.09.2026</a></p>
+<p><a href="https://selo-zelenoe.ru/investors/">«Село Зелёное» — раздел инвесторов</a></p>
+<p><a href="https://selo-zelenoe.ru/investors/%D0%A1%D0%B5%D0%BB%D0%BE_%D0%97%D0%B5%D0%BB%D0%B5%D0%BD%D0%BE%D0%B5_%D0%A5%D0%BE%D0%BB%D0%B4%D0%B8%D0%BD%D0%B3_%D0%9F%D1%80%D0%B5%D0%B7%D0%B5%D0%BD%D1%82%D0%B0%D1%86%D0%B8%D1%8F_%D0%B4%D0%BB%D1%8F_%D0%B8%D0%BD%D0%B2%D0%B5%D1%81%D1%82%D0%BE%D1%80%D0%BE%D0%B2.pdf">Инвесторская презентация «Село Зелёное Холдинг»</a></p>
+<p><a href="https://selo-zelenoe.ru/investors/%D0%A1%D0%B5%D0%BB%D0%BE%20%D0%97%D0%B5%D0%BB%D0%B5%D0%BD%D0%BE%D0%B5%20%D0%A5%D0%BE%D0%BB%D0%B4%D0%B8%D0%BD%D0%B3_%D1%82%D0%B8%D0%B7%D0%B5%D1%80.pdf">Инвесторский тизер</a></p>
+<p><a href="https://www.ra-national.ru/press_release/ooo-selo-zeljonoe-holding/45326/">НРА — подтверждение рейтинга, 08.09.2026</a></p>
+<p><a href="https://ratings.ru/ratings/press-releases/selo-zelenoe-RA-220925/">НКР — рейтинг и показатели 2023–2024</a></p>
+<p><a href="https://ratings.ru/ratings/press-releases/selo-zelenoe-RA-110926/">НКР — подтверждение рейтинга и показатели 2024–2025</a></p>
+<p><a href="https://www.kommersant.ru/doc/8080873">«Коммерсантъ» — владельцы и дочерние общества, 02.10.2025</a></p>
+<p><a href="https://alfabank.ru/alfa-investor/t/obligatsii-selo-zelenoe-otlichnaya-vozmozhnost/">Альфа-Инвестиции — обзор облигаций «Село Зелёное»</a></p>
+<p><a href="https://firmoteka.ru/1832043008">Карточка ООО «Село Зелёное Холдинг»</a></p>
+<p><a href="https://www.rusprofile.ru/id/3924725">Карточка ООО «КОМОС ГРУПП»</a></p>
+<p><a href="https://www.rusprofile.ru/id/1211800006318">Карточка ООО «КОМОС ИНФОРМ»</a></p>
+<p><a href="https://www.rusprofile.ru/id/1310278">Карточка ООО «ЮМИКО»</a></p>
+<p><a href="https://www.rusprofile.ru/id/268480">Карточка ООО «Стройкласс»</a></p>
+<p><a href="https://www.rusprofile.ru/id/7717988">Карточка ООО «ТЗК «Крылатский»</a></p>
+<p><a href="https://kontragent.skrin.ru/issuers/HYPHG">SKRIN — карточка эмитента</a></p>
+<p><a href="https://b2b.house/company/OOO-KOMOS-GRUPP_5f41345a-953b-47c1-9cfd-b290cea19f1b/">Финансовые показатели ООО «КОМОС ГРУПП»</a></p>
+<p><a href="https://www.tadviser.ru/index.php/%D0%9A%D0%BE%D0%BC%D0%BF%D0%B0%D0%BD%D0%B8%D1%8F:%D0%9A%D0%BE%D0%BC%D0%BE%D1%81_%D0%93%D1%80%D1%83%D0%BF%D0%BF_(%D1%81%D0%B5%D0%BB%D1%8C%D1%81%D0%BA%D0%BE%D0%B5_%D1%85%D0%BE%D0%B7%D1%8F%D0%B9%D1%81%D1%82%D0%B2%D0%BE)">TAdviser — КОМОС ГРУПП</a></p>
+</div>
+</section>
+
+<div class="footer">
+Сформировано на основе открытых источников; дата среза — 28 сентября 2026 года. Публичного реестра всех 52 юрлиц группы нет, поэтому в таблице — ключевые компании. Роли людей в закупке IT и наличие WMS/TMS стоит подтвердить на первой встрече.
+</div>
+</div>
+<script>
+(function(){
+  var vizes = [].slice.call(document.querySelectorAll('.viz'));
+  function show(el){ el.classList.add('is-in'); }
+  if (!('IntersectionObserver' in window)) { vizes.forEach(show); }
+  else {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if (e.isIntersecting) { show(e.target); io.unobserve(e.target); } });
+    }, { threshold: 0.2 });
+    vizes.forEach(function(v){ io.observe(v); });
+  }
+  window.addEventListener('beforeprint', function(){ vizes.forEach(show); });
+
+  // Подсветка связей на схеме собственности
+  var svg = document.querySelector('.own-svg');
+  // для бенефициаров подсвечиваем всю цепочку до материнской компании
+  var EXTRA = { shutov: ['ppk holding'], oskolkov: ['ap holding'] };
+  if (svg) {
+    var edges = [].slice.call(svg.querySelectorAll('.own-edge'));
+    [].slice.call(svg.querySelectorAll('.own-node')).forEach(function(n){
+      var id = n.getAttribute('data-id');
+      function on(){
+        svg.classList.add('focus'); n.classList.add('hl');
+        edges.forEach(function(e){
+          var ends = (e.getAttribute('data-ends') || '').split(' ');
+          var chain = (EXTRA[id] || []).indexOf(e.getAttribute('data-ends')) > -1;
+          if (ends.indexOf(id) > -1 || chain) {
+            e.classList.add('hl');
+            ends.forEach(function(x){ var m = svg.querySelector('.own-node[data-id="' + x + '"]'); if (m) m.classList.add('hl'); });
+          }
+        });
+      }
+      function off(){
+        svg.classList.remove('focus');
+        [].slice.call(svg.querySelectorAll('.hl')).forEach(function(x){ x.classList.remove('hl'); });
+      }
+      n.addEventListener('mouseenter', on); n.addEventListener('mouseleave', off);
+      n.addEventListener('focus', on); n.addEventListener('blur', off);
+      n.addEventListener('touchstart', function(){ off(); on(); }, { passive: true });
+    });
+  }
+
+  // Компания на схеме направлений → строка в таблице юрлиц
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  [].slice.call(document.querySelectorAll('.chip[data-row]')).forEach(function(c){
+    c.addEventListener('click', function(){
+      var r = document.getElementById(c.getAttribute('data-row'));
+      if (!r) return;
+      r.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+      r.classList.remove('flash'); void r.offsetWidth; r.classList.add('flash');
+    });
+  });
+})();
+</script>
+</body>
+</html>
